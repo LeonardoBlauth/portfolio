@@ -1,9 +1,9 @@
 # 02 — Visual Direction and Architecture
 
 **Project:** Leonardo Blauth's professional portfolio  
-**Version:** 1.0  
-**Status:** approved to guide the `03 — Prototype Handoff`  
-**Sources:** `01 — Portfolio Definition`, curated references, and decisions approved in this Work
+**Version:** 1.1  
+**Status:** approved; updated with the professional identity defined in document `04`  
+**Sources:** `01 — Portfolio Definition`, curated references, decisions approved in this Work, and `04 — Professional Identity`
 
 ## 1. Purpose of this document
 
@@ -69,6 +69,22 @@ The interface must transmit:
 - composition with the appearance of a known template;
 - creative agency or awards language;
 - decorative elements without noticeable function.
+
+### 2.6 Approved professional identity
+
+The interface incorporates the **Open Loop LB** professional identity as a signature layer, without replacing the direction of **dark minimalism with depth and controlled movement**.
+
+Its presence on the interface must occur in a concentrated manner:
+
+- monogram `LB` as link to Home in the header;
+- favicon;
+- discreet signature on the footer;
+- Open Graph images and covers produced for the portfolio;
+- cobalt line as a supporting graphic element in backgrounds and editorial compositions.
+
+`Leonardo Blauth` remains the main identity, `Full Stack Developer` the descriptor and the photograph the personal representation. The monogram remains secondary and should not be repeated as decoration.
+
+Complete specifications for construction, variants, palette, clear space, applications, and restrictions are in `04 — Professional Identity`.
 
 ## 3. Information architecture
 
@@ -136,13 +152,15 @@ Even without going through the entire Home, the visitor should find on Hero and 
 
 The header will be compact, fixed and integrated into the canvas.
 
-- name or short signature on the left;
+- only the monogram `LB` on the left, as a visual link to the Home and the beginning of the page;
 - central or right links: Projects, Experience, Stack and Contact;
 - PT/EN selector and theme grouped as utilities;
 - GitHub and LinkedIn remain in Hero, Contact and Footer to avoid excessive controls;
 - at the top, the header can be transparent;
 - after the start of the scroll, it receives an almost opaque surface and a discreet lower edge;
 - blur can be used at low intensity, without turning the header into a pane of glass.
+
+The header should not simultaneously display the monogram and `Leonardo Blauth`, as the name already appears dominantly in Hero. The monogram maintains a discreet scale, visible focus and accessible label. It should not use glow, rotation, or ornamental animation.
 
 The current section may be indicated by a subtle color change or small dash. This indication will only be maintained if it remains stable in long sections and during horizontal gallery.
 
@@ -156,7 +174,7 @@ The current section may be indicated by a subtle color change or small dash. Thi
 
 ### 4.3 Mobile
 
-- signature/name on the left;
+- `LB` monogram on the left, maintaining the same link function to the Home;
 - theme and language can remain visible as a single compact group;
 - other links are in a menu activated by a clearly labeled button;
 - menu opens as a simple panel, not as an animated fullscreen experience;
@@ -606,45 +624,24 @@ Absolute black may appear in very specific areas, but it should not eliminate th
 
 Light mode should feel editorial and airy. Soft shadows can contribute more than in the dark, while lines and lighting will be less intense.
 
-### 13.3 Accent color — finalists
+### 13.3 Approved accent color
 
-The definitive choice will be made during prototyping, comparing the two options in Hero, CTA, links, focus, lighting, projects and both themes.
+Cobalt `#2563EB` is the official color of the identity and the definitive accent of the portfolio. The previous amber/copper alternative was discarded.
 
-#### Alternative A — desaturated cobalt blue
+Main applications:
 
-Initial references:
+- Primary CTA;
+- links and active status;
+- focus;
+- small Project details;
+- discreet ambient lighting;
+- monogram and supporting graphic line.
 
-- dark: `#6F88F7`;
-- hover in dark: `#89A0FF`;
-- light: `#3F5FCF`;
-- tonal surface: blue with low opacity on the canvas.
-
-Implications:
-
-- greater association with trust, technology and precision;
-- predictable integration with dark and light;
-- lower functional risk in focus and links;
-- greater risk of appearing conventional.
-
-#### Alternative C — moderate amber/copper
-
-Initial references:
-
-- dark: `#D89A62`;
-- hover in dark: `#E5AF7C`;
-- light: `#9A5C2F`;
-- tonal surface: copper with low opacity on canvas.
-
-Implications:
-
-- more editorial and human identity;
-- differentiation in relation to blue or purple portfolios;
-- interesting combination with almost black background and photography;
-- requires care not to be interpreted as a warning color.
+Variations in hover, tonal surface and contrast can be derived visually for each theme, but must remain clearly within the cobalt family. The functional neutrals of dark and light remain valid; the identity palette does not require a literal replacement of all interface tokens.
 
 ### 13.4 Usage rules
 
-- only one prominent family will be chosen;
+- use only the cobalt family as the brand accent;
 - accent should not color large areas of the layout;
 - main use: CTA, links, focus, active state, small details and ambient lighting;
 - success, warning and error states do not depend on the mark color;
@@ -896,7 +893,10 @@ These ranges are language limits, not implementation requirements.
 - subtle lighting linked to the cursor on appropriate devices;
 - Experience, Stack, About and Contact predominantly static;
 - modular architecture for case studies;
-- cobalt blue and amber/copper as finalists for visual validation;
+- Open Loop LB professional identity approved;
+- monogram as the only visual link to the Home in the header;
+- cobalt `#2563EB` as official brand color and definitive accent;
+- cobalt line as a discrete supporting graphic element;
 - About maintained only if it offers distinctive content.
 
 ### Avoided
@@ -912,6 +912,8 @@ These ranges are language limits, not implementation requirements.
 - constant animation or indispensable for understanding;
 - artificially filled case studies;
 - publication of confidential professional information.
+- direction in amber/copper and mixing personal palettes with movune's identity;
+- repeating the monogram on cards and sections or applying effects to the symbol.
 
 ## 19. Decisions required before Handoff to Prototype
 
@@ -925,8 +927,8 @@ Before producing document `03 — Prototype Handoff`, the following decisions wi
 6. decide whether a PDF resume will be part of the first prototype;
 7. redact or discard the content of “About / How I work” according to the defined criteria;
 8. define which modules in the movune case have sufficient content for the first version;
-9. prepare the visual comparison between cobalt blue and amber/copper in the handoff, without choosing the winner in advance.
+9. incorporate the assets and identity rules approved in document `04` into the handoff.
 
-The definitive choice of the accent color will be a visual validation decision for the prototype and will not block the production of the `03` document, as long as both variants are specified.
+The accent color is set to cobalt `#2563EB`; no comparison with copper is necessary in the prototype.
 
 This document does not initiate prototyping, implementation, or stack decisions.

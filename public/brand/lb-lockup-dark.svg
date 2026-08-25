@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" role="img" aria-labelledby="title desc">
+  <title id="title">Assinatura Leonardo Blauth para fundo escuro</title>
+  <desc id="desc">Monograma LB acompanhado do nome Leonardo Blauth e do título Full Stack Developer.</desc>
+  <g transform="translate(8 10)">
+    <path d="M28 20V92H56" fill="none" stroke="#F8FAFC" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M58 28H72C84 28 92 35 92 45C92 54 85 60 74 60H60H74C86 60 94 67 94 77C94 88 85 92 72 92H56" fill="none" stroke="#2563EB" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <path d="M132 34V106" stroke="#334155"/>
+  <text x="158" y="67" fill="#F8FAFC" font-family="Instrument Sans, Inter, Arial, sans-serif" font-size="32" font-weight="650" letter-spacing="-0.7">Leonardo Blauth</text>
+  <text x="158" y="95" fill="#94A3B8" font-family="Instrument Sans, Inter, Arial, sans-serif" font-size="18" font-weight="400">Full Stack Developer</text>
+</svg>

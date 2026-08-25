@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+  <title id="title">LB</title>
+  <rect width="120" height="120" rx="24" fill="#0B0F14"/>
+  <path d="M28 20V92H56" fill="none" stroke="#F8FAFC" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M58 28H72C84 28 92 35 92 45C92 54 85 60 74 60H60H74C86 60 94 67 94 77C94 88 85 92 72 92H56" fill="none" stroke="#2563EB" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
