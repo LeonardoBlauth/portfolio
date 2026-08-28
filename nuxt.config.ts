@@ -1,9 +1,5 @@
 import { localizedRoutes } from './app/data/localized-routes'
-import {
-  DEFAULT_THEME,
-  THEME_ATTRIBUTE,
-  createThemeInitializationScript,
-} from './app/utils/theme'
+import { createThemeInitializationScript } from './app/utils/theme'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-08-19',
@@ -17,9 +13,6 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
-      htmlAttrs: {
-        [THEME_ATTRIBUTE]: DEFAULT_THEME,
-      },
       link: [
         { rel: 'icon', href: '/brand/favicon.svg', type: 'image/svg+xml' },
         {

@@ -9,6 +9,7 @@ import {
   createThemeInitializationScript,
 } from '~/utils/theme'
 import { useTheme } from '~/composables/useTheme'
+import App from '~/app.vue'
 
 type ThemeChangeListener = (event: MediaQueryListEvent) => void
 
@@ -105,6 +106,20 @@ describe('theme behavior', () => {
 
     expect(wrapper.attributes('data-resolved-theme')).toBe('light')
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('light')
+    expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe('light')
+  })
+
+  it('keeps the application head synchronized with an explicit light preference', async () => {
+    const system = createSystemTheme(true)
+    vi.stubGlobal(
+      'matchMedia',
+      vi.fn(() => system.mediaQuery),
+    )
+    localStorage.setItem(THEME_STORAGE_KEY, 'light')
+
+    await mountSuspended(App, { route: '/' })
+    await nextTick()
+
     expect(document.documentElement.getAttribute(THEME_ATTRIBUTE)).toBe('light')
   })
 

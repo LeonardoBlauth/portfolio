@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import { THEME_ATTRIBUTE } from '~/utils/theme'
+
 const { locale } = useI18n()
-const { initializeTheme } = useTheme()
+const { initializeTheme, resolvedTheme } = useTheme()
 
 initializeTheme()
 
 useHead(() => ({
   htmlAttrs: {
     lang: locale.value,
+    [THEME_ATTRIBUTE]: resolvedTheme.value,
   },
 }))
 </script>
