@@ -1,8 +1,37 @@
 import { localizedRoutes } from './app/data/localized-routes'
+import { createThemeInitializationScript } from './app/utils/theme'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-08-19',
   devtools: { enabled: true },
+  css: [
+    '~/assets/styles/fonts.css',
+    '~/assets/styles/tokens.css',
+    '~/assets/styles/reset.css',
+    '~/assets/styles/base.css',
+    '~/assets/styles/utilities.css',
+  ],
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', href: '/brand/favicon.svg', type: 'image/svg+xml' },
+        {
+          rel: 'preload',
+          href: '/fonts/instrument-sans-variable.woff2',
+          as: 'font',
+          type: 'font/woff2',
+          crossorigin: 'anonymous',
+        },
+      ],
+      meta: [{ name: 'color-scheme', content: 'dark light' }],
+      script: [
+        {
+          innerHTML: createThemeInitializationScript(),
+          tagPosition: 'head',
+        },
+      ],
+    },
+  },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n'],
   nitro: {
     prerender: {
