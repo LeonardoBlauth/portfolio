@@ -16,6 +16,8 @@ const generatedRoutes = [
   },
 ]
 
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 for (const route of generatedRoutes) {
   const outputPath = resolve('.output/public', route.file)
   const html = await readFile(outputPath, 'utf8')
@@ -28,7 +30,11 @@ for (const route of generatedRoutes) {
     throw new Error(`${route.file} does not declare lang=${route.lang}`)
   }
 
-  if (!html.includes(`<h1>${route.heading}</h1>`)) {
+  const headingPattern = new RegExp(
+    `<h1\\b[^>]*>\\s*${escapeRegExp(route.heading)}\\s*</h1>`,
+  )
+
+  if (!headingPattern.test(html)) {
     throw new Error(`${route.file} does not contain its expected heading`)
   }
 }

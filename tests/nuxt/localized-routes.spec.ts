@@ -13,6 +13,6 @@ describe('localized routes', () => {
     const wrapper = await mountSuspended(App, { route })
 
     expect(wrapper.get('h1').text()).toBe(heading)
-    expect(wrapper.attributes('data-locale')).toBe(locale)
+    expect(wrapper.get('main').attributes('data-locale')).toBe(locale)
   })
 })

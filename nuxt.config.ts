@@ -3,7 +3,7 @@ import { createThemeInitializationScript } from './app/utils/theme'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-08-19',
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NUXT_DEVTOOLS !== 'false' },
   css: [
     '~/assets/styles/fonts.css',
     '~/assets/styles/tokens.css',

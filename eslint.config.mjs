@@ -1,3 +1,14 @@
 import { createConfigForNuxt } from '@nuxt/eslint-config'
 
-export default createConfigForNuxt()
+export default createConfigForNuxt().append({
+  rules: {
+    'vue/html-self-closing': [
+      'error',
+      {
+        html: {
+          void: 'always',
+        },
+      },
+    ],
+  },
+})
