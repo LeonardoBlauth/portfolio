@@ -1,4 +1,27 @@
 {
+  "navigation": {
+    "home": "Go to the top",
+    "primary": "Primary navigation",
+    "mobile": "Mobile navigation",
+    "menu": "Menu",
+    "skip": "Skip to main content",
+    "projects": "Projects",
+    "experience": "Experience",
+    "stack": "Stack",
+    "contact": "Contact"
+  },
+  "controls": {
+    "locale": "Switch language to {locale}",
+    "theme": {
+      "toggle": "Toggle color theme",
+      "light": "Activate light theme",
+      "dark": "Activate dark theme"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

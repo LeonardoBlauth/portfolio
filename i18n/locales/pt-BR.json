@@ -1,4 +1,27 @@
 {
+  "navigation": {
+    "home": "Ir para o início",
+    "primary": "Navegação principal",
+    "mobile": "Navegação móvel",
+    "menu": "Menu",
+    "skip": "Ir para o conteúdo principal",
+    "projects": "Projetos",
+    "experience": "Experiência",
+    "stack": "Stack",
+    "contact": "Contato"
+  },
+  "controls": {
+    "locale": "Mudar idioma para {locale}",
+    "theme": {
+      "toggle": "Alternar tema de cores",
+      "light": "Ativar tema claro",
+      "dark": "Ativar tema escuro"
+    },
+    "menu": {
+      "open": "Abrir menu",
+      "close": "Fechar menu"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

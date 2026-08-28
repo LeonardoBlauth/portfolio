@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { THEME_ATTRIBUTE } from '~/utils/theme'
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { initializeTheme, resolvedTheme } = useTheme()
 
 initializeTheme()
@@ -15,7 +15,33 @@ useHead(() => ({
 </script>
 
 <template>
-  <main :data-locale="locale">
+  <a class="skip-link" href="#main-content">{{ t('navigation.skip') }}</a>
+  <LayoutAppHeader />
+  <main id="main-content" :data-locale="locale" tabindex="-1">
     <NuxtPage />
   </main>
 </template>
+
+<style scoped>
+.skip-link {
+  position: fixed;
+  z-index: 200;
+  inset-block-start: var(--space-3);
+  inset-inline-start: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
+  border-radius: var(--radius-md);
+  translate: 0 calc(-100% - var(--space-6));
+}
+
+.skip-link:focus-visible {
+  translate: 0;
+}
+
+main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-block-start: calc(var(--header-height) + var(--space-8));
+}
+</style>
