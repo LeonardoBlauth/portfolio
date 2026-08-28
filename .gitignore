@@ -3,9 +3,11 @@
 !.env.example
 
 node_modules/
+.pnpm-store/
 .nuxt/
 .output/
 dist/
+coverage/
 
 .DS_Store
 Thumbs.db
