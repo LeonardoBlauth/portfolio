@@ -1,5 +1,8 @@
 <script setup lang="ts">
 const { locale } = useI18n()
+const { initializeTheme } = useTheme()
+
+initializeTheme()
 
 useHead(() => ({
   htmlAttrs: {
