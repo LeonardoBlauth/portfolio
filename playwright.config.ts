@@ -23,7 +23,7 @@ export default defineConfig({
       'node node_modules/nuxt/bin/nuxt.mjs dev --host 127.0.0.1 --port 3000',
     url: 'http://127.0.0.1:3000',
     env: { NUXT_DEVTOOLS: 'false' },
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
 })
