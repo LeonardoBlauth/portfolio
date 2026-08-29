@@ -268,6 +268,15 @@ test.describe('reduced motion navigation', () => {
       .getByRole('link', { name: 'Contato' })
       .click()
     await expect(page).toHaveURL(/#contact$/)
+    const viewport = page.viewportSize()
+    expect(viewport).not.toBeNull()
+    await expect
+      .poll(() =>
+        page
+          .locator('#contact')
+          .evaluate((target) => target.getBoundingClientRect().top),
+      )
+      .toBeLessThan(viewport!.height)
     await headerOffsetIsClear(page, 'contact', false)
   })
 })
