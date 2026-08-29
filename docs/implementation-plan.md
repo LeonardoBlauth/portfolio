@@ -372,13 +372,13 @@ Deliver the approved bilingual Hero as the first complete visual product increme
 
 ### Acceptance criteria
 
-- [ ] All approved Hero content is present and localized.
-- [ ] Professional web development is stated from 2021.
-- [ ] CTAs and social links work with correct semantics and destinations.
-- [ ] Orbit and glow remain a coherent system in both themes and at all widths.
-- [ ] No 853px-specific or screenshot-specific layout rule is used.
-- [ ] Metadata wraps as a group without an isolated stack line.
-- [ ] The Hero remains readable and operable with reduced motion, keyboard, touch, and 200% zoom.
+- [x] All approved Hero content is present and localized.
+- [x] Professional web development is stated from 2021.
+- [x] CTAs and social links work with correct semantics and destinations.
+- [x] Orbit and glow remain a coherent system in both themes and at all widths.
+- [x] No 853px-specific or screenshot-specific layout rule is used.
+- [x] Metadata wraps as a group without an isolated stack line.
+- [x] The Hero remains readable and operable with reduced motion, keyboard, touch, and 200% zoom.
 
 ### Implementation unit
 
