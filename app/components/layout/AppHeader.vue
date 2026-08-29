@@ -69,6 +69,39 @@ const scrollingKeys = new Set([
 const handleScrollKeydown = (event: KeyboardEvent) => {
   if (scrollingKeys.has(event.key)) cancelScrollAnimation()
 }
+const pushHashHistoryEntry = (current: URL, destination: URL) => {
+  const currentUrl = `${current.pathname}${current.search}${current.hash}`
+  const destinationUrl = `${destination.pathname}${destination.search}${destination.hash}`
+  const currentState = window.history.state as
+    (Record<string, unknown> & { position?: number }) | null
+  const currentPosition =
+    typeof currentState?.position === 'number'
+      ? currentState.position
+      : window.history.length - 1
+
+  window.history.replaceState(
+    {
+      ...(currentState ?? {}),
+      forward: destinationUrl,
+      scroll: { left: window.scrollX, top: window.scrollY },
+    },
+    '',
+    currentUrl,
+  )
+  window.history.pushState(
+    {
+      ...(currentState ?? {}),
+      back: currentUrl,
+      current: destinationUrl,
+      forward: null,
+      position: currentPosition + 1,
+      replaced: false,
+      scroll: null,
+    },
+    '',
+    destinationUrl,
+  )
+}
 
 const handleSectionNavigation = (event: MouseEvent) => {
   if (
@@ -117,11 +150,7 @@ const handleSectionNavigation = (event: MouseEvent) => {
   )
 
   if (current.hash !== destination.hash) {
-    window.history.pushState(
-      window.history.state,
-      '',
-      `${destination.pathname}${destination.search}${destination.hash}`,
-    )
+    pushHashHistoryEntry(current, destination)
   }
   currentHash.value = destination.hash
 

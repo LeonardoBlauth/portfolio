@@ -115,9 +115,34 @@ test.describe('desktop shell navigation', () => {
       .getByRole('link', { name: 'Projetos' })
       .click()
 
-    expect(await page.evaluate(() => history.state)).toEqual(
-      initialHistoryState,
-    )
+    expect(await page.evaluate(() => history.state)).toMatchObject({
+      back: '/',
+      current: '/#projects',
+      forward: null,
+      position: initialHistoryState.position + 1,
+      replaced: false,
+    })
+  })
+
+  test('keeps hash history reachable across locale navigation', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link', { name: 'Stack' })
+      .click()
+    await headerOffsetIsClear(page, 'stack')
+    await page.getByRole('link', { name: 'Mudar idioma para English' }).click()
+    await expect(page).toHaveURL(/\/en#stack$/)
+
+    await page.goBack()
+    await expect(page).toHaveURL(/\/#stack$/)
+    await headerOffsetIsClear(page, 'stack')
+
+    await page.goForward()
+    await expect(page).toHaveURL(/\/en#stack$/)
   })
 
   test('treats a localized trailing slash as the same page', async ({
