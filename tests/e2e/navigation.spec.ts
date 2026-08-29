@@ -246,7 +246,7 @@ test.describe('reduced motion navigation', () => {
     contextOptions: { reducedMotion: 'reduce' },
   })
 
-  test('uses immediate scrolling while preserving hash navigation', async ({
+  test('preserves smooth hash scrolling with reduced motion enabled', async ({
     page,
   }) => {
     await gotoHydrated(page, '/')
@@ -261,7 +261,7 @@ test.describe('reduced motion navigation', () => {
           () => getComputedStyle(document.documentElement).scrollBehavior,
         ),
       )
-      .toBe('auto')
+      .toBe('smooth')
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
