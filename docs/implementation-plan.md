@@ -168,13 +168,13 @@ Create a healthy, statically generated application baseline that can support eve
 
 ### Acceptance criteria
 
-- [ ] Nuxt 4, Vue 3, TypeScript, and pnpm are configured with compatible pinned versions.
-- [ ] One lockfile and an explicit runtime/package-manager policy exist.
-- [ ] The four localized routes prerender successfully as complete HTML.
-- [ ] PT-BR is unprefixed, English uses `/en`, and no automatic language redirect occurs.
-- [ ] Formatting, lint, typecheck, tests, and static build pass locally and in minimal CI.
-- [ ] The structure supports typed data and centralized localized messages without premature abstraction.
-- [ ] No production feature or unrelated code is introduced.
+- [x] Nuxt 4, Vue 3, TypeScript, and pnpm are configured with compatible pinned versions.
+- [x] One lockfile and an explicit runtime/package-manager policy exist.
+- [x] The four localized routes prerender successfully as complete HTML.
+- [x] PT-BR is unprefixed, English uses `/en`, and no automatic language redirect occurs.
+- [x] Formatting, lint, typecheck, tests, and static build pass locally and in minimal CI.
+- [x] The structure supports typed data and centralized localized messages without premature abstraction.
+- [x] No production feature or unrelated code is introduced.
 
 ### Implementation unit
 
@@ -239,13 +239,13 @@ Establish the approved visual language and theme behavior before feature section
 
 ### Acceptance criteria
 
-- [ ] Both themes are represented through semantic tokens.
-- [ ] Explicit preference persists and overrides the system preference.
-- [ ] System preference is used only when no explicit choice exists.
-- [ ] Theme application avoids a relevant pre-hydration flash.
-- [ ] Instrument Sans and fallbacks load efficiently.
-- [ ] Base focus, contrast, and reduced-motion behavior are usable in both themes.
-- [ ] No generic design-system or styling dependency is introduced without need.
+- [x] Both themes are represented through semantic tokens.
+- [x] Explicit preference persists and overrides the system preference.
+- [x] System preference is used only when no explicit choice exists.
+- [x] Theme application avoids a relevant pre-hydration flash.
+- [x] Instrument Sans and fallbacks load efficiently.
+- [x] Base focus, contrast, and reduced-motion behavior are usable in both themes.
+- [x] No generic design-system or styling dependency is introduced without need.
 
 ### Implementation unit
 
@@ -307,13 +307,13 @@ Deliver the shared page shell and fully operable responsive Header, including lo
 
 ### Acceptance criteria
 
-- [ ] Shared landmarks and navigation are semantic.
-- [ ] Header content adapts cleanly across continuous widths.
-- [ ] Locale and theme controls work by keyboard, mouse, and touch.
-- [ ] The mobile menu closes after selection and on `Escape`, contains focus while open, and restores focus when closed.
-- [ ] Same-page navigation provides real perceptible smooth scrolling with correct Header offset.
+- [x] Shared landmarks and navigation are semantic.
+- [x] Header content adapts cleanly across continuous widths.
+- [x] Locale and theme controls work by keyboard, mouse, and touch.
+- [x] The mobile menu closes after selection and on `Escape`, contains focus while open, and restores focus when closed.
+- [x] Same-page navigation provides real perceptible smooth scrolling with correct Header offset.
 - [ ] Reduced motion changes the scroll to an appropriate immediate behavior.
-- [ ] Deep links and browser history remain predictable.
+- [x] Deep links and browser history remain predictable.
 
 ### Implementation unit
 
