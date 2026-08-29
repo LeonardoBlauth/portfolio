@@ -103,6 +103,48 @@ test.describe('desktop shell navigation', () => {
     await headerOffsetIsClear(page, 'experience')
     expect(clientErrors).toEqual([])
   })
+
+  test('preserves router history state for controlled hash entries', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const initialHistoryState = await page.evaluate(() => history.state)
+
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link', { name: 'Projetos' })
+      .click()
+
+    expect(await page.evaluate(() => history.state)).toEqual(
+      initialHistoryState,
+    )
+  })
+
+  test('treats a localized trailing slash as the same page', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/en/')
+    await page.evaluate(() => {
+      ;(
+        window as typeof window & { __sameDocumentSentinel?: boolean }
+      ).__sameDocumentSentinel = true
+    })
+
+    await page
+      .getByRole('navigation', { name: 'Primary navigation' })
+      .getByRole('link', { name: 'Projects' })
+      .click()
+
+    await expect(page).toHaveURL(/\/en#projects$/)
+    expect(
+      await page.evaluate(
+        () =>
+          (window as typeof window & { __sameDocumentSentinel?: boolean })
+            .__sameDocumentSentinel,
+      ),
+    ).toBe(true)
+    await headerOffsetIsClear(page, 'projects')
+  })
 })
 
 test.describe('localized and persisted controls', () => {
@@ -305,5 +347,64 @@ test.describe('reduced motion navigation', () => {
 
     expect(intermediatePositions.size).toBeGreaterThanOrEqual(2)
     await headerOffsetIsClear(page, 'contact', false)
+  })
+
+  test('cancels an in-flight animation when browser history changes', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const navigation = page.getByRole('navigation', {
+      name: 'Navegação principal',
+    })
+
+    await navigation.getByRole('link', { name: 'Projetos' }).click()
+    await expect(page).toHaveURL(/#projects$/)
+    await headerOffsetIsClear(page, 'projects')
+
+    const projectsY = await page.evaluate(() => window.scrollY)
+    await navigation.getByRole('link', { name: 'Stack' }).click()
+    await expect(page).toHaveURL(/#stack$/)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeGreaterThan(projectsY + 10)
+
+    await page.goBack()
+    await expect(page).toHaveURL(/#projects$/)
+    await page.waitForTimeout(450)
+    await headerOffsetIsClear(page, 'projects')
+  })
+
+  test('allows user input to interrupt an in-flight animation', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const expectedFinalY = await page.evaluate(() => {
+      const target = document.querySelector<HTMLElement>('#contact')
+      const scrollPadding = Number.parseFloat(
+        getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+      )
+
+      if (!target) throw new Error('Contact destination is missing')
+
+      return Math.min(
+        document.documentElement.scrollHeight - window.innerHeight,
+        window.scrollY + target.getBoundingClientRect().top - scrollPadding,
+      )
+    })
+
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link', { name: 'Contato' })
+      .click()
+    await expect(page).toHaveURL(/#contact$/)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeGreaterThan(10)
+    await page.mouse.wheel(0, -600)
+    await page.waitForTimeout(450)
+
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(
+      expectedFinalY - 50,
+    )
   })
 })

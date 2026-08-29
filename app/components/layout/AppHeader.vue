@@ -49,6 +49,26 @@ const navigationItems = computed(() => [
 const sectionHref = (id: string) => `${homePath.value}#${id}`
 const handleLocaleSwitch = () => writeLocalePreference(targetLocale.value)
 const toggleTheme = () => setTheme(targetTheme.value)
+const normalizePathname = (pathname: string) =>
+  pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
+const cancelScrollAnimation = () => {
+  if (scrollAnimationFrame === null) return
+
+  window.cancelAnimationFrame(scrollAnimationFrame)
+  scrollAnimationFrame = null
+}
+const scrollingKeys = new Set([
+  'ArrowDown',
+  'ArrowUp',
+  'End',
+  'Home',
+  'PageDown',
+  'PageUp',
+  ' ',
+])
+const handleScrollKeydown = (event: KeyboardEvent) => {
+  if (scrollingKeys.has(event.key)) cancelScrollAnimation()
+}
 
 const handleSectionNavigation = (event: MouseEvent) => {
   if (
@@ -69,7 +89,8 @@ const handleSectionNavigation = (event: MouseEvent) => {
   const current = new URL(window.location.href)
   if (
     destination.origin !== current.origin ||
-    destination.pathname !== current.pathname ||
+    normalizePathname(destination.pathname) !==
+      normalizePathname(current.pathname) ||
     destination.search !== current.search ||
     !destination.hash
   ) {
@@ -97,16 +118,14 @@ const handleSectionNavigation = (event: MouseEvent) => {
 
   if (current.hash !== destination.hash) {
     window.history.pushState(
-      null,
+      window.history.state,
       '',
       `${destination.pathname}${destination.search}${destination.hash}`,
     )
   }
   currentHash.value = destination.hash
 
-  if (scrollAnimationFrame !== null) {
-    window.cancelAnimationFrame(scrollAnimationFrame)
-  }
+  cancelScrollAnimation()
 
   const distance = targetY - startY
   const startedAt = performance.now()
@@ -211,16 +230,26 @@ const handleDialogKeydown = (event: KeyboardEvent) => {
 
 onMounted(() => {
   mounted.value = true
+  window.addEventListener('popstate', cancelScrollAnimation)
+  window.addEventListener('hashchange', cancelScrollAnimation)
+  window.addEventListener('wheel', cancelScrollAnimation, { passive: true })
+  window.addEventListener('touchstart', cancelScrollAnimation, {
+    passive: true,
+  })
+  window.addEventListener('keydown', handleScrollKeydown)
   desktopMediaQuery = window.matchMedia('(min-width: 52rem)')
   desktopMediaQuery.addEventListener('change', handleDesktopTransition)
   if (desktopMediaQuery.matches) closeMenu({ restoreFocus: false })
 })
 
 onBeforeUnmount(() => {
+  window.removeEventListener('popstate', cancelScrollAnimation)
+  window.removeEventListener('hashchange', cancelScrollAnimation)
+  window.removeEventListener('wheel', cancelScrollAnimation)
+  window.removeEventListener('touchstart', cancelScrollAnimation)
+  window.removeEventListener('keydown', handleScrollKeydown)
   desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
-  if (scrollAnimationFrame !== null) {
-    window.cancelAnimationFrame(scrollAnimationFrame)
-  }
+  cancelScrollAnimation()
   if (dialog.value?.open) dialog.value.close()
 })
 </script>
