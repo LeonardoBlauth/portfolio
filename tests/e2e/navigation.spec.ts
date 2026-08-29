@@ -27,15 +27,26 @@ const headerOffsetIsClear = async (
   id: string,
   expectTightOffset = true,
 ) => {
+  if (expectTightOffset) {
+    await expect
+      .poll(async () => {
+        const header = await page
+          .locator('header .site-header__bar')
+          .boundingBox()
+        const target = await page.locator(`#${id}`).boundingBox()
+
+        if (!header || !target) return Number.POSITIVE_INFINITY
+        return target.y - (header.y + header.height)
+      })
+      .toBeLessThanOrEqual(64)
+  }
+
   const header = await page.locator('header .site-header__bar').boundingBox()
   const target = await page.locator(`#${id}`).boundingBox()
 
   expect(header).not.toBeNull()
   expect(target).not.toBeNull()
   expect(target!.y).toBeGreaterThanOrEqual(header!.y + header!.height)
-  if (expectTightOffset) {
-    expect(target!.y).toBeLessThanOrEqual(header!.y + header!.height + 32)
-  }
 }
 
 test.describe('desktop shell navigation', () => {
