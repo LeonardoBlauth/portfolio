@@ -13,9 +13,13 @@ const menuTrigger = useTemplateRef<HTMLButtonElement>('menuTrigger')
 const menuClose = useTemplateRef<HTMLButtonElement>('menuClose')
 const menuOpen = ref(false)
 const mounted = ref(false)
+const currentHash = ref(route.hash)
 
 let desktopMediaQuery: MediaQueryList | null = null
 let restoreFocusAfterClose = true
+let scrollAnimationFrame: number | null = null
+
+const SECTION_SCROLL_DURATION_MS = 360
 
 const currentLocale = computed<SupportedLocale>(() =>
   locale.value === 'en' ? 'en' : 'pt-BR',
@@ -28,8 +32,8 @@ const targetLocalePath = computed(
   () => switchLocalePath(targetLocale.value).split('#', 1)[0] || '/',
 )
 const targetLocaleHref = computed(() =>
-  mounted.value && route.hash
-    ? `${targetLocalePath.value}${route.hash}`
+  mounted.value && currentHash.value
+    ? `${targetLocalePath.value}${currentHash.value}`
     : targetLocalePath.value,
 )
 const targetTheme = computed(() =>
@@ -45,6 +49,88 @@ const navigationItems = computed(() => [
 const sectionHref = (id: string) => `${homePath.value}#${id}`
 const handleLocaleSwitch = () => writeLocalePreference(targetLocale.value)
 const toggleTheme = () => setTheme(targetTheme.value)
+
+const handleSectionNavigation = (event: MouseEvent) => {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) {
+    return
+  }
+
+  const link = event.currentTarget as HTMLAnchorElement | null
+  if (!link || link.target || link.hasAttribute('download')) return
+
+  const destination = new URL(link.href, window.location.href)
+  const current = new URL(window.location.href)
+  if (
+    destination.origin !== current.origin ||
+    destination.pathname !== current.pathname ||
+    destination.search !== current.search ||
+    !destination.hash
+  ) {
+    return
+  }
+
+  const target = document.getElementById(
+    decodeURIComponent(destination.hash.slice(1)),
+  )
+  if (!target) return
+
+  event.preventDefault()
+
+  const scrollPadding = Number.parseFloat(
+    getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+  )
+  const startY = window.scrollY
+  const targetY = Math.max(
+    0,
+    Math.min(
+      document.documentElement.scrollHeight - window.innerHeight,
+      startY + target.getBoundingClientRect().top - scrollPadding,
+    ),
+  )
+
+  if (current.hash !== destination.hash) {
+    window.history.pushState(
+      null,
+      '',
+      `${destination.pathname}${destination.search}${destination.hash}`,
+    )
+  }
+  currentHash.value = destination.hash
+
+  if (scrollAnimationFrame !== null) {
+    window.cancelAnimationFrame(scrollAnimationFrame)
+  }
+
+  const distance = targetY - startY
+  const startedAt = performance.now()
+  const animateScroll = (timestamp: number) => {
+    const progress = Math.min(
+      (timestamp - startedAt) / SECTION_SCROLL_DURATION_MS,
+      1,
+    )
+    const easedProgress = 1 - Math.pow(1 - progress, 3)
+
+    window.scrollTo({
+      top: startY + distance * easedProgress,
+      behavior: 'instant',
+    })
+
+    if (progress < 1) {
+      scrollAnimationFrame = window.requestAnimationFrame(animateScroll)
+    } else {
+      scrollAnimationFrame = null
+    }
+  }
+
+  scrollAnimationFrame = window.requestAnimationFrame(animateScroll)
+}
 
 const openMenu = async () => {
   if (menuOpen.value) return
@@ -74,9 +160,21 @@ const closeMenu = (options?: { restoreFocus?: boolean }) => {
   }
 }
 
+const handleMobileSectionNavigation = (event: MouseEvent) => {
+  handleSectionNavigation(event)
+  closeMenu()
+}
+
 const handleDesktopTransition = (event: MediaQueryListEvent) => {
   if (event.matches) closeMenu({ restoreFocus: false })
 }
+
+watch(
+  () => route.hash,
+  (hash) => {
+    currentHash.value = hash
+  },
+)
 
 const getDialogFocusableElements = () =>
   dialog.value
@@ -120,6 +218,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
+  if (scrollAnimationFrame !== null) {
+    window.cancelAnimationFrame(scrollAnimationFrame)
+  }
   if (dialog.value?.open) dialog.value.close()
 })
 </script>
@@ -131,6 +232,7 @@ onBeforeUnmount(() => {
         class="site-header__brand"
         :to="`${homePath}#top`"
         :aria-label="t('navigation.home')"
+        @click="handleSectionNavigation"
       >
         <span class="site-header__mark" aria-hidden="true">
           <img
@@ -158,6 +260,7 @@ onBeforeUnmount(() => {
           v-for="item in navigationItems"
           :key="item.id"
           :href="sectionHref(item.id)"
+          @click="handleSectionNavigation"
         >
           {{ item.label }}
         </a>
@@ -254,7 +357,7 @@ onBeforeUnmount(() => {
           v-for="item in navigationItems"
           :key="item.id"
           :href="sectionHref(item.id)"
-          @click="closeMenu()"
+          @click="handleMobileSectionNavigation"
         >
           {{ item.label }}
         </a>

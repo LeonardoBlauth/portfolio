@@ -246,7 +246,7 @@ test.describe('reduced motion navigation', () => {
     contextOptions: { reducedMotion: 'reduce' },
   })
 
-  test('preserves smooth hash scrolling with reduced motion enabled', async ({
+  test('animates hash scrolling with reduced motion enabled', async ({
     page,
   }) => {
     await gotoHydrated(page, '/')
@@ -255,28 +255,55 @@ test.describe('reduced motion navigation', () => {
         () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
       ),
     ).toBe(true)
-    await expect
-      .poll(() =>
-        page.evaluate(
-          () => getComputedStyle(document.documentElement).scrollBehavior,
-        ),
+
+    const scrollMetrics = await page.evaluate(() => {
+      const target = document.querySelector<HTMLElement>('#contact')
+      const scrollPadding = Number.parseFloat(
+        getComputedStyle(document.documentElement).scrollPaddingBlockStart,
       )
-      .toBe('smooth')
+
+      if (!target) throw new Error('Contact destination is missing')
+
+      const expectedFinalY = Math.min(
+        document.documentElement.scrollHeight - window.innerHeight,
+        window.scrollY + target.getBoundingClientRect().top - scrollPadding,
+      )
+      const browserWindow = window as typeof window & {
+        __scrollPositions: number[]
+      }
+      browserWindow.__scrollPositions = []
+      window.addEventListener(
+        'scroll',
+        () => browserWindow.__scrollPositions.push(window.scrollY),
+        { passive: true },
+      )
+
+      return { expectedFinalY, startY: window.scrollY }
+    })
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
       .getByRole('link', { name: 'Contato' })
       .click()
     await expect(page).toHaveURL(/#contact$/)
-    const viewport = page.viewportSize()
-    expect(viewport).not.toBeNull()
     await expect
-      .poll(() =>
-        page
-          .locator('#contact')
-          .evaluate((target) => target.getBoundingClientRect().top),
-      )
-      .toBeLessThan(viewport!.height)
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeCloseTo(scrollMetrics.expectedFinalY, 0)
+
+    const scrollPositions = await page.evaluate(
+      () =>
+        (window as typeof window & { __scrollPositions: number[] })
+          .__scrollPositions,
+    )
+    const intermediatePositions = new Set(
+      scrollPositions.filter(
+        (position) =>
+          position > scrollMetrics.startY + 1 &&
+          position < scrollMetrics.expectedFinalY - 1,
+      ),
+    )
+
+    expect(intermediatePositions.size).toBeGreaterThanOrEqual(2)
     await headerOffsetIsClear(page, 'contact', false)
   })
 })
