@@ -48,6 +48,7 @@
   --motion-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
 
   --header-height: 4.5rem;
+  --scroll-offset: calc(var(--header-height) + var(--space-6));
   --layout-max-width: 75rem;
   --layout-gutter: clamp(1rem, 3vw, 2rem);
   --section-spacing: clamp(4.5rem, 9vw, 8rem);

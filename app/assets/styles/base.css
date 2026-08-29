@@ -8,6 +8,8 @@ html {
   line-height: var(--line-height-body);
   color: var(--color-text-primary);
   text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  scroll-padding-block-start: var(--scroll-offset);
 }
 
 body {
@@ -41,7 +43,6 @@ a:hover {
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
     animation-delay: 0ms !important;
     animation-duration: var(--motion-duration-instant) !important;
     animation-iteration-count: 1 !important;

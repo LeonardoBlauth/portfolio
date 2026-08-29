@@ -3,5 +3,13 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <h1>{{ t('pages.movune.heading') }}</h1>
+  <div class="layout-container">
+    <h1 id="top">{{ t('pages.movune.heading') }}</h1>
+  </div>
 </template>
+
+<style scoped>
+h1 {
+  padding-block: var(--space-12);
+}
+</style>
