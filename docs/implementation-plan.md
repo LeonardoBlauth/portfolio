@@ -50,7 +50,7 @@ V1 includes:
 - light and dark themes with persisted explicit preference and system fallback;
 - localized navigation, content, accessible names, and metadata;
 - responsive behavior across desktop, intermediate, tablet, and mobile widths;
-- real, restrained smooth scrolling with fixed-Header offset and reduced-motion support;
+- real, restrained smooth scrolling with fixed-Header offset that remains perceptible with reduced motion enabled;
 - temporary, clearly identified `movune` prototype representations;
 - semantic HTML, keyboard support, visible focus, adequate contrast, and accessible interactions;
 - localized SEO, social metadata, sitemap, robots behavior, and static delivery;
@@ -271,8 +271,8 @@ Deliver the shared page shell and fully operable responsive Header, including lo
 - implement the light/dark control using Stage 2 theme infrastructure;
 - implement compact, translucent desktop and intermediate-width Header behavior;
 - implement the mobile-menu trigger, panel, expanded state, focus containment, `Escape` handling, selection close, focus restoration, and obscured-content protection;
-- implement semantic same-page links, fixed-Header offset, predictable hashes, deep links, and short perceptible smooth scrolling;
-- provide immediate navigation when reduced motion is requested;
+- implement semantic same-page links, fixed-Header offset, predictable hashes, deep links, and short perceptible smooth scrolling for section and Hero/top return controls;
+- preserve short perceptible same-page scrolling when reduced motion is requested while reducing other nonessential motion;
 - establish stable section identifiers for later stages.
 
 ### Out of scope
@@ -290,7 +290,7 @@ Deliver the shared page shell and fully operable responsive Header, including lo
 ### Implementation considerations
 
 - Smooth scroll must correct the prototype's instant-jump limitation; the prototype mechanism is not authoritative.
-- Navigation must work upward and downward, keep headings visible, preserve deep links, and avoid competing movement when the mobile menu closes.
+- Navigation, including every implemented control that returns to the Hero/top, must reuse the same behavior, work upward and downward, keep destinations visible, preserve deep links, and avoid competing movement when the mobile menu closes.
 - Header layout responds to available space rather than a named device category.
 - Language and theme controls use localized accessible names and state that does not depend on color.
 - External links that may appear in the mobile panel follow the approved safe new-tab pattern.
@@ -312,7 +312,7 @@ Deliver the shared page shell and fully operable responsive Header, including lo
 - [x] Locale and theme controls work by keyboard, mouse, and touch.
 - [x] The mobile menu closes after selection and on `Escape`, contains focus while open, and restores focus when closed.
 - [x] Same-page navigation provides real perceptible smooth scrolling with correct Header offset.
-- [ ] Reduced motion changes the scroll to an appropriate immediate behavior.
+- [x] Smooth scrolling remains short and perceptible when reduced motion is requested.
 - [x] Deep links and browser history remain predictable.
 
 ### Implementation unit
@@ -764,7 +764,7 @@ Audit and complete the interactions among all implemented sections, locales, the
 - verify complete PT-BR and English content, labels, hidden text, alternative text, accessible names, and route equivalence;
 - verify language preference behavior and every Home/case switch path;
 - validate all sections in light and dark themes and explicit/system preference combinations;
-- confirm section identifiers, same-page navigation, back-to-top behavior, case return path, hashes, and fixed-Header offset;
+- confirm section identifiers, same-page navigation, every implemented return-to-Hero/top control, case return path, hashes, and fixed-Header offset;
 - correct cross-section spacing, content-width consistency, and continuous responsive transitions;
 - verify that Header, Hero, and later sections behave as one page rather than isolated snapshots;
 - expand E2E journeys to cover the complete application.
@@ -1076,7 +1076,7 @@ V1 is complete only when all conditions below are satisfied.
 
 - [ ] Light and dark themes work as intentional experiences with explicit persistence, system fallback, and no relevant flash.
 - [ ] Layout works at all four reference viewports and intermediate widths without horizontal overflow or resolution-specific hacks.
-- [ ] Smooth scrolling is perceptible, respects the fixed Header, works in both directions, preserves deep links, and becomes immediate with reduced motion.
+- [ ] Smooth scrolling is perceptible, respects the fixed Header, works in both directions, preserves deep links, and remains perceptible with reduced motion enabled.
 - [ ] Mobile menu, locale control, theme control, CTAs, and links work by keyboard, mouse, and touch.
 
 ### Accessibility

@@ -40,7 +40,9 @@ describe('application shell', () => {
     expect(wrapper.get('header')).toBeTruthy()
     expect(wrapper.get('nav[aria-label="Navegação principal"]')).toBeTruthy()
     expect(wrapper.get('main#main-content')).toBeTruthy()
-    expect(wrapper.get('a[aria-label="Ir para o início"]')).toBeTruthy()
+    expect(
+      wrapper.get('a[aria-label="Ir para o início"]').attributes('href'),
+    ).toBe('/#top')
 
     const destinations = ['projects', 'experience', 'stack', 'contact']
     for (const destination of destinations) {

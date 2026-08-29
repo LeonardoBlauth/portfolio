@@ -374,6 +374,79 @@ test.describe('reduced motion navigation', () => {
     await headerOffsetIsClear(page, 'contact', false)
   })
 
+  test('animates return navigation to the Hero with reduced motion enabled', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const navigation = page.getByRole('navigation', {
+      name: 'Navegação principal',
+    })
+
+    await navigation.getByRole('link', { name: 'Contato' }).click()
+    await expect(page).toHaveURL(/#contact$/)
+    await headerOffsetIsClear(page, 'contact', false)
+
+    const scrollMetrics = await page.evaluate(() => {
+      const target = document.querySelector<HTMLElement>('#top')
+      const scrollPadding = Number.parseFloat(
+        getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+      )
+
+      if (!target) throw new Error('Hero destination is missing')
+
+      const browserWindow = window as typeof window & {
+        __returnScrollPositions: number[]
+      }
+      browserWindow.__returnScrollPositions = []
+      window.addEventListener(
+        'scroll',
+        () => browserWindow.__returnScrollPositions.push(window.scrollY),
+        { passive: true },
+      )
+
+      return {
+        startY: window.scrollY,
+        expectedFinalY: Math.max(
+          0,
+          window.scrollY + target.getBoundingClientRect().top - scrollPadding,
+        ),
+        historyPosition: (window.history.state as { position: number })
+          .position,
+      }
+    })
+
+    await page.getByRole('link', { name: 'Ir para o início' }).click()
+    await expect(page).toHaveURL(/#top$/)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeCloseTo(scrollMetrics.expectedFinalY, 0)
+
+    const scrollPositions = await page.evaluate(
+      () =>
+        (window as typeof window & { __returnScrollPositions: number[] })
+          .__returnScrollPositions,
+    )
+    const intermediatePositions = new Set(
+      scrollPositions.filter(
+        (position) =>
+          position > scrollMetrics.expectedFinalY + 1 &&
+          position < scrollMetrics.startY - 1,
+      ),
+    )
+
+    expect(intermediatePositions.size).toBeGreaterThanOrEqual(2)
+    expect(await page.evaluate(() => window.history.state)).toMatchObject({
+      back: '/#contact',
+      current: '/#top',
+      position: scrollMetrics.historyPosition + 1,
+    })
+    await headerOffsetIsClear(page, 'top', false)
+
+    await page.goBack()
+    await expect(page).toHaveURL(/#contact$/)
+    await headerOffsetIsClear(page, 'contact', false)
+  })
+
   test('cancels an in-flight animation when browser history changes', async ({
     page,
   }) => {
