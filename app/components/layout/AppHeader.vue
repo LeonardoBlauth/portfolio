@@ -286,9 +286,9 @@ onBeforeUnmount(() => {
 <template>
   <header class="site-header">
     <div class="site-header__bar layout-container">
-      <NuxtLink
+      <a
         class="site-header__brand"
-        :to="`${homePath}#top`"
+        :href="`${homePath}#top`"
         :aria-label="t('navigation.home')"
         @click="handleSectionNavigation"
       >
@@ -308,7 +308,7 @@ onBeforeUnmount(() => {
             height="120"
           />
         </span>
-      </NuxtLink>
+      </a>
 
       <nav
         class="site-header__desktop-nav"

@@ -22,6 +22,24 @@
       "close": "Close menu"
     }
   },
+  "hero": {
+    "availability": "Open to opportunities",
+    "description": "I build end-to-end web solutions, connecting product needs with clear technical decisions.",
+    "actions": {
+      "contact": "Get in touch",
+      "projects": "View projects"
+    },
+    "social": {
+      "label": "Professional links",
+      "githubLabel": "GitHub (opens in a new tab)",
+      "linkedinLabel": "LinkedIn (opens in a new tab)"
+    },
+    "metadata": {
+      "label": "Professional information",
+      "location": "Brazil",
+      "experience": "Web development since 2021"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

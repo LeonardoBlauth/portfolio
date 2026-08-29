@@ -5,8 +5,8 @@ import App from '~/app.vue'
 
 describe('localized routes', () => {
   it.each([
-    ['/', 'pt-BR', 'Portfolio'],
-    ['/en', 'en', 'Portfolio'],
+    ['/', 'pt-BR', 'Leonardo Blauth'],
+    ['/en', 'en', 'Leonardo Blauth'],
     ['/projetos/movune', 'pt-BR', 'movune'],
     ['/en/projects/movune', 'en', 'movune'],
   ])('renders %s in %s', async (route, locale, heading) => {
