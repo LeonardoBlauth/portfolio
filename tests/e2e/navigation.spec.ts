@@ -25,6 +25,7 @@ const gotoHydrated = async (
 const headerOffsetIsClear = async (
   page: import('@playwright/test').Page,
   id: string,
+  expectTightOffset = true,
 ) => {
   const header = await page.locator('header .site-header__bar').boundingBox()
   const target = await page.locator(`#${id}`).boundingBox()
@@ -32,6 +33,9 @@ const headerOffsetIsClear = async (
   expect(header).not.toBeNull()
   expect(target).not.toBeNull()
   expect(target!.y).toBeGreaterThanOrEqual(header!.y + header!.height)
+  if (expectTightOffset) {
+    expect(target!.y).toBeLessThanOrEqual(header!.y + header!.height + 32)
+  }
 }
 
 test.describe('desktop shell navigation', () => {
@@ -95,6 +99,11 @@ test.describe('localized and persisted controls', () => {
     page,
   }) => {
     await gotoHydrated(page, '/en#stack')
+    const localeControl = page.getByRole('link', {
+      name: 'Switch language to português',
+    })
+    await expect(localeControl).toHaveAttribute('href', '/#stack')
+    await expect(localeControl.locator('span')).toHaveAttribute('lang', 'pt-BR')
     await page
       .getByRole('link', { name: 'Switch language to português' })
       .click()
@@ -122,11 +131,17 @@ test.describe('localized and persisted controls', () => {
     await gotoHydrated(page, '/')
     const initialTheme = await page.locator('html').getAttribute('data-theme')
     const targetTheme = initialTheme === 'dark' ? 'light' : 'dark'
-    await page.getByRole('button', { name: 'Alternar tema de cores' }).click()
+    const initialAction =
+      initialTheme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'
+    const targetAction =
+      targetTheme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'
+    const themeControl = page.getByRole('button', { name: initialAction })
+    await themeControl.click()
     await expect(page.locator('html')).toHaveAttribute(
       'data-theme',
       targetTheme,
     )
+    await expect(page.getByRole('button', { name: targetAction })).toBeVisible()
     await page.reload()
     await waitForHydration(page)
     await expect(page.locator('html')).toHaveAttribute(
@@ -164,6 +179,26 @@ test.describe('mobile navigation', () => {
     await dialog.getByRole('link', { name: 'Projetos' }).click()
     await expect(dialog).toBeHidden()
     await expect(page).toHaveURL(/#projects$/)
+  })
+
+  test('closes the mobile menu when the Header transitions to desktop', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const trigger = page.getByRole('button', { name: 'Abrir menu' })
+    await trigger.click()
+
+    const dialog = page.getByRole('dialog', { name: 'Navegação móvel' })
+    await expect(dialog).toBeVisible()
+
+    await page.setViewportSize({ width: 1024, height: 768 })
+
+    await expect(dialog).toBeHidden()
+    await expect(
+      page.getByRole('navigation', { name: 'Navegação principal' }),
+    ).toBeVisible()
+    await expect(trigger).toBeHidden()
+    await expect(page.locator('body')).not.toHaveAttribute('inert')
   })
 
   test('has no automatically detectable accessibility violations in either theme or the open menu', async ({
@@ -222,6 +257,6 @@ test.describe('reduced motion navigation', () => {
       .getByRole('link', { name: 'Contato' })
       .click()
     await expect(page).toHaveURL(/#contact$/)
-    await headerOffsetIsClear(page, 'contact')
+    await headerOffsetIsClear(page, 'contact', false)
   })
 })

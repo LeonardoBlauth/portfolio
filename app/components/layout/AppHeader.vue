@@ -12,6 +12,10 @@ const dialog = useTemplateRef<HTMLDialogElement>('mobileDialog')
 const menuTrigger = useTemplateRef<HTMLButtonElement>('menuTrigger')
 const menuClose = useTemplateRef<HTMLButtonElement>('menuClose')
 const menuOpen = ref(false)
+const mounted = ref(false)
+
+let desktopMediaQuery: MediaQueryList | null = null
+let restoreFocusAfterClose = true
 
 const currentLocale = computed<SupportedLocale>(() =>
   locale.value === 'en' ? 'en' : 'pt-BR',
@@ -22,6 +26,11 @@ const targetLocale = computed<SupportedLocale>(() =>
 const homePath = computed(() => localizedRoutes.home.paths[currentLocale.value])
 const targetLocalePath = computed(
   () => switchLocalePath(targetLocale.value).split('#', 1)[0] || '/',
+)
+const targetLocaleHref = computed(() =>
+  mounted.value && route.hash
+    ? `${targetLocalePath.value}${route.hash}`
+    : targetLocalePath.value,
 )
 const targetTheme = computed(() =>
   resolvedTheme.value === 'dark' ? 'light' : 'dark',
@@ -34,14 +43,7 @@ const navigationItems = computed(() => [
 ])
 
 const sectionHref = (id: string) => `${homePath.value}#${id}`
-const handleLocaleSwitch = (event: MouseEvent) => {
-  writeLocalePreference(targetLocale.value)
-
-  if (!route.hash) return
-
-  event.preventDefault()
-  void navigateTo({ path: targetLocalePath.value, hash: route.hash })
-}
+const handleLocaleSwitch = () => writeLocalePreference(targetLocale.value)
 const toggleTheme = () => setTheme(targetTheme.value)
 
 const openMenu = async () => {
@@ -56,17 +58,24 @@ const openMenu = async () => {
 const handleDialogClose = async () => {
   menuOpen.value = false
   await nextTick()
-  menuTrigger.value?.focus()
+  if (restoreFocusAfterClose) menuTrigger.value?.focus()
+  restoreFocusAfterClose = true
 }
 
-const closeMenu = () => {
+const closeMenu = (options?: { restoreFocus?: boolean }) => {
   if (!menuOpen.value) return
+
+  restoreFocusAfterClose = options?.restoreFocus ?? true
 
   if (dialog.value?.open) {
     dialog.value.close()
   } else {
     void handleDialogClose()
   }
+}
+
+const handleDesktopTransition = (event: MediaQueryListEvent) => {
+  if (event.matches) closeMenu({ restoreFocus: false })
 }
 
 const getDialogFocusableElements = () =>
@@ -102,7 +111,15 @@ const handleDialogKeydown = (event: KeyboardEvent) => {
   }
 }
 
+onMounted(() => {
+  mounted.value = true
+  desktopMediaQuery = window.matchMedia('(min-width: 52rem)')
+  desktopMediaQuery.addEventListener('change', handleDesktopTransition)
+  if (desktopMediaQuery.matches) closeMenu({ restoreFocus: false })
+})
+
 onBeforeUnmount(() => {
+  desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
   if (dialog.value?.open) dialog.value.close()
 })
 </script>
@@ -149,9 +166,8 @@ onBeforeUnmount(() => {
       <div class="site-header__controls">
         <NuxtLink
           class="site-header__control site-header__locale"
-          :to="targetLocalePath"
+          :to="targetLocaleHref"
           :hreflang="targetLocale"
-          :lang="targetLocale"
           :aria-label="
             t('controls.locale', {
               locale: targetLocale === 'en' ? 'English' : 'português',
@@ -159,15 +175,18 @@ onBeforeUnmount(() => {
           "
           @click="handleLocaleSwitch"
         >
-          {{ targetLocale === 'en' ? 'EN' : 'PT' }}
+          <span :lang="targetLocale">{{
+            targetLocale === 'en' ? 'EN' : 'PT'
+          }}</span>
         </NuxtLink>
 
-        <button
-          class="site-header__control"
-          type="button"
-          :aria-label="t('controls.theme.toggle')"
-          @click="toggleTheme"
-        >
+        <button class="site-header__control" type="button" @click="toggleTheme">
+          <span class="visually-hidden site-header__theme-label--light">
+            {{ t('controls.theme.light') }}
+          </span>
+          <span class="visually-hidden site-header__theme-label--dark">
+            {{ t('controls.theme.dark') }}
+          </span>
           <svg
             class="site-header__theme-icon site-header__theme-icon--light"
             viewBox="0 0 24 24"
@@ -211,9 +230,9 @@ onBeforeUnmount(() => {
       ref="mobileDialog"
       class="mobile-navigation"
       :aria-label="t('navigation.mobile')"
-      @cancel.prevent="closeMenu"
+      @cancel.prevent="closeMenu()"
       @close="handleDialogClose"
-      @click.self="closeMenu"
+      @click.self="closeMenu()"
       @keydown="handleDialogKeydown"
     >
       <div class="mobile-navigation__heading">
@@ -223,7 +242,7 @@ onBeforeUnmount(() => {
           class="site-header__control"
           type="button"
           :aria-label="t('controls.menu.close')"
-          @click="closeMenu"
+          @click="closeMenu()"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 6l12 12M18 6 6 18" />
@@ -235,7 +254,7 @@ onBeforeUnmount(() => {
           v-for="item in navigationItems"
           :key="item.id"
           :href="sectionHref(item.id)"
-          @click="closeMenu"
+          @click="closeMenu()"
         >
           {{ item.label }}
         </a>
@@ -298,10 +317,10 @@ onBeforeUnmount(() => {
 .site-header__mark-light {
   display: none;
 }
-:global(:root[data-theme='light']) .site-header__mark-dark {
+:global(:root[data-theme='light'] .site-header__mark-dark) {
   display: none;
 }
-:global(:root[data-theme='light']) .site-header__mark-light {
+:global(:root[data-theme='light'] .site-header__mark-light) {
   display: block;
 }
 
@@ -359,11 +378,23 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-:global(:root[data-theme='light']) .site-header__theme-icon--light {
+.site-header__theme-label--dark {
   display: none;
 }
 
-:global(:root[data-theme='light']) .site-header__theme-icon--dark {
+:global(:root[data-theme='light'] .site-header__theme-icon--light) {
+  display: none;
+}
+
+:global(:root[data-theme='light'] .site-header__theme-icon--dark) {
+  display: block;
+}
+
+:global(:root[data-theme='light'] .site-header__theme-label--light) {
+  display: none;
+}
+
+:global(:root[data-theme='light'] .site-header__theme-label--dark) {
   display: block;
 }
 

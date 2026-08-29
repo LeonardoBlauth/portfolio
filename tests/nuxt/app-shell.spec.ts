@@ -75,7 +75,7 @@ describe('application shell', () => {
       attachTo: document.body,
     })
     const themeControl = wrapper.get(
-      'button[aria-label="Alternar tema de cores"]',
+      'button:has(.site-header__theme-label--light)',
     )
     const expectedTheme =
       document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'

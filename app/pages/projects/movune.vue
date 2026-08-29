@@ -11,6 +11,5 @@ const { t } = useI18n()
 <style scoped>
 h1 {
   padding-block: var(--space-12);
-  scroll-margin-block-start: var(--scroll-offset);
 }
 </style>
