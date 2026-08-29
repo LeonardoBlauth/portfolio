@@ -22,6 +22,24 @@
       "close": "Fechar menu"
     }
   },
+  "hero": {
+    "availability": "Disponível para oportunidades",
+    "description": "Desenvolvo soluções web de ponta a ponta, conectando necessidades de produto a decisões técnicas claras.",
+    "actions": {
+      "contact": "Entrar em contato",
+      "projects": "Ver projetos"
+    },
+    "social": {
+      "label": "Links profissionais",
+      "githubLabel": "GitHub (abre em uma nova aba)",
+      "linkedinLabel": "LinkedIn (abre em uma nova aba)"
+    },
+    "metadata": {
+      "label": "Informações profissionais",
+      "location": "Brasil",
+      "experience": "Desenvolvimento web desde 2021"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

@@ -2,8 +2,8 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 const generatedRoutes = [
-  { file: 'index.html', lang: 'pt-BR', heading: 'Portfolio' },
-  { file: 'en/index.html', lang: 'en', heading: 'Portfolio' },
+  { file: 'index.html', lang: 'pt-BR', heading: 'Leonardo Blauth' },
+  { file: 'en/index.html', lang: 'en', heading: 'Leonardo Blauth' },
   {
     file: 'projetos/movune/index.html',
     lang: 'pt-BR',
@@ -15,8 +15,6 @@ const generatedRoutes = [
     heading: 'movune',
   },
 ]
-
-const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 for (const route of generatedRoutes) {
   const outputPath = resolve('.output/public', route.file)
@@ -30,11 +28,13 @@ for (const route of generatedRoutes) {
     throw new Error(`${route.file} does not declare lang=${route.lang}`)
   }
 
-  const headingPattern = new RegExp(
-    `<h1\\b[^>]*>\\s*${escapeRegExp(route.heading)}\\s*</h1>`,
-  )
+  const headingMatch = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)
+  const headingText = headingMatch?.[1]
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 
-  if (!headingPattern.test(html)) {
+  if (headingText !== route.heading) {
     throw new Error(`${route.file} does not contain its expected heading`)
   }
 }
