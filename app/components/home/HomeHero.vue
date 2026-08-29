@@ -96,7 +96,7 @@ const { t } = useI18n()
   overflow: clip;
 }
 
-:global(:root[data-theme='light']) .hero {
+:global(:root[data-theme='light'] .hero) {
   --hero-accent: #245fdf;
   --hero-accent-hover: #1d4ed8;
   --hero-button: #245fdf;
