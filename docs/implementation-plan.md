@@ -499,12 +499,12 @@ Deliver the complete localized case-study route while preserving the project's c
 
 ### Acceptance criteria
 
-- [ ] Both localized case routes generate complete static HTML.
-- [ ] The six approved case areas and factual content are present.
-- [ ] `movune` remains lowercase and accurately described as an evolving personal project in prototyping.
-- [ ] Temporary assets and demo data are clearly identified and accessible.
-- [ ] Navigation between Home, case, and equivalent locales is correct.
-- [ ] The route contains no unsupported launch, validation, customer, revenue, integration, or architecture claim.
+- [x] Both localized case routes generate complete static HTML.
+- [x] The six approved case areas and factual content are present.
+- [x] `movune` remains lowercase and accurately described as an evolving personal project in prototyping.
+- [x] Temporary assets and demo data are clearly identified and accessible.
+- [x] Navigation between Home, case, and equivalent locales is correct.
+- [x] The route contains no unsupported launch, validation, customer, revenue, integration, or architecture claim.
 
 ### Implementation unit
 

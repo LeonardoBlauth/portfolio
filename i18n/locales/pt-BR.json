@@ -61,7 +61,62 @@
       "heading": "Portfolio"
     },
     "movune": {
-      "heading": "movune"
+      "back": "Voltar para projetos",
+      "headline": "Organizando um produto complexo antes de implementar.",
+      "lead": "O movune é um SaaS B2B em evolução para gestão de clínicas de Fisioterapia e Pilates no Brasil. Este case registra o caminho da ideia à definição do produto, fluxos, arquitetura de telas, identidade visual e prototipação.",
+      "roleLabel": "Atuação no projeto",
+      "role": "Definição de produto, fluxos, arquitetura de telas, direção de UI/UX e prototipação.",
+      "overview": {
+        "title": "Visão geral",
+        "context": "O produto busca centralizar atividades de gestão de clínicas de Fisioterapia e Pilates. O domínio considerado reúne agendas, pacientes, atendimentos, turmas, pacotes, finanças, documentos e comunicação, além de regras operacionais distintas.",
+        "challenge": "O desafio foi organizar uma ideia ampla em uma estrutura de produto coerente e validar a experiência antes de definir a arquitetura de produção."
+      },
+      "process": {
+        "title": "Processo",
+        "introduction": "O trabalho avançou em etapas conectadas, mantendo decisões e protótipo alinhados.",
+        "product": "Definição de produto",
+        "productDescription": "Organização do problema, do público e do domínio considerado.",
+        "flows": "Fluxos",
+        "flowsDescription": "Mapeamento de jornadas, regras e exceções relevantes.",
+        "architecture": "Arquitetura de telas",
+        "architectureDescription": "Estruturação da navegação e das relações entre módulos.",
+        "interface": "Identidade e UI/UX",
+        "interfaceDescription": "Direção visual e estados necessários para tornar os fluxos legíveis.",
+        "prototype": "Prototipação",
+        "prototypeDescription": "Validação antecipada das decisões e identificação de inconsistências."
+      },
+      "interface": {
+        "title": "Interface",
+        "description": "As representações exploram a organização de agenda e o acompanhamento operacional sem antecipar uma interface final.",
+        "scheduleTitle": "Agenda individual e em grupo",
+        "scheduleDescription": "A composição diferencia tipos de atendimento, recorrência e conflitos por forma, texto e posição — não apenas por cor.",
+        "patientTitle": "Cadastro rápido no agendamento",
+        "patientDescription": "O fluxo considera a inclusão de um paciente sem abandonar o contexto do agendamento.",
+        "representation": "Representação temporária do protótipo · dados demonstrativos · não são capturas finais do produto"
+      },
+      "decisions": {
+        "title": "Decisões principais",
+        "introduction": "As decisões abaixo pertencem à definição e à prototipação do produto; não descrevem funcionalidades já implementadas.",
+        "schedule": "Agendas individuais e em grupo",
+        "scheduleDescription": "Os dois contextos exigem regras e leituras próprias, em vez de um único fluxo genérico.",
+        "recurrence": "Recorrência e conflitos",
+        "recurrenceDescription": "A repetição de atendimentos precisa tornar exceções e sobreposições explícitas.",
+        "status": "Duas camadas de status",
+        "statusDescription": "O estado operacional e o estado do atendimento são informações relacionadas, mas distintas.",
+        "registration": "Cadastro rápido de paciente",
+        "registrationDescription": "O agendamento pode abrir um cadastro essencial e retornar ao fluxo original."
+      },
+      "status": {
+        "title": "Estado atual",
+        "description": "A definição de produto, os fluxos, a arquitetura de telas, a identidade visual e parte do protótipo foram desenvolvidos e refinados. A arquitetura de produção e a implementação completa ainda não foram definidas.",
+        "label": "Projeto pessoal em evolução · em prototipação"
+      },
+      "next": {
+        "title": "Próximos passos",
+        "description": "Continuar refinando as regras e os fluxos no protótipo antes de definir a arquitetura de produção e iniciar a implementação completa.",
+        "learningsTitle": "Aprendizados até aqui",
+        "learnings": "Documentação e protótipo precisam evoluir juntos; fluxos em grupo diferem de atendimentos individuais; estados visuais não podem depender apenas de cor; e prototipar cedo revela regras e inconsistências antes da implementação."
+      }
     }
   }
 }

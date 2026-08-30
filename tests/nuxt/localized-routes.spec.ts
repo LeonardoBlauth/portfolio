@@ -7,8 +7,16 @@ describe('localized routes', () => {
   it.each([
     ['/', 'pt-BR', 'Leonardo Blauth'],
     ['/en', 'en', 'Leonardo Blauth'],
-    ['/projetos/movune', 'pt-BR', 'movune'],
-    ['/en/projects/movune', 'en', 'movune'],
+    [
+      '/projetos/movune',
+      'pt-BR',
+      'Organizando um produto complexo antes de implementar.',
+    ],
+    [
+      '/en/projects/movune',
+      'en',
+      'Organizing a complex product before implementation.',
+    ],
   ])('renders %s in %s', async (route, locale, heading) => {
     const wrapper = await mountSuspended(App, { route })
 
