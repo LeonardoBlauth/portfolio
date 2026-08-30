@@ -61,7 +61,62 @@
       "heading": "Portfolio"
     },
     "movune": {
-      "heading": "movune"
+      "back": "Back to projects",
+      "headline": "Organizing a complex product before implementation.",
+      "lead": "movune is an evolving B2B SaaS product for managing Physiotherapy and Pilates clinics in Brazil. This case study documents the path from the initial idea to product definition, flows, screen architecture, visual identity, and prototyping.",
+      "roleLabel": "Role in the project",
+      "role": "Product definition, flows, screen architecture, UI/UX direction, and prototyping.",
+      "overview": {
+        "title": "Overview",
+        "context": "The product aims to centralize management activities for Physiotherapy and Pilates clinics. The considered domain includes schedules, patients, appointments, classes, packages, finance, documents, and communication, as well as distinct operational rules.",
+        "challenge": "The challenge was to organize a broad idea into a coherent product structure and validate the experience before defining production architecture."
+      },
+      "process": {
+        "title": "Process",
+        "introduction": "The work moved through connected stages, keeping decisions and prototype aligned.",
+        "product": "Product definition",
+        "productDescription": "Organizing the problem, audience, and considered domain.",
+        "flows": "Flows",
+        "flowsDescription": "Mapping relevant journeys, rules, and exceptions.",
+        "architecture": "Screen architecture",
+        "architectureDescription": "Structuring navigation and relationships between modules.",
+        "interface": "Identity and UI/UX",
+        "interfaceDescription": "Visual direction and the states needed to make flows legible.",
+        "prototype": "Prototyping",
+        "prototypeDescription": "Validating decisions early and identifying inconsistencies."
+      },
+      "interface": {
+        "title": "Interface",
+        "description": "The representations explore schedule organization and operational tracking without anticipating a final interface.",
+        "scheduleTitle": "Individual and group scheduling",
+        "scheduleDescription": "The composition distinguishes appointment types, recurrence, and conflicts through shape, text, and position — not color alone.",
+        "patientTitle": "Quick registration while scheduling",
+        "patientDescription": "The flow considers adding a patient without leaving the scheduling context.",
+        "representation": "Temporary prototype representation · demo data · not final product screenshots"
+      },
+      "decisions": {
+        "title": "Key decisions",
+        "introduction": "The decisions below belong to product definition and prototyping; they do not describe implemented functionality.",
+        "schedule": "Individual and group schedules",
+        "scheduleDescription": "Both contexts require their own rules and readings instead of one generic flow.",
+        "recurrence": "Recurrence and conflicts",
+        "recurrenceDescription": "Recurring appointments need to make exceptions and overlaps explicit.",
+        "status": "Two status layers",
+        "statusDescription": "The operational state and appointment state are related but distinct information.",
+        "registration": "Quick patient registration",
+        "registrationDescription": "Scheduling can open an essential registration step and return to the original flow."
+      },
+      "status": {
+        "title": "Current status",
+        "description": "Product definition, flows, screen architecture, visual identity, and part of the prototype have been developed and refined. Production architecture and complete implementation have not been defined yet.",
+        "label": "Evolving personal project · in prototyping"
+      },
+      "next": {
+        "title": "Next steps",
+        "description": "Continue refining rules and flows in the prototype before defining production architecture and starting complete implementation.",
+        "learningsTitle": "Learnings so far",
+        "learnings": "Documentation and prototype need to evolve together; group flows differ from individual appointments; visual states cannot rely on color alone; and early prototyping reveals rules and inconsistencies before implementation."
+      }
     }
   }
 }

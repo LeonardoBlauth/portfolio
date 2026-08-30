@@ -7,14 +7,33 @@ const generatedRoutes = [
   {
     file: 'projetos/movune/index.html',
     lang: 'pt-BR',
-    heading: 'movune',
+    heading: 'Organizando um produto complexo antes de implementar.',
   },
   {
     file: 'en/projects/movune/index.html',
     lang: 'en',
-    heading: 'movune',
+    heading: 'Organizing a complex product before implementation.',
   },
 ]
+
+const caseSections = {
+  'projetos/movune/index.html': [
+    'Visão geral',
+    'Processo',
+    'Interface',
+    'Decisões principais',
+    'Estado atual',
+    'Próximos passos',
+  ],
+  'en/projects/movune/index.html': [
+    'Overview',
+    'Process',
+    'Interface',
+    'Key decisions',
+    'Current status',
+    'Next steps',
+  ],
+}
 
 for (const route of generatedRoutes) {
   const outputPath = resolve('.output/public', route.file)
@@ -36,6 +55,16 @@ for (const route of generatedRoutes) {
 
   if (headingText !== route.heading) {
     throw new Error(`${route.file} does not contain its expected heading`)
+  }
+
+  const expectedSections = caseSections[route.file]
+  if (expectedSections) {
+    const documentText = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
+    for (const section of expectedSections) {
+      if (!documentText.includes(section)) {
+        throw new Error(`${route.file} is missing the ${section} case section`)
+      }
+    }
   }
 }
 

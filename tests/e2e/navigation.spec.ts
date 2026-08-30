@@ -177,6 +177,51 @@ test.describe('desktop shell navigation', () => {
 })
 
 test.describe('localized and persisted controls', () => {
+  test('navigates from Home to the complete case and back to Projects', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+
+    await page.getByRole('link', { name: 'Ver estudo de caso' }).click()
+    await expect(page).toHaveURL(/\/projetos\/movune$/)
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: 'Organizando um produto complexo antes de implementar.',
+      }),
+    ).toBeVisible()
+    await expect(page.locator('article section')).toHaveCount(6)
+
+    await page
+      .getByRole('link', { name: 'Voltar para projetos' })
+      .first()
+      .click()
+    await expect(page).toHaveURL(/\/#projects$/)
+    await headerOffsetIsClear(page, 'projects')
+  })
+
+  test('loads the English case directly and switches to its Portuguese equivalent', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/en/projects/movune')
+
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: 'Organizing a complex product before implementation.',
+      }),
+    ).toBeVisible()
+    await expect(
+      page.getByText('Evolving personal project · in prototyping'),
+    ).toBeVisible()
+
+    await page
+      .getByRole('link', { name: 'Switch language to português' })
+      .click()
+    await expect(page).toHaveURL(/\/projetos\/movune$/)
+    await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR')
+  })
+
   test('switches equivalent routes and persists only manual locale choices', async ({
     page,
   }) => {
@@ -308,6 +353,24 @@ test.describe('mobile navigation', () => {
       .disableRules(['document-title'])
       .analyze()
     expect(openMenuScan.violations).toEqual([])
+  })
+
+  test('keeps the movune case usable without horizontal overflow', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/projetos/movune')
+
+    await expect(page.locator('article section')).toHaveCount(6)
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+
+    const caseScan = await new AxeBuilder({ page })
+      .disableRules(['document-title'])
+      .analyze()
+    expect(caseScan.violations).toEqual([])
   })
 })
 
