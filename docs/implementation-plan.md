@@ -678,10 +678,10 @@ Add a concise bilingual explanation of Leonardo's working approach without turni
 
 ### Acceptance criteria
 
-- [ ] The approved headline, paragraphs, and principles are present in both locales.
-- [ ] The section remains independent from `movune` and academic education.
-- [ ] No manifesto-style claims or new methodology are introduced.
-- [ ] Layout and reading order remain clear at all widths and at 200% zoom.
+- [x] The approved headline, paragraphs, and principles are present in both locales.
+- [x] The section remains independent from `movune` and academic education.
+- [x] No manifesto-style claims or new methodology are introduced.
+- [x] Layout and reading order remain clear at all widths and at 200% zoom.
 
 ### Implementation unit
 

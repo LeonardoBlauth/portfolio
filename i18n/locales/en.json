@@ -120,6 +120,19 @@
       "real-time-applications": "Real-time applications"
     }
   },
+  "workApproach": {
+    "label": "How I work",
+    "headline": "Context before code. Decisions I can explain.",
+    "paragraphs": {
+      "context": "I connect product context with technical execution. Before implementing, I aim to understand the problem, its constraints, and how each decision affects the rest of the application.",
+      "ai": "I use AI as a tool to research, structure, review, and accelerate parts of the work, while keeping decisions and code within what I can explain and stand behind."
+    },
+    "principles": {
+      "understand": "Understand before building",
+      "decide": "Make clear decisions",
+      "evolve": "Evolve incrementally"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

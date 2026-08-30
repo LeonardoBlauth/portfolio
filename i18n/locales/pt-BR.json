@@ -120,6 +120,19 @@
       "real-time-applications": "Aplicações em tempo real"
     }
   },
+  "workApproach": {
+    "label": "Como trabalho",
+    "headline": "Contexto antes de código. Decisões que consigo explicar.",
+    "paragraphs": {
+      "context": "Trabalho conectando contexto de produto e execução técnica. Antes de implementar, procuro compreender o problema, as restrições e o impacto de cada decisão no restante da aplicação.",
+      "ai": "Utilizo IA como ferramenta para pesquisar, estruturar, revisar e acelerar partes do trabalho, mantendo as decisões e o código dentro do que consigo explicar e sustentar."
+    },
+    "principles": {
+      "understand": "Entender antes de construir",
+      "decide": "Decidir com clareza",
+      "evolve": "Evoluir de forma incremental"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"
