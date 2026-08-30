@@ -562,12 +562,12 @@ Add the approved professional history and secondary education block with accurat
 
 ### Acceptance criteria
 
-- [ ] DealerUp Consultoria e Sistemas and the Full Stack Developer role are accurate.
-- [ ] The professional period is `2021 — present` and development experience begins in 2021.
-- [ ] Expected Software Engineering completion is 2027.
-- [ ] Education is visually and semantically subordinate to experience.
-- [ ] Only approved general professional information is public.
-- [ ] The LinkedIn action is safe, accessible, and functional.
+- [x] DealerUp Consultoria e Sistemas and the Full Stack Developer role are accurate.
+- [x] The professional period is `2021 — present` and development experience begins in 2021.
+- [x] Expected Software Engineering completion is 2027.
+- [x] Education is visually and semantically subordinate to experience.
+- [x] Only approved general professional information is public.
+- [x] The LinkedIn action is safe, accessible, and functional.
 
 ### Implementation unit
 

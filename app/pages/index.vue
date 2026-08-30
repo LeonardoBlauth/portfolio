@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HomeHero from '~/components/home/HomeHero.vue'
+import ProfessionalHistory from '~/components/home/ProfessionalHistory.vue'
 import SelectedProject from '~/components/home/SelectedProject.vue'
 
 const { t } = useI18n()
@@ -9,10 +10,11 @@ const { t } = useI18n()
   <div>
     <HomeHero />
     <SelectedProject />
+    <ProfessionalHistory />
 
     <div class="navigation-destinations layout-container">
       <section
-        v-for="section in ['experience', 'stack', 'contact']"
+        v-for="section in ['stack', 'contact']"
         :id="section"
         :key="section"
         class="navigation-destination"
