@@ -56,6 +56,35 @@
       "representation": "Representação do protótipo · dados demonstrativos"
     }
   },
+  "experience": {
+    "label": "Experiência profissional",
+    "headline": "Minha experiência como desenvolvedor.",
+    "present": "atual",
+    "location": "Brasil",
+    "description": "Atuação no desenvolvimento e na evolução de produtos web, envolvendo frontend, backend, banco de dados, integrações, bots e automações.",
+    "contributions": {
+      "product": {
+        "title": "Produto e interfaces",
+        "description": "Dashboards, interfaces e funcionalidades de apoio a processos comerciais, pesquisas e atendimento ou primeiro contato."
+      },
+      "automation": {
+        "title": "Integrações e automação",
+        "description": "Integrações, bots e automações para rotinas operacionais."
+      },
+      "applications": {
+        "title": "Aplicações e dados",
+        "description": "Manutenção e evolução de aplicações com Vue.js, Laravel e MySQL."
+      }
+    },
+    "technologies": "Tecnologias utilizadas nesta experiência",
+    "cta": "Ver trajetória completa no LinkedIn",
+    "ctaNewTab": " (abre em uma nova aba)"
+  },
+  "education": {
+    "label": "Formação acadêmica",
+    "program": "Engenharia de Software",
+    "status": "Em andamento · conclusão prevista em {year}"
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"
