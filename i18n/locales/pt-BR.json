@@ -133,6 +133,20 @@
       "evolve": "Evoluir de forma incremental"
     }
   },
+  "contact": {
+    "label": "Contato",
+    "headline": "Vamos conversar sobre a próxima oportunidade?",
+    "description": "Estou aberto a conversar sobre oportunidades Full Stack no Brasil e com equipes internacionais ou remotas.",
+    "actions": {
+      "label": "Formas de contato",
+      "email": "Email",
+      "emailLabel": "Email",
+      "github": "GitHub",
+      "githubLabel": "GitHub (abre em uma nova aba)",
+      "linkedin": "LinkedIn",
+      "linkedinLabel": "LinkedIn (abre em uma nova aba)"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"
