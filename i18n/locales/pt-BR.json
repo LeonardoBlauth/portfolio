@@ -85,6 +85,41 @@
     "program": "Engenharia de Software",
     "status": "Em andamento · conclusão prevista em {year}"
   },
+  "techStack": {
+    "label": "Competências e Tech Stack",
+    "headline": "O que uso no dia a dia. O que estou explorando.",
+    "categories": {
+      "core": {
+        "title": "Stack profissional principal",
+        "description": "Tecnologias utilizadas no trabalho profissional."
+      },
+      "additional": {
+        "title": "Experiência complementar",
+        "description": "Tecnologias já utilizadas ou com as quais tive contato."
+      },
+      "exploring": {
+        "title": "Explorando atualmente",
+        "description": "Áreas de estudo e experimentação, sem apresentá-las como domínio profissional."
+      }
+    },
+    "technologies": {
+      "vue": "Vue.js",
+      "javascript-typescript": "JavaScript / TypeScript",
+      "laravel": "Laravel",
+      "php": "PHP",
+      "mysql": "MySQL",
+      "node": "Node.js",
+      "python": "Python",
+      "git": "Git",
+      "linux": "Linux",
+      "docker": "Docker",
+      "ai-assisted-development": "IA aplicada ao desenvolvimento",
+      "ai-agents": "Agentes de IA",
+      "postgresql": "PostgreSQL",
+      "redis": "Redis",
+      "real-time-applications": "Aplicações em tempo real"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

@@ -85,6 +85,41 @@
     "program": "Software Engineering",
     "status": "In progress · expected completion in {year}"
   },
+  "techStack": {
+    "label": "Skills and Tech Stack",
+    "headline": "What I use day to day. What I’m exploring.",
+    "categories": {
+      "core": {
+        "title": "Core professional stack",
+        "description": "Technologies used in professional work."
+      },
+      "additional": {
+        "title": "Additional experience",
+        "description": "Technologies I have used or had practical exposure to."
+      },
+      "exploring": {
+        "title": "Currently exploring",
+        "description": "Topics I am studying and experimenting with, without presenting them as professional expertise."
+      }
+    },
+    "technologies": {
+      "vue": "Vue.js",
+      "javascript-typescript": "JavaScript / TypeScript",
+      "laravel": "Laravel",
+      "php": "PHP",
+      "mysql": "MySQL",
+      "node": "Node.js",
+      "python": "Python",
+      "git": "Git",
+      "linux": "Linux",
+      "docker": "Docker",
+      "ai-assisted-development": "AI-assisted development",
+      "ai-agents": "AI agents",
+      "postgresql": "PostgreSQL",
+      "redis": "Redis",
+      "real-time-applications": "Real-time applications"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

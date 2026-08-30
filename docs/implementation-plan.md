@@ -622,11 +622,11 @@ Present technical experience with the approved distinctions between professional
 
 ### Acceptance criteria
 
-- [ ] Exactly three approved categories are present.
-- [ ] Every technology appears in the correct category.
-- [ ] Exploratory items are not presented as professional expertise.
-- [ ] No rating, percentage, experience-year claim, or unapproved technology is added.
-- [ ] The layout transitions cleanly from three columns to two and then one based on available space.
+- [x] Exactly three approved categories are present.
+- [x] Every technology appears in the correct category.
+- [x] Exploratory items are not presented as professional expertise.
+- [x] No rating, percentage, experience-year claim, or unapproved technology is added.
+- [x] The layout transitions cleanly from three columns to two and then one based on available space.
 
 ### Implementation unit
 
