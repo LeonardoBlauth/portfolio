@@ -436,12 +436,12 @@ Add the Home Projects section with the single approved `movune` presentation and
 
 ### Acceptance criteria
 
-- [ ] Home presents exactly one real project: `movune`.
-- [ ] All project facts, status, scope, and demo-data disclosures are accurate in both locales.
-- [ ] The CTA reaches the equivalent localized case route.
-- [ ] The layout works in two-area and stacked forms without overflow.
-- [ ] No carousel or speculative multi-project system exists.
-- [ ] Temporary representations are optimized, accessible, and clearly identified.
+- [x] Home presents exactly one real project: `movune`.
+- [x] All project facts, status, scope, and demo-data disclosures are accurate in both locales.
+- [x] The CTA reaches the equivalent localized case route.
+- [x] The layout works in two-area and stacked forms without overflow.
+- [x] No carousel or speculative multi-project system exists.
+- [x] Temporary representations are optimized, accessible, and clearly identified.
 
 ### Implementation unit
 
