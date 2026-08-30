@@ -18,6 +18,7 @@ const currentHash = ref(route.hash)
 let desktopMediaQuery: MediaQueryList | null = null
 let restoreFocusAfterClose = true
 let scrollAnimationFrame: number | null = null
+let routeAlignmentFrame: number | null = null
 
 const SECTION_SCROLL_DURATION_MS = 360
 
@@ -56,6 +57,38 @@ const cancelScrollAnimation = () => {
 
   window.cancelAnimationFrame(scrollAnimationFrame)
   scrollAnimationFrame = null
+}
+const cancelRouteAlignment = () => {
+  if (routeAlignmentFrame === null) return
+
+  window.cancelAnimationFrame(routeAlignmentFrame)
+  routeAlignmentFrame = null
+}
+const alignRouteHash = async () => {
+  if (!route.hash) return
+
+  await nextTick()
+  cancelRouteAlignment()
+  routeAlignmentFrame = window.requestAnimationFrame(() => {
+    routeAlignmentFrame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(
+        decodeURIComponent(route.hash.slice(1)),
+      )
+      if (!target) return
+
+      const scrollPadding = Number.parseFloat(
+        getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+      )
+      window.scrollTo({
+        top: Math.max(
+          0,
+          window.scrollY + target.getBoundingClientRect().top - scrollPadding,
+        ),
+        behavior: 'instant',
+      })
+      routeAlignmentFrame = null
+    })
+  })
 }
 const scrollingKeys = new Set([
   'ArrowDown',
@@ -218,9 +251,13 @@ const handleDesktopTransition = (event: MediaQueryListEvent) => {
 }
 
 watch(
-  () => route.hash,
-  (hash) => {
-    currentHash.value = hash
+  () => route.fullPath,
+  (fullPath, previousFullPath) => {
+    currentHash.value = route.hash
+
+    const currentPath = fullPath.split('#', 1)[0]
+    const previousPath = previousFullPath?.split('#', 1)[0]
+    if (route.hash && currentPath !== previousPath) void alignRouteHash()
   },
 )
 
@@ -278,6 +315,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('touchstart', cancelScrollAnimation)
   window.removeEventListener('keydown', handleScrollKeydown)
   desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
+  cancelRouteAlignment()
   cancelScrollAnimation()
   if (dialog.value?.open) dialog.value.close()
 })

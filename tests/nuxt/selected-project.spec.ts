@@ -10,6 +10,7 @@ describe('Selected project presentation', () => {
       'Projetos selecionados',
       'Projetos e soluções que desenvolvo.',
       'Projeto pessoal',
+      'SaaS B2B',
       'Em prototipação',
       'Produto e experiência',
       'Escopo atual',
@@ -23,6 +24,7 @@ describe('Selected project presentation', () => {
       'Selected projects',
       'Projects and solutions I develop.',
       'Personal project',
+      'B2B SaaS',
       'In prototyping',
       'Product and experience',
       'Current scope',
@@ -38,6 +40,7 @@ describe('Selected project presentation', () => {
       label,
       headline,
       type,
+      productType,
       status,
       classification,
       scopeLabel,
@@ -48,12 +51,13 @@ describe('Selected project presentation', () => {
     ) => {
       const wrapper = await mountSuspended(App, { route })
       const section = wrapper.get('section#projects')
+      const identifier = section.get('.selected-project__identifier')
 
       expect(section.get('.selected-projects__label').text()).toBe(label)
       expect(section.get('h2').text()).toBe(headline)
-      expect(section.text()).toContain('01')
-      expect(section.text()).toContain(type)
-      expect(section.text()).toContain('B2B SaaS')
+      expect(identifier.text()).toContain('01')
+      expect(identifier.text()).toContain(type)
+      expect(identifier.text()).toContain(productType)
       expect(section.text()).toContain(status)
       expect(section.text()).toContain(classification)
       expect(section.text()).toContain(scopeLabel)

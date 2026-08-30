@@ -46,6 +46,7 @@
     "introduction": "Apresento cada projeto com seu contexto, processo, decisões e estado real de desenvolvimento.",
     "movune": {
       "type": "Projeto pessoal",
+      "productType": "SaaS B2B",
       "status": "Em prototipação",
       "classification": "Produto e experiência",
       "description": "O movune é um projeto pessoal em evolução: um SaaS B2B para apoiar a gestão de clínicas de fisioterapia e Pilates no Brasil. O case acompanha as decisões e o processo de desenvolvimento do produto.",

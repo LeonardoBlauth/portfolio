@@ -52,7 +52,7 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
 
                 <div class="project-preview__dashboard">
                   <div class="project-preview__dashboard-heading">
-                    <span class="project-preview__eyebrow">Dashboard</span>
+                    <span class="project-preview__eyebrow" />
                     <span class="project-preview__action" />
                   </div>
 
@@ -83,7 +83,7 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
             <span aria-hidden="true">·</span>
             <span>{{ message('type') }}</span>
             <span aria-hidden="true">·</span>
-            <span>{{ selectedProject.type }}</span>
+            <span>{{ message('productType') }}</span>
           </p>
 
           <div class="selected-project__title-row">
@@ -291,9 +291,10 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
 }
 
 .project-preview__eyebrow {
-  color: #19372f;
-  font-size: clamp(0.42rem, 1.2vw, 0.75rem);
-  font-weight: var(--font-weight-semibold);
+  width: 24%;
+  height: clamp(0.35rem, 0.8vw, 0.6rem);
+  background: #cdded7;
+  border-radius: 999px;
 }
 
 .project-preview__action {
@@ -393,7 +394,7 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
   height: 0.4rem;
   margin-inline-end: var(--space-2);
   content: '';
-  background: #5bb98c;
+  background: var(--color-accent);
   border-radius: 50%;
 }
 
