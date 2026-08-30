@@ -40,6 +40,22 @@
       "experience": "Web development since 2021"
     }
   },
+  "selectedProjects": {
+    "label": "Selected projects",
+    "headline": "Projects and solutions I develop.",
+    "introduction": "I present each project with its context, process, decisions, and current stage of development.",
+    "movune": {
+      "type": "Personal project",
+      "productType": "B2B SaaS",
+      "status": "In prototyping",
+      "classification": "Product and experience",
+      "description": "movune is an evolving personal project: a B2B SaaS designed to support the management of physiotherapy and Pilates clinics in Brazil. The case study documents the decisions and product development process.",
+      "scopeLabel": "Current scope",
+      "scope": "Product · Flows · Screen architecture · UI/UX · Prototyping",
+      "cta": "View case study",
+      "representation": "Prototype representation · demo data"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

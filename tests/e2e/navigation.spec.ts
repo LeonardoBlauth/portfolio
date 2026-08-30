@@ -27,13 +27,17 @@ const headerOffsetIsClear = async (
   id: string,
   expectTightOffset = true,
 ) => {
+  const headerLocator = page.locator('header .site-header__bar')
+  const targetLocator = page.locator(`#${id}`)
+
+  await expect(headerLocator).toBeVisible()
+  await expect(targetLocator).toBeVisible()
+
   if (expectTightOffset) {
     await expect
       .poll(async () => {
-        const header = await page
-          .locator('header .site-header__bar')
-          .boundingBox()
-        const target = await page.locator(`#${id}`).boundingBox()
+        const header = await headerLocator.boundingBox()
+        const target = await targetLocator.boundingBox()
 
         if (!header || !target) return Number.POSITIVE_INFINITY
         return target.y - (header.y + header.height)
@@ -41,8 +45,8 @@ const headerOffsetIsClear = async (
       .toBeLessThanOrEqual(64)
   }
 
-  const header = await page.locator('header .site-header__bar').boundingBox()
-  const target = await page.locator(`#${id}`).boundingBox()
+  const header = await headerLocator.boundingBox()
+  const target = await targetLocator.boundingBox()
 
   expect(header).not.toBeNull()
   expect(target).not.toBeNull()

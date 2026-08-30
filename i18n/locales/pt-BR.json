@@ -40,6 +40,22 @@
       "experience": "Desenvolvimento web desde 2021"
     }
   },
+  "selectedProjects": {
+    "label": "Projetos selecionados",
+    "headline": "Projetos e soluções que desenvolvo.",
+    "introduction": "Apresento cada projeto com seu contexto, processo, decisões e estado real de desenvolvimento.",
+    "movune": {
+      "type": "Projeto pessoal",
+      "productType": "SaaS B2B",
+      "status": "Em prototipação",
+      "classification": "Produto e experiência",
+      "description": "O movune é um projeto pessoal em evolução: um SaaS B2B para apoiar a gestão de clínicas de fisioterapia e Pilates no Brasil. O case acompanha as decisões e o processo de desenvolvimento do produto.",
+      "scopeLabel": "Escopo atual",
+      "scope": "Produto · Fluxos · Arquitetura de telas · UI/UX · Prototipação",
+      "cta": "Ver estudo de caso",
+      "representation": "Representação do protótipo · dados demonstrativos"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"
