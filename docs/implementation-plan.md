@@ -737,12 +737,12 @@ Complete the Home narrative with approved contact actions and a restrained respo
 
 ### Acceptance criteria
 
-- [ ] All three approved contact destinations are correct and operable.
-- [ ] GitHub and LinkedIn open safely in a new tab with an accessible indication.
-- [ ] Email uses the approved `mailto:` destination.
-- [ ] Contact works by keyboard, mouse, and touch without hover dependency.
-- [ ] Footer contains only the approved monogram, name, and copyright content.
-- [ ] No contact form or unapproved integration exists.
+- [x] All three approved contact destinations are correct and operable.
+- [x] GitHub and LinkedIn open safely in a new tab with an accessible indication.
+- [x] Email uses the approved `mailto:` destination.
+- [x] Contact works by keyboard, mouse, and touch without hover dependency.
+- [x] Footer contains only the approved monogram, name, and copyright content.
+- [x] No contact form or unapproved integration exists.
 
 ### Implementation unit
 

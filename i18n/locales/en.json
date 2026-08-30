@@ -133,6 +133,20 @@
       "evolve": "Evolve incrementally"
     }
   },
+  "contact": {
+    "label": "Contact",
+    "headline": "Let’s talk about the next opportunity.",
+    "description": "I’m open to discussing Full Stack opportunities in Brazil and with international or remote teams.",
+    "actions": {
+      "label": "Contact options",
+      "email": "Email",
+      "emailLabel": "Email",
+      "github": "GitHub",
+      "githubLabel": "GitHub (opens in a new tab)",
+      "linkedin": "LinkedIn",
+      "linkedinLabel": "LinkedIn (opens in a new tab)"
+    }
+  },
   "pages": {
     "home": {
       "heading": "Portfolio"

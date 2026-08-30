@@ -374,6 +374,75 @@ test.describe('mobile navigation', () => {
   })
 })
 
+test.describe('contact and footer', () => {
+  test('exposes the approved destinations in logical keyboard order', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/en')
+
+    const contact = page.getByRole('navigation', { name: 'Contact options' })
+    const email = contact.getByRole('link', { name: 'Email' })
+    const github = contact.getByRole('link', {
+      name: 'GitHub (opens in a new tab)',
+    })
+    const linkedin = contact.getByRole('link', {
+      name: 'LinkedIn (opens in a new tab)',
+    })
+
+    await expect(email).toHaveAttribute(
+      'href',
+      'mailto:contato@leonardoblauth.dev',
+    )
+    await expect(github).toHaveAttribute(
+      'href',
+      'https://github.com/LeonardoBlauth',
+    )
+    await expect(linkedin).toHaveAttribute(
+      'href',
+      'https://www.linkedin.com/in/leonardo-blauth',
+    )
+
+    for (const link of [github, linkedin]) {
+      await expect(link).toHaveAttribute('target', '_blank')
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    }
+
+    await email.focus()
+    await expect(email).toBeFocused()
+    await page.keyboard.press('Tab')
+    await expect(github).toBeFocused()
+    await page.keyboard.press('Tab')
+    await expect(linkedin).toBeFocused()
+
+    const footer = page.locator('footer')
+    await expect(footer).toContainText('Leonardo Blauth')
+    await expect(footer).toContainText('© 2026')
+    await expect(footer.getByRole('link')).toHaveCount(0)
+  })
+
+  test('keeps contact actions comfortable and overflow-free on mobile', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await gotoHydrated(page, '/')
+
+    const actions = page.locator('.contact__action')
+    await expect(actions).toHaveCount(3)
+
+    for (const action of await actions.all()) {
+      const box = await action.boundingBox()
+      expect(box).not.toBeNull()
+      expect(box!.height).toBeGreaterThanOrEqual(44)
+    }
+
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+  })
+})
+
 test.describe('reduced motion navigation', () => {
   test.use({
     viewport: { width: 1024, height: 768 },
