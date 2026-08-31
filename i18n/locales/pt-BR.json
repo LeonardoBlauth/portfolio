@@ -88,6 +88,12 @@
   "techStack": {
     "label": "Competências e Tech Stack",
     "headline": "O que uso no dia a dia. O que estou explorando.",
+    "actions": {
+      "show": "Ver tecnologias de {category}",
+      "hide": "Ocultar tecnologias de {category}",
+      "showShort": "Ver tecnologias",
+      "hideShort": "Ocultar tecnologias"
+    },
     "categories": {
       "core": {
         "title": "Stack profissional principal",

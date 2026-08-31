@@ -132,6 +132,20 @@ const principles = ['understand', 'decide', 'evolve'] as const
   }
 }
 
+@media (width < 42rem) {
+  .work-approach__layout {
+    gap: var(--space-10);
+  }
+
+  .work-approach__copy {
+    gap: var(--space-4);
+  }
+
+  .work-approach__principles {
+    margin-block-start: var(--space-8);
+  }
+}
+
 @media (width < 32rem) {
   .work-approach h2 {
     font-size: clamp(2.35rem, 12vw, 3.25rem);

@@ -313,6 +313,21 @@ const { t } = useI18n()
     text-align: start;
   }
 
+  .experience-record {
+    margin-block-start: var(--space-12);
+  }
+
+  .experience-record__identity {
+    gap: var(--space-5);
+    padding-block-end: var(--space-6);
+  }
+
+  .experience-record__description,
+  .contribution-groups,
+  .experience-record__footer {
+    margin-block-start: var(--space-6);
+  }
+
   .contribution-groups {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -330,12 +345,24 @@ const { t } = useI18n()
     border-block-start: 0;
   }
 
+  .contribution-group,
+  .contribution-group + .contribution-group,
+  .contribution-group:nth-child(3) {
+    padding-block: var(--space-6);
+  }
+
   .experience-record__footer {
     align-items: flex-start;
   }
 
   .education__status {
     grid-column: auto;
+  }
+
+  .education {
+    gap: var(--space-4);
+    padding-block-start: var(--space-8);
+    margin-block-start: var(--space-12);
   }
 }
 </style>

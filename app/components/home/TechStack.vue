@@ -2,6 +2,39 @@
 import { technologyCategories } from '~/data/tech-stack'
 
 const { t } = useI18n()
+
+type TechnologyCategoryId = (typeof technologyCategories)[number]['id']
+
+const compactMediaQuery = ref<MediaQueryList | null>(null)
+const isCompact = ref(false)
+const expandedCategories = ref<Set<TechnologyCategoryId>>(new Set(['core']))
+
+const syncCompactLayout = () => {
+  isCompact.value = compactMediaQuery.value?.matches ?? false
+}
+const isCategoryExpanded = (categoryId: TechnologyCategoryId) =>
+  !isCompact.value || expandedCategories.value.has(categoryId)
+const toggleCategory = (categoryId: TechnologyCategoryId) => {
+  const nextExpandedCategories = new Set(expandedCategories.value)
+
+  if (nextExpandedCategories.has(categoryId)) {
+    nextExpandedCategories.delete(categoryId)
+  } else {
+    nextExpandedCategories.add(categoryId)
+  }
+
+  expandedCategories.value = nextExpandedCategories
+}
+
+onMounted(() => {
+  compactMediaQuery.value = window.matchMedia('(width < 42rem)')
+  syncCompactLayout()
+  compactMediaQuery.value.addEventListener('change', syncCompactLayout)
+})
+
+onBeforeUnmount(() =>
+  compactMediaQuery.value?.removeEventListener('change', syncCompactLayout),
+)
 </script>
 
 <template>
@@ -28,15 +61,49 @@ const { t } = useI18n()
             <span class="tech-stack-group__index" aria-hidden="true">
               {{ String(index + 1).padStart(2, '0') }}
             </span>
-            <div>
+            <div class="tech-stack-group__details">
               <h3>{{ t(`techStack.categories.${category.id}.title`) }}</h3>
               <p class="tech-stack-group__description">
                 {{ t(`techStack.categories.${category.id}.description`) }}
               </p>
+              <button
+                v-if="category.id !== 'core'"
+                class="tech-stack-group__toggle"
+                type="button"
+                :aria-expanded="isCategoryExpanded(category.id)"
+                :aria-controls="`technology-list-${category.id}`"
+                :aria-label="
+                  t(
+                    isCategoryExpanded(category.id)
+                      ? 'techStack.actions.hide'
+                      : 'techStack.actions.show',
+                    {
+                      category: t(`techStack.categories.${category.id}.title`),
+                    },
+                  )
+                "
+                @click="toggleCategory(category.id)"
+              >
+                <span>
+                  {{
+                    t(
+                      isCategoryExpanded(category.id)
+                        ? 'techStack.actions.hideShort'
+                        : 'techStack.actions.showShort',
+                    )
+                  }}
+                </span>
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="m5 8 5 5 5-5" />
+                </svg>
+              </button>
             </div>
           </header>
 
-          <ul>
+          <ul
+            :id="`technology-list-${category.id}`"
+            :hidden="!isCategoryExpanded(category.id)"
+          >
             <li
               v-for="technology in category.technologies"
               :key="technology"
@@ -126,9 +193,17 @@ const { t } = useI18n()
   color: var(--color-text-secondary);
 }
 
+.tech-stack-group__toggle {
+  display: none;
+}
+
 .tech-stack-group ul {
   margin-block-start: var(--space-8);
   list-style: none;
+}
+
+.tech-stack-group ul[hidden] {
+  display: none;
 }
 
 .tech-stack-group li {
@@ -176,6 +251,7 @@ const { t } = useI18n()
   }
 
   .tech-stack__groups {
+    margin-block-start: var(--space-12);
     border-block-end: 0;
   }
 
@@ -189,8 +265,65 @@ const { t } = useI18n()
     border-inline-start: 0;
   }
 
+  .tech-stack-group {
+    padding-block: var(--space-8);
+  }
+
+  .tech-stack-group--additional,
+  .tech-stack-group--exploring {
+    padding-block: var(--space-5);
+  }
+
   .tech-stack-group__description {
     min-block-size: auto;
+  }
+
+  .tech-stack-group__toggle {
+    display: inline-flex;
+    min-block-size: 2.75rem;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0;
+    margin-block-start: var(--space-4);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .tech-stack-group__toggle svg {
+    width: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+    transition: transform var(--motion-duration-fast)
+      var(--motion-ease-standard);
+  }
+
+  .tech-stack-group__toggle[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+
+  .tech-stack-group ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 var(--space-4);
+    margin-block-start: var(--space-6);
+  }
+
+  .tech-stack-group li {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-stack-group__toggle svg {
+    transition: none;
   }
 }
 </style>

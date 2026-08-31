@@ -143,10 +143,10 @@ const { t } = useI18n()
   display: grid;
   margin-block-start: var(--space-8);
   color: var(--color-text-primary);
-  font-size: clamp(4.25rem, 8vw, 7rem);
+  font-size: clamp(4.25rem, 8vw, 6rem);
   font-weight: var(--font-weight-semibold);
   line-height: 0.84;
-  letter-spacing: -0.065em;
+  letter-spacing: -0.04em;
 }
 
 .hero__role {
@@ -358,7 +358,7 @@ const { t } = useI18n()
 
 @media (width < 42rem) {
   .hero__layout {
-    padding-block: var(--space-6) var(--space-16);
+    padding-block: var(--space-6) var(--space-12);
   }
 
   .hero__name {

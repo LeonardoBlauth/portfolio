@@ -281,6 +281,71 @@ test.describe('localized and persisted controls', () => {
 test.describe('mobile navigation', () => {
   test.use({ viewport: { width: 390, height: 844 } })
 
+  test('condenses the long homepage without hiding core stack content', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+
+    await page.locator('#stack').scrollIntoViewIfNeeded()
+
+    const stackColumns = await page
+      .locator('.tech-stack-group ul')
+      .first()
+      .evaluate((element) => getComputedStyle(element).gridTemplateColumns)
+    expect(stackColumns.split(' ')).toHaveLength(2)
+
+    const complementaryTechnologies = page
+      .locator('.tech-stack-group--additional')
+      .getByRole('list')
+    const exploringTechnologies = page
+      .locator('.tech-stack-group--exploring')
+      .getByRole('list')
+    await expect(complementaryTechnologies).toBeHidden()
+    await expect(exploringTechnologies).toBeHidden()
+    const initialPageHeight = await page.evaluate(
+      () => document.documentElement.scrollHeight,
+    )
+
+    const complementaryToggle = page.locator(
+      'button[aria-controls="technology-list-additional"]',
+    )
+    await expect(complementaryToggle).toHaveAccessibleName(
+      'Ver tecnologias de Experiência complementar',
+    )
+    await expect(complementaryToggle).toHaveAttribute('aria-expanded', 'false')
+    await complementaryToggle.click()
+    await expect(complementaryTechnologies).toBeVisible()
+    await expect(complementaryToggle).toHaveAttribute('aria-expanded', 'true')
+    await expect(complementaryToggle).toHaveAccessibleName(
+      'Ocultar tecnologias de Experiência complementar',
+    )
+
+    const sectionPadding = await page
+      .locator('#experience')
+      .evaluate((element) =>
+        Number.parseFloat(getComputedStyle(element).paddingTop),
+      )
+    expect(sectionPadding).toBeLessThanOrEqual(64)
+    expect(initialPageHeight).toBeLessThan(6700)
+  })
+
+  test('uses only the hamburger navigation without horizontal overflow at 320px', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 700 })
+    await gotoHydrated(page, '/')
+
+    await expect(page.getByRole('button', { name: 'Abrir menu' })).toBeVisible()
+    await expect(
+      page.getByRole('navigation', { name: 'Atalhos de seção' }),
+    ).toHaveCount(0)
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true)
+  })
+
   test('supports keyboard dismissal, focus restoration, and selection close', async ({
     page,
   }) => {
@@ -912,5 +977,27 @@ test.describe('cross-cutting integration', () => {
       )
     })
     expect(contrast).toBeGreaterThanOrEqual(4.5)
+
+    for (const selector of ['.hero__name', '.selected-project h3']) {
+      const typography = await page.locator(selector).evaluate((element) => {
+        const styles = getComputedStyle(element)
+        const fontSize = Number.parseFloat(styles.fontSize)
+        const letterSpacing = Number.parseFloat(styles.letterSpacing)
+
+        return {
+          fontSize,
+          trackingEm: letterSpacing / fontSize,
+        }
+      })
+
+      expect(
+        typography.fontSize,
+        `${selector} display size`,
+      ).toBeLessThanOrEqual(96)
+      expect(
+        typography.trackingEm,
+        `${selector} tracking`,
+      ).toBeGreaterThanOrEqual(-0.04)
+    }
   })
 })
