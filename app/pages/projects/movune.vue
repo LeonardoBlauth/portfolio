@@ -38,6 +38,16 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
         <p>{{ t('pages.movune.roleLabel') }}</p>
         <p data-case-role>{{ t('pages.movune.role') }}</p>
       </div>
+      <a
+        class="case-hero__evidence"
+        href="#interface-heading"
+        data-case-evidence
+      >
+        {{ t('pages.movune.viewEvidence') }}
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M10 4v11m-4-4 4 4 4-4" />
+        </svg>
+      </a>
     </header>
 
     <div class="case-content layout-container">
@@ -287,6 +297,33 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
 }
 .case-hero__role p:last-child {
   color: var(--color-text-secondary);
+}
+.case-hero__evidence {
+  display: inline-flex;
+  min-block-size: 2.75rem;
+  align-items: center;
+  gap: var(--space-3);
+  margin-block-start: var(--space-8);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  text-decoration-color: var(--movune-green-bright);
+  text-underline-offset: 0.35em;
+}
+.case-hero__evidence:hover {
+  color: var(--movune-green-bright);
+}
+.case-hero__evidence svg {
+  width: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  transition: translate var(--motion-duration-fast) var(--motion-ease-standard);
+}
+.case-hero__evidence:hover svg,
+.case-hero__evidence:focus-visible svg {
+  translate: 0 0.2rem;
 }
 .case-content {
   border-block-start: 1px solid var(--color-border);
@@ -599,11 +636,26 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
     padding-inline: 0;
     border-inline-start: 0;
   }
+  .interface-figure figcaption small {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    letter-spacing: 0.035em;
+  }
   .demo-patient {
     width: 84%;
   }
   .interface-figure figcaption small {
     grid-column: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-hero__evidence svg {
+    transition: none;
+  }
+  .case-hero__evidence:hover svg,
+  .case-hero__evidence:focus-visible svg {
+    translate: 0;
   }
 }
 </style>

@@ -11,6 +11,7 @@ describe('movune case study', () => {
       backRoute: '/#projects',
       headline: 'Organizando um produto complexo antes de implementar.',
       role: 'Definição de produto, fluxos, arquitetura de telas, direção de UI/UX e prototipação.',
+      evidenceLabel: 'Ver representações da interface',
       sections: [
         'Visão geral',
         'Processo',
@@ -34,6 +35,7 @@ describe('movune case study', () => {
       backRoute: '/en#projects',
       headline: 'Organizing a complex product before implementation.',
       role: 'Product definition, flows, screen architecture, UI/UX direction, and prototyping.',
+      evidenceLabel: 'View interface representations',
       sections: [
         'Overview',
         'Process',
@@ -59,6 +61,7 @@ describe('movune case study', () => {
       backRoute,
       headline,
       role,
+      evidenceLabel,
       sections,
       facts,
     }) => {
@@ -67,6 +70,9 @@ describe('movune case study', () => {
 
       expect(article.get('h1').text()).toBe(headline)
       expect(article.get('[data-case-role]').text()).toBe(role)
+      expect(
+        article.get('a[data-case-evidence][href="#interface-heading"]').text(),
+      ).toBe(evidenceLabel)
       expect(article.get(`a[href="${backRoute}"]`).text()).toBe(backLabel)
       expect(article.findAll('section')).toHaveLength(6)
       expect(
