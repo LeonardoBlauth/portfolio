@@ -449,7 +449,7 @@ test.describe('reduced motion navigation', () => {
     contextOptions: { reducedMotion: 'reduce' },
   })
 
-  test('animates hash scrolling with reduced motion enabled', async ({
+  test('moves immediately to a hash with reduced motion enabled', async ({
     page,
   }) => {
     await gotoHydrated(page, '/')
@@ -506,11 +506,11 @@ test.describe('reduced motion navigation', () => {
       ),
     )
 
-    expect(intermediatePositions.size).toBeGreaterThanOrEqual(2)
+    expect(intermediatePositions.size).toBe(0)
     await headerOffsetIsClear(page, 'contact', false)
   })
 
-  test('animates return navigation to the Hero with reduced motion enabled', async ({
+  test('returns immediately to the Hero with reduced motion enabled', async ({
     page,
   }) => {
     await gotoHydrated(page, '/')
@@ -570,7 +570,7 @@ test.describe('reduced motion navigation', () => {
       ),
     )
 
-    expect(intermediatePositions.size).toBeGreaterThanOrEqual(2)
+    expect(intermediatePositions.size).toBe(0)
     expect(await page.evaluate(() => window.history.state)).toMatchObject({
       back: '/#contact',
       current: '/#top',
@@ -581,6 +581,59 @@ test.describe('reduced motion navigation', () => {
     await page.goBack()
     await expect(page).toHaveURL(/#contact$/)
     await headerOffsetIsClear(page, 'contact', false)
+  })
+
+  test('makes both native Hero hash links immediate with reduced motion enabled', async ({
+    page,
+  }) => {
+    const destinations = [
+      { link: 'Ver projetos', id: 'projects' },
+      { link: 'Entrar em contato', id: 'contact' },
+    ]
+
+    for (const destination of destinations) {
+      await gotoHydrated(page, '/')
+      const metrics = await page.evaluate((id) => {
+        const target = document.getElementById(id)
+        if (!target) throw new Error(`Missing ${id} destination`)
+        const scrollPadding = Number.parseFloat(
+          getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+        )
+        const browserWindow = window as typeof window & {
+          __heroScrollPositions: number[]
+        }
+        browserWindow.__heroScrollPositions = []
+        window.addEventListener(
+          'scroll',
+          () => browserWindow.__heroScrollPositions.push(window.scrollY),
+          { passive: true },
+        )
+        return {
+          expectedFinalY: Math.min(
+            document.documentElement.scrollHeight - window.innerHeight,
+            window.scrollY + target.getBoundingClientRect().top - scrollPadding,
+          ),
+        }
+      }, destination.id)
+
+      await page.getByRole('link', { name: destination.link }).click()
+      await expect(page).toHaveURL(new RegExp(`#${destination.id}$`))
+      await expect
+        .poll(() => page.evaluate(() => window.scrollY))
+        .toBeCloseTo(metrics.expectedFinalY, 0)
+
+      const intermediatePositions = await page.evaluate(
+        ({ finalY }) =>
+          (
+            window as typeof window & { __heroScrollPositions: number[] }
+          ).__heroScrollPositions.filter(
+            (position) => position > 1 && position < finalY - 1,
+          ),
+        { finalY: metrics.expectedFinalY },
+      )
+      expect(new Set(intermediatePositions).size).toBe(0)
+      await headerOffsetIsClear(page, destination.id, false)
+    }
   })
 
   test('cancels an in-flight animation when browser history changes', async ({
@@ -640,5 +693,224 @@ test.describe('reduced motion navigation', () => {
     expect(await page.evaluate(() => window.scrollY)).toBeLessThan(
       expectedFinalY - 50,
     )
+  })
+})
+
+test.describe('cross-cutting integration', () => {
+  const publicRoutes = ['/', '/en', '/projetos/movune', '/en/projects/movune']
+
+  test('keeps every localized route axe-clean in both themes', async ({
+    page,
+  }) => {
+    for (const theme of ['light', 'dark']) {
+      for (const route of publicRoutes) {
+        await page.addInitScript((selectedTheme) => {
+          localStorage.setItem('portfolio-theme', selectedTheme)
+        }, theme)
+        await gotoHydrated(page, route)
+        await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+
+        const results = await new AxeBuilder({ page })
+          .disableRules(['document-title'])
+          .analyze()
+        expect(results.violations, `${theme} theme at ${route}`).toEqual([])
+      }
+    }
+  })
+
+  test('preserves both case-study routes and both return paths', async ({
+    page,
+  }) => {
+    const journeys = [
+      {
+        casePath: '/projetos/movune',
+        switchName: 'Mudar idioma para English',
+        switchedPath: '/en/projects/movune',
+        backName: 'Back to projects',
+        homePath: '/en#projects',
+      },
+      {
+        casePath: '/en/projects/movune',
+        switchName: 'Switch language to português',
+        switchedPath: '/projetos/movune',
+        backName: 'Voltar para projetos',
+        homePath: '/#projects',
+      },
+    ]
+
+    for (const journey of journeys) {
+      await gotoHydrated(page, journey.casePath)
+      await page.getByRole('link', { name: journey.switchName }).click()
+      await expect(page).toHaveURL(new RegExp(`${journey.switchedPath}$`))
+
+      for (const position of ['first', 'last'] as const) {
+        const returnLinks = page.getByRole('link', { name: journey.backName })
+        await (
+          position === 'first' ? returnLinks.first() : returnLinks.last()
+        ).click()
+        await expect(page).toHaveURL(
+          new RegExp(`${journey.homePath.replace('#', '\\#')}$`),
+        )
+        await headerOffsetIsClear(page, 'projects')
+        await gotoHydrated(page, journey.switchedPath)
+      }
+    }
+  })
+
+  test('reflows the full application at reference widths and 200% text size', async ({
+    page,
+  }) => {
+    const viewports = [
+      { width: 1440, height: 900 },
+      { width: 1024, height: 768 },
+      { width: 853, height: 1280 },
+      { width: 641, height: 900 },
+      { width: 390, height: 844 },
+    ]
+
+    for (const route of publicRoutes) {
+      for (const viewport of viewports) {
+        await page.setViewportSize(viewport)
+        await gotoHydrated(page, route)
+        expect(
+          await page.evaluate(
+            () => document.documentElement.scrollWidth <= window.innerWidth,
+          ),
+          `${route} at ${viewport.width}px`,
+        ).toBe(true)
+      }
+    }
+
+    await page.setViewportSize({ width: 1024, height: 768 })
+    const cdp = await page.context().newCDPSession(page)
+    await cdp.send('Emulation.setDeviceMetricsOverride', {
+      width: 512,
+      height: 384,
+      deviceScaleFactor: 2,
+      mobile: false,
+      screenWidth: 1024,
+      screenHeight: 768,
+    })
+
+    for (const route of ['/', '/en']) {
+      await gotoHydrated(page, route)
+      expect(
+        await page.evaluate(() => ({
+          devicePixelRatio: window.devicePixelRatio,
+          innerWidth: window.innerWidth,
+        })),
+        `${route} browser zoom emulation`,
+      ).toEqual({ devicePixelRatio: 2, innerWidth: 512 })
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= window.innerWidth,
+        ),
+        `${route} at 200% text size`,
+      ).toBe(true)
+      await expect(page.locator('#contact')).toBeAttached()
+    }
+    await cdp.send('Emulation.clearDeviceMetricsOverride')
+  })
+
+  test('supports complete keyboard traversal on every localized route', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+
+    for (const route of publicRoutes) {
+      await gotoHydrated(page, route)
+      const focusableCount = await page
+        .locator(
+          'a[href]:visible, button:not([disabled]):visible, [tabindex="0"]:visible',
+        )
+        .count()
+      const visited = new Set<string>()
+
+      for (let index = 0; index < focusableCount; index += 1) {
+        await page.keyboard.press('Tab')
+        const focusState = await page.evaluate(() => {
+          const active = document.activeElement as HTMLElement | null
+          if (!active) return null
+          const focusable = Array.from(
+            document.querySelectorAll<HTMLElement>(
+              'a[href], button:not([disabled]), [tabindex="0"]',
+            ),
+          ).filter((element) => element.getClientRects().length > 0)
+          const styles = getComputedStyle(active)
+          return {
+            key: String(focusable.indexOf(active)),
+            outlineStyle: styles.outlineStyle,
+            outlineWidth: styles.outlineWidth,
+          }
+        })
+
+        expect(focusState, `missing focus at ${route}`).not.toBeNull()
+        expect(focusState!.outlineStyle, `focus style at ${route}`).not.toBe(
+          'none',
+        )
+        expect(focusState!.outlineWidth, `focus style at ${route}`).not.toBe(
+          '0px',
+        )
+        visited.add(focusState!.key)
+      }
+
+      expect(visited.size, `keyboard sequence at ${route}`).toBe(focusableCount)
+    }
+  })
+
+  test('uses valid themed interaction styles and accessible CTA contrast', async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('portfolio-theme', 'dark')
+    })
+    await gotoHydrated(page, '/')
+
+    const contactAction = page.locator('.contact__action').first()
+    const initialBackground = await contactAction.evaluate(
+      (element) => getComputedStyle(element).backgroundColor,
+    )
+    await contactAction.hover()
+    await expect
+      .poll(() =>
+        contactAction.evaluate(
+          (element) => getComputedStyle(element).backgroundColor,
+        ),
+      )
+      .not.toBe(initialBackground)
+    expect(
+      await contactAction.evaluate(
+        (element) => getComputedStyle(element).transitionDuration,
+      ),
+    ).not.toBe('0s')
+
+    const primaryCta = page.locator('.hero__cta--primary')
+    await primaryCta.hover()
+    const contrast = await primaryCta.evaluate((element) => {
+      const parseRgb = (value: string) =>
+        value
+          .match(/[\d.]+/g)!
+          .slice(0, 3)
+          .map(Number)
+      const luminance = (rgb: number[]) => {
+        const channels = rgb.map((value) => {
+          const channel = value / 255
+          return channel <= 0.04045
+            ? channel / 12.92
+            : Math.pow((channel + 0.055) / 1.055, 2.4)
+        })
+        return (
+          0.2126 * channels[0]! + 0.7152 * channels[1]! + 0.0722 * channels[2]!
+        )
+      }
+      const styles = getComputedStyle(element)
+      const foreground = luminance(parseRgb(styles.color))
+      const background = luminance(parseRgb(styles.backgroundColor))
+      return (
+        (Math.max(foreground, background) + 0.05) /
+        (Math.min(foreground, background) + 0.05)
+      )
+    })
+    expect(contrast).toBeGreaterThanOrEqual(4.5)
   })
 })

@@ -587,7 +587,8 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
 }
 @media (width < 40rem) {
   .case-hero h1 {
-    font-size: clamp(2.75rem, 14vw, 4.25rem);
+    overflow-wrap: break-word;
+    font-size: clamp(2.5rem, 12vw, 4.25rem);
   }
   .decision-list,
   .interface-figure figcaption {

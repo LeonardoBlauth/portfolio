@@ -798,12 +798,12 @@ Audit and complete the interactions among all implemented sections, locales, the
 
 ### Acceptance criteria
 
-- [ ] Every public string and accessible label is correctly localized.
-- [ ] Locale switching preserves the equivalent Home or case route.
-- [ ] Both themes work consistently across every section without relevant flash.
-- [ ] Navigation, hashes, smooth scroll, Header offset, and return paths work across the full page.
-- [ ] No horizontal overflow or screenshot-specific responsive hack exists.
-- [ ] All cross-section E2E journeys pass.
+- [x] Every public string and accessible label is correctly localized.
+- [x] Locale switching preserves the equivalent Home or case route.
+- [x] Both themes work consistently across every section without relevant flash.
+- [x] Navigation, hashes, smooth scroll, Header offset, and return paths work across the full page.
+- [x] No horizontal overflow or screenshot-specific responsive hack exists.
+- [x] All cross-section E2E journeys pass.
 
 ### Implementation unit
 
