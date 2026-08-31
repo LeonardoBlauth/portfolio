@@ -374,7 +374,7 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
   font-size: clamp(3rem, 6vw, 5.5rem);
   font-weight: var(--font-weight-semibold);
   line-height: 0.9;
-  letter-spacing: -0.065em;
+  letter-spacing: -0.04em;
 }
 
 .selected-project__status {

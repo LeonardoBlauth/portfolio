@@ -186,6 +186,16 @@ const contactActions = [
   }
 }
 
+@media (max-width: 42rem) {
+  .contact__layout {
+    gap: var(--space-10);
+  }
+
+  .contact__description {
+    margin-block-start: var(--space-6);
+  }
+}
+
 @media (max-width: 32rem) {
   .contact h2 {
     font-size: clamp(2.5rem, 12vw, 3.5rem);

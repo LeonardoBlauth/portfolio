@@ -97,3 +97,9 @@
     --motion-duration-slow: var(--motion-duration-instant);
   }
 }
+
+@media (width < 42rem) {
+  :root {
+    --section-spacing: clamp(3.25rem, 14vw, 4rem);
+  }
+}
