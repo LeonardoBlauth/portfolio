@@ -189,6 +189,11 @@ const handleSectionNavigation = (event: MouseEvent) => {
 
   cancelScrollAnimation()
 
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo({ top: targetY, behavior: 'instant' })
+    return
+  }
+
   const distance = targetY - startY
   const startedAt = performance.now()
   const animateScroll = (timestamp: number) => {

@@ -126,24 +126,24 @@ const contactActions = [
   align-items: center;
   min-block-size: 6rem;
   padding: var(--space-6) var(--space-2);
-  color: var(--color-text);
+  color: var(--color-text-primary);
   text-decoration: none;
   border-block-end: 1px solid var(--color-border);
   transition:
-    color var(--transition-fast),
-    background-color var(--transition-fast),
-    padding-inline var(--transition-fast);
+    color var(--motion-duration-fast) var(--motion-ease-standard),
+    background-color var(--motion-duration-fast) var(--motion-ease-standard),
+    padding-inline var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
 .contact__action:hover {
   padding-inline: var(--space-5);
   color: var(--color-accent);
-  background: var(--color-surface-raised);
+  background: var(--color-surface-elevated);
 }
 
 .contact__action:focus-visible {
   color: var(--color-accent);
-  background: var(--color-surface-raised);
+  background: var(--color-surface-elevated);
   outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
@@ -167,7 +167,7 @@ const contactActions = [
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: translate var(--transition-fast);
+  transition: translate var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
 .contact__action:hover svg,

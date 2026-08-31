@@ -82,7 +82,7 @@ const { t } = useI18n()
   --hero-accent: #6377ff;
   --hero-accent-hover: #7f90ff;
   --hero-button: #5269db;
-  --hero-button-hover: #6078ec;
+  --hero-button-hover: #4058c8;
   --hero-orbit: rgb(117 138 221 / 50%);
   --hero-orbit-muted: rgb(99 116 151 / 30%);
   --hero-glow: rgb(46 65 139 / 22%);
