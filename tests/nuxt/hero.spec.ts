@@ -37,7 +37,7 @@ describe('Home Hero', () => {
       const wrapper = await mountSuspended(App, { route })
       const hero = wrapper.get('section#top')
 
-      expect(hero.get('h1').text()).toBe('Leonardo Blauth')
+      expect(hero.get('h1 .visually-hidden').text()).toBe('Leonardo Blauth')
       expect(hero.text()).toContain('Full Stack Developer')
       expect(hero.text()).toContain(availability)
       expect(hero.text()).toContain(description)

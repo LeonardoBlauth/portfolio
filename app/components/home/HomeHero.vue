@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TextType from '~/components/ui/TextType.vue'
+
 const { t } = useI18n()
 </script>
 
@@ -11,10 +13,15 @@ const { t } = useI18n()
           {{ t('hero.availability') }}
         </p>
 
-        <h1 id="hero-title" class="hero__name">
-          <span>Leonardo </span>
-          <span>Blauth</span>
-        </h1>
+        <TextType
+          id="hero-title"
+          class="hero__name"
+          text="Leonardo&#10;Blauth"
+          as="h1"
+          :typing-speed="70"
+          :show-cursor="true"
+          cursor-character="|"
+        />
 
         <p class="hero__role">Full Stack Developer</p>
         <p class="hero__description">{{ t('hero.description') }}</p>
