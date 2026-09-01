@@ -46,9 +46,10 @@ describe('Home Hero', () => {
       expect(hero.text()).toContain('Vue.js · TypeScript · Laravel · MySQL')
       expect(hero.get('a[href="#contact"]').text()).toContain(contact)
       expect(hero.get('a[href="#projects"]').text()).toContain(projects)
-      expect(hero.get('.hero__orbit-system').attributes('aria-hidden')).toBe(
+      expect(hero.get('.hero__light-rays').attributes('aria-hidden')).toBe(
         'true',
       )
+      expect(hero.find('.hero__orbit-system').exists()).toBe(false)
     },
   )
 

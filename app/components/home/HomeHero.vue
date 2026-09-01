@@ -1,18 +1,39 @@
 <script setup lang="ts">
+import LightRays from '~/components/ui/LightRays.vue'
 import TextType from '~/components/ui/TextType.vue'
 
 const { t } = useI18n()
+const { resolvedTheme } = useTheme()
+
+const raysColor = computed(() =>
+  resolvedTheme.value === 'light' ? '#FFD166' : '#fff',
+)
+const raysSaturation = computed(() =>
+  resolvedTheme.value === 'light' ? 1 : 0.82,
+)
 </script>
 
 <template>
   <section id="top" class="hero" aria-labelledby="hero-title">
-    <div class="hero__layout layout-container">
-      <div class="hero__content">
-        <p class="hero__availability">
-          <span class="hero__availability-dot" aria-hidden="true" />
-          {{ t('hero.availability') }}
-        </p>
+    <LightRays
+      class="hero__light-rays"
+      aria-hidden="true"
+      rays-origin="top-center"
+      :rays-color="raysColor"
+      :rays-speed="0.1"
+      :light-spread="0.5"
+      :ray-length="2.5"
+      :fade-distance="1"
+      :pulsating="false"
+      :saturation="raysSaturation"
+      :follow-mouse="true"
+      :mouse-influence="0.05"
+      :noise-amount="0"
+      :distortion="0.01"
+    />
 
+    <div class="hero__layout layout-container">
+      <div class="hero__identity">
         <TextType
           id="hero-title"
           class="hero__name"
@@ -24,6 +45,14 @@ const { t } = useI18n()
         />
 
         <p class="hero__role">Full Stack Developer</p>
+
+        <p class="hero__availability">
+          <span class="hero__availability-dot" aria-hidden="true" />
+          {{ t('hero.availability') }}
+        </p>
+      </div>
+
+      <div class="hero__details">
         <p class="hero__description">{{ t('hero.description') }}</p>
 
         <div class="hero__actions">
@@ -73,13 +102,6 @@ const { t } = useI18n()
           <li>Vue.js · TypeScript · Laravel · MySQL</li>
         </ul>
       </div>
-
-      <div class="hero__orbit-system" aria-hidden="true">
-        <span class="hero__glow" />
-        <span class="hero__orbit hero__orbit--outer" />
-        <span class="hero__orbit hero__orbit--middle" />
-        <span class="hero__orbit hero__orbit--inner" />
-      </div>
     </div>
   </section>
 </template>
@@ -90,16 +112,18 @@ const { t } = useI18n()
   --hero-accent-hover: #7f90ff;
   --hero-button: #5269db;
   --hero-button-hover: #4058c8;
-  --hero-orbit: rgb(117 138 221 / 50%);
-  --hero-orbit-muted: rgb(99 116 151 / 30%);
-  --hero-glow: rgb(46 65 139 / 22%);
-
+  --hero-name-typing-duration: 1.05s;
+  --hero-role-delay: calc(var(--hero-name-typing-duration) + 0.08s);
+  --hero-availability-delay: calc(var(--hero-role-delay) + 0.44s);
+  --hero-details-delay: calc(
+    var(--hero-availability-delay) + var(--motion-duration-base) +
+      var(--motion-duration-fast)
+  );
   position: relative;
   isolation: isolate;
-  min-block-size: min(
-    47rem,
-    calc(100svh - var(--header-height) - var(--space-8))
-  );
+  margin-block-start: calc(-1 * (var(--header-height) + var(--space-8)));
+  min-block-size: 100vh;
+  min-block-size: 100svh;
   overflow: clip;
 }
 
@@ -108,24 +132,43 @@ const { t } = useI18n()
   --hero-accent-hover: #1d4ed8;
   --hero-button: #245fdf;
   --hero-button-hover: #1d4ed8;
-  --hero-orbit: rgb(36 95 223 / 34%);
-  --hero-orbit-muted: rgb(86 103 136 / 22%);
-  --hero-glow: rgb(68 111 209 / 16%);
+}
+
+.hero__light-rays {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  opacity: 0.52;
+}
+
+:global(:root[data-theme='light'] .hero__light-rays) {
+  opacity: 0.34;
 }
 
 .hero__layout {
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  align-items: center;
+  align-content: center;
+  gap: var(--space-10);
   min-block-size: inherit;
-  padding-block: var(--space-8) var(--space-20);
+  padding-block: calc(var(--header-height) + var(--space-8)) var(--space-8);
 }
 
-.hero__content {
+.hero__identity,
+.hero__details {
   position: relative;
   z-index: 1;
-  max-inline-size: 45rem;
+  min-inline-size: 0;
+}
+
+.hero__identity {
+  max-inline-size: 32rem;
+}
+
+.hero__details {
+  max-inline-size: 36rem;
 }
 
 .hero__availability {
@@ -135,6 +178,8 @@ const { t } = useI18n()
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
+  animation: hero-status-reveal var(--motion-duration-base)
+    var(--motion-ease-emphasized) var(--hero-availability-delay) both;
 }
 
 .hero__availability-dot {
@@ -148,7 +193,6 @@ const { t } = useI18n()
 
 .hero__name {
   display: grid;
-  margin-block-start: var(--space-8);
   color: var(--color-text-primary);
   font-size: clamp(4.25rem, 8vw, 6rem);
   font-weight: var(--font-weight-semibold);
@@ -162,11 +206,21 @@ const { t } = useI18n()
   font-size: clamp(var(--font-size-xl), 1.8vw, 1.75rem);
   line-height: var(--line-height-heading);
   letter-spacing: -0.035em;
+  animation: hero-role-reveal var(--motion-duration-slow)
+    var(--motion-ease-emphasized) var(--hero-role-delay) both;
+}
+
+.hero__role + .hero__availability {
+  margin-block-start: var(--space-5);
+}
+
+.hero__details {
+  animation: hero-details-reveal var(--motion-duration-slow)
+    var(--motion-ease-emphasized) var(--hero-details-delay) both;
 }
 
 .hero__description {
   max-inline-size: 39rem;
-  margin-block-start: var(--space-8);
   color: var(--color-text-secondary);
   font-size: clamp(var(--font-size-lg), 1.5vw, 1.4rem);
   line-height: 1.58;
@@ -267,8 +321,8 @@ const { t } = useI18n()
 
 .hero__metadata {
   display: grid;
-  grid-template-columns: max-content minmax(12rem, 1fr) minmax(17rem, 1.25fr);
-  max-inline-size: 45rem;
+  grid-template-columns: max-content minmax(0, 1fr);
+  max-inline-size: 100%;
   padding: 0;
   margin: var(--space-8) 0 0;
   color: var(--color-text-muted);
@@ -289,77 +343,58 @@ const { t } = useI18n()
   border-inline-start: 0;
 }
 
-.hero__orbit-system {
-  position: absolute;
-  z-index: 0;
-  inset-block-start: 4.5rem;
-  inset-inline-start: 10%;
-  width: 45rem;
-  height: 27rem;
-  pointer-events: none;
-  animation: hero-orbit-drift 12s var(--motion-ease-emphasized) infinite
-    alternate;
+.hero__metadata li:last-child {
+  grid-column: 1 / -1;
+  padding-inline-start: 0;
+  border-block-start: 1px solid var(--color-border);
+  border-inline-start: 0;
 }
 
-.hero__glow,
-.hero__orbit {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  translate: -50% -50%;
-}
-
-.hero__glow {
-  width: 60%;
-  aspect-ratio: 1;
-  background: radial-gradient(circle, var(--hero-glow), transparent 68%);
-  border-radius: 50%;
-  filter: blur(0.5rem);
-}
-
-.hero__orbit {
-  border: 1px solid var(--hero-orbit-muted);
-  border-radius: 50%;
-  rotate: -15deg;
-}
-
-.hero__orbit--outer {
-  width: 145%;
-  height: 120%;
-}
-
-.hero__orbit--middle {
-  width: 115%;
-  height: 90%;
-}
-
-.hero__orbit--inner {
-  width: 84%;
-  height: 65%;
-  border-color: var(--hero-orbit);
-}
-
-@keyframes hero-orbit-drift {
+@keyframes hero-role-reveal {
   from {
-    transform: translate3d(0, -0.25rem, 0);
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    translate: 0 0.375rem;
   }
   to {
-    transform: translate3d(0.35rem, 0.35rem, 0);
+    opacity: 1;
+    clip-path: inset(0);
+    translate: 0;
+  }
+}
+
+@keyframes hero-status-reveal {
+  from {
+    opacity: 0;
+    translate: 0 0.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
+  }
+}
+
+@keyframes hero-details-reveal {
+  from {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
   }
 }
 
 @media (width >= 68rem) {
   .hero__layout {
-    grid-template-columns: minmax(34rem, 0.92fr) minmax(28rem, 1.08fr);
-    gap: var(--space-8);
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    column-gap: clamp(var(--space-12), 6vw, var(--space-24));
     padding-block: clamp(var(--space-16), 9vh, var(--space-20)) var(--space-12);
   }
 
-  .hero__orbit-system {
-    position: relative;
-    inset: auto;
-    justify-self: center;
-    width: min(49vw, 49rem);
-    height: min(31vw, 31rem);
+  .hero__details {
+    justify-self: end;
   }
 }
 
@@ -369,12 +404,10 @@ const { t } = useI18n()
   }
 
   .hero__name {
-    margin-block-start: var(--space-8);
     font-size: clamp(3.75rem, 17vw, 4.5rem);
   }
 
-  .hero__role,
-  .hero__description {
+  .hero__role {
     margin-block-start: var(--space-8);
   }
 
@@ -400,12 +433,16 @@ const { t } = useI18n()
     border-inline-start: 0;
   }
 
-  .hero__orbit-system {
-    inset-block-start: 3.5rem;
-    inset-inline-start: 4.75rem;
-    width: 43rem;
-    height: 26rem;
-    opacity: 0.82;
+  .hero__metadata li:last-child {
+    grid-column: auto;
+    padding-inline-start: 0;
+    border-block-start: 0;
+  }
+
+  .hero__light-rays {
+    inset-inline: -18%;
+    width: 136%;
+    opacity: 0.42;
   }
 }
 
@@ -416,7 +453,12 @@ const { t } = useI18n()
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__orbit-system {
+  .hero__role,
+  .hero__availability,
+  .hero__details {
+    opacity: 1;
+    clip-path: none;
+    translate: 0;
     animation: none;
   }
 
