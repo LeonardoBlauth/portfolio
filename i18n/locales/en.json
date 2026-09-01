@@ -88,6 +88,9 @@
   "techStack": {
     "label": "Skills and Tech Stack",
     "headline": "What I use day to day. What I’m exploring.",
+    "logoLoop": {
+      "label": "Core technologies"
+    },
     "actions": {
       "show": "View technologies in {category}",
       "hide": "Hide technologies in {category}",

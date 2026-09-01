@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { technologyCategories } from '~/data/tech-stack'
+import LogoLoop from '~/components/ui/LogoLoop.vue'
+import { technologyCategories, technologyLogos } from '~/data/tech-stack'
 
 const { t } = useI18n()
 
@@ -48,6 +49,21 @@ onBeforeUnmount(() =>
         <p class="tech-stack__label">{{ t('techStack.label') }}</p>
         <h2 id="stack-heading">{{ t('techStack.headline') }}</h2>
       </header>
+
+      <div class="tech-stack__logo-loop">
+        <LogoLoop
+          :logos="technologyLogos"
+          :speed="42"
+          direction="left"
+          :logo-height="32"
+          :gap="48"
+          :hover-speed="14"
+          :fade-out="true"
+          fade-out-color="var(--color-canvas)"
+          :scale-on-hover="false"
+          :aria-label="t('techStack.logoLoop.label')"
+        />
+      </div>
 
       <div class="tech-stack__groups">
         <article
@@ -149,8 +165,12 @@ onBeforeUnmount(() =>
 .tech-stack__groups {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-block-start: clamp(var(--space-16), 8vw, var(--space-24));
-  border-block: 1px solid var(--color-border);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.tech-stack__logo-loop {
+  padding-block: clamp(var(--space-8), 4vw, var(--space-12));
+  margin-block: clamp(var(--space-12), 6vw, var(--space-20));
 }
 
 .tech-stack-group {
@@ -251,8 +271,12 @@ onBeforeUnmount(() =>
   }
 
   .tech-stack__groups {
-    margin-block-start: var(--space-12);
     border-block-end: 0;
+  }
+
+  .tech-stack__logo-loop {
+    padding-block: 0;
+    margin-block: var(--space-2) 0;
   }
 
   .tech-stack-group,

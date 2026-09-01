@@ -9,6 +9,18 @@ describe('skills and tech stack', () => {
       route: '/',
       label: 'Competências e Tech Stack',
       headline: 'O que uso no dia a dia. O que estou explorando.',
+      logoLoop: {
+        label: 'Tecnologias principais',
+        technologies: [
+          'Vue.js',
+          'TypeScript',
+          'Laravel',
+          'PHP',
+          'MySQL',
+          'Git',
+          'Docker',
+        ],
+      },
       categories: [
         {
           title: 'Stack profissional principal',
@@ -45,6 +57,18 @@ describe('skills and tech stack', () => {
       route: '/en',
       label: 'Skills and Tech Stack',
       headline: 'What I use day to day. What I’m exploring.',
+      logoLoop: {
+        label: 'Core technologies',
+        technologies: [
+          'Vue.js',
+          'TypeScript',
+          'Laravel',
+          'PHP',
+          'MySQL',
+          'Git',
+          'Docker',
+        ],
+      },
       categories: [
         {
           title: 'Core professional stack',
@@ -83,6 +107,20 @@ describe('skills and tech stack', () => {
 
     expect(section.get('.tech-stack__label').text()).toBe(scenario.label)
     expect(section.get('h2').text()).toBe(scenario.headline)
+
+    const logoLoop = section.get('[data-logo-loop]')
+    expect(logoLoop.attributes('aria-label')).toBe(scenario.logoLoop.label)
+    expect(
+      logoLoop
+        .findAll('[data-logo-loop-copy]:not([aria-hidden="true"]) img')
+        .map((logo) => logo.attributes('alt')),
+    ).toEqual(scenario.logoLoop.technologies)
+    expect(
+      logoLoop
+        .findAll('[data-logo-loop-copy]:not([aria-hidden="true"]) img')
+        .map((logo) => logo.attributes('src')),
+    ).not.toContainEqual(expect.stringContaining('/2563EB'))
+
     expect(groups).toHaveLength(3)
 
     groups.forEach((group, index) => {
