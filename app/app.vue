@@ -42,6 +42,5 @@ useHead(() => ({
 main {
   min-height: 100vh;
   min-height: 100dvh;
-  padding-block-start: calc(var(--header-height) + var(--space-8));
 }
 </style>
