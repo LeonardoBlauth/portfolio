@@ -121,6 +121,7 @@ const raysSaturation = computed(() =>
   );
   position: relative;
   isolation: isolate;
+  margin-block-start: calc(-1 * (var(--header-height) + var(--space-8)));
   min-block-size: 100vh;
   min-block-size: 100svh;
   overflow: clip;
@@ -152,7 +153,7 @@ const raysSaturation = computed(() =>
   align-content: center;
   gap: var(--space-10);
   min-block-size: inherit;
-  padding-block: var(--space-8) var(--space-20);
+  padding-block: calc(var(--header-height) + var(--space-8)) var(--space-8);
 }
 
 .hero__identity,

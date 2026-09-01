@@ -39,10 +39,12 @@ const headerOffsetIsClear = async (
         const header = await headerLocator.boundingBox()
         const target = await targetLocator.boundingBox()
 
-        if (!header || !target) return Number.POSITIVE_INFINITY
-        return target.y - (header.y + header.height)
+        if (!header || !target) return false
+
+        const offset = target.y - (header.y + header.height)
+        return offset >= 0 && offset <= 64
       })
-      .toBeLessThanOrEqual(64)
+      .toBe(true)
   }
 
   const header = await headerLocator.boundingBox()
@@ -641,7 +643,12 @@ test.describe('reduced motion navigation', () => {
       current: '/#top',
       position: scrollMetrics.historyPosition + 1,
     })
-    await headerOffsetIsClear(page, 'top', false)
+    const header = await page.locator('.site-header').boundingBox()
+    const heroTitle = await page.locator('#hero-title').boundingBox()
+
+    expect(header).not.toBeNull()
+    expect(heroTitle).not.toBeNull()
+    expect(heroTitle!.y).toBeGreaterThanOrEqual(header!.y + header!.height)
 
     await page.goBack()
     await expect(page).toHaveURL(/#contact$/)
