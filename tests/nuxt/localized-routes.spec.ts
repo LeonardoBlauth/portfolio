@@ -20,7 +20,14 @@ describe('localized routes', () => {
   ])('renders %s in %s', async (route, locale, heading) => {
     const wrapper = await mountSuspended(App, { route })
 
-    expect(wrapper.get('h1').text()).toBe(heading)
+    const pageHeading = wrapper.get('h1')
+    const accessibleHeading = pageHeading.find('.visually-hidden')
+
+    expect(
+      accessibleHeading.exists()
+        ? accessibleHeading.text()
+        : pageHeading.text(),
+    ).toBe(heading)
     expect(wrapper.get('main').attributes('data-locale')).toBe(locale)
   })
 })
