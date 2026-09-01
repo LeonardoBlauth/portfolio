@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { education, professionalExperience } from '~/data/professional-history'
+import { technologyLogoSources } from '~/data/technology-logos'
 
 const { t } = useI18n()
 </script>
@@ -58,7 +59,15 @@ const { t } = useI18n()
               :key="technology"
               data-technology
             >
-              {{ technology }}
+              <img
+                :src="technologyLogoSources[technology]"
+                alt=""
+                width="16"
+                height="16"
+                loading="lazy"
+                decoding="async"
+              />
+              <span>{{ technology }}</span>
             </li>
           </ul>
 
@@ -219,11 +228,21 @@ const { t } = useI18n()
 }
 
 .experience-record__technologies li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
+}
+
+.experience-record__technologies img {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  object-fit: contain;
 }
 
 .experience-record__cta {

@@ -67,7 +67,22 @@ describe('professional history', () => {
           .findAll('.contribution-group h4')
           .map((heading) => heading.text()),
       ).toEqual(contributionHeadings)
-      expect(experience.findAll('[data-technology]')).toHaveLength(6)
+      const technologies = experience.findAll('[data-technology]')
+      const technologyLogos = experience.findAll('[data-technology] img')
+
+      expect(technologies).toHaveLength(6)
+      expect(technologyLogos).toHaveLength(6)
+      expect(technologyLogos.map((logo) => logo.attributes('alt'))).toEqual(
+        Array(6).fill(''),
+      )
+      expect(technologyLogos.map((logo) => logo.attributes('src'))).toEqual([
+        'https://cdn.simpleicons.org/vuedotjs',
+        'https://cdn.simpleicons.org/javascript',
+        'https://cdn.simpleicons.org/typescript',
+        'https://cdn.simpleicons.org/laravel',
+        'https://cdn.simpleicons.org/php',
+        'https://cdn.simpleicons.org/mysql',
+      ])
 
       expect(education.get('.education__label').text()).toBe(educationLabel)
       expect(education.get('h3').text()).toBe(program)
