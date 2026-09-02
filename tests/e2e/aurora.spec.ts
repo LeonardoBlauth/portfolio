@@ -1,5 +1,15 @@
 import { expect, test } from '@playwright/test'
 
+const waitForHydration = (page: import('@playwright/test').Page) =>
+  page.waitForFunction(() =>
+    Boolean(
+      (
+        document.querySelector('#__nuxt') as
+          (HTMLElement & { __vue_app__?: unknown }) | null
+      )?.__vue_app__,
+    ),
+  )
+
 test.describe('Post-hero Aurora', () => {
   test('keeps the ambient layer perceptible in both themes', async ({
     page,
@@ -8,6 +18,7 @@ test.describe('Post-hero Aurora', () => {
       localStorage.setItem('portfolio-theme', 'dark')
     })
     await page.goto('/')
+    await waitForHydration(page)
 
     for (const [theme, minimumOpacity, maximumOpacity] of [
       ['dark', 0.3, 0.32],
