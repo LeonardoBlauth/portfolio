@@ -123,6 +123,15 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
   border-block-start: 1px solid var(--color-border);
 }
 
+@media (width >= 64rem) and (height >= 52rem) {
+  .selected-projects {
+    display: grid;
+    min-block-size: 100vh;
+    min-block-size: 100svh;
+    align-content: center;
+  }
+}
+
 .selected-projects::before {
   position: absolute;
   inset: 12% 0 auto;
