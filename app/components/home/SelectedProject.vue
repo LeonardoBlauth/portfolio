@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { localizedRoutes } from '~/data/localized-routes'
 import { selectedProject } from '~/data/projects'
+import ScrollReveal from '~/components/ui/ScrollReveal.vue'
 import type { SupportedLocale } from '~/utils/locale'
 
 const { locale, t } = useI18n()
@@ -21,7 +22,7 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
     aria-labelledby="projects-heading"
   >
     <div class="selected-projects__container layout-container">
-      <header class="selected-projects__header">
+      <ScrollReveal as="header" class="selected-projects__header">
         <p class="selected-projects__label">
           {{ t('selectedProjects.label') }}
         </p>
@@ -29,9 +30,13 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
         <p class="selected-projects__introduction">
           {{ t('selectedProjects.introduction') }}
         </p>
-      </header>
+      </ScrollReveal>
 
-      <article class="selected-project" :data-project-id="selectedProject.id">
+      <ScrollReveal
+        as="article"
+        class="selected-project"
+        :data-project-id="selectedProject.id"
+      >
         <div class="project-preview">
           <div class="project-preview__frame">
             <div class="project-preview__interface" aria-hidden="true">
@@ -112,7 +117,7 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
             </svg>
           </NuxtLink>
         </div>
-      </article>
+      </ScrollReveal>
     </div>
   </section>
 </template>

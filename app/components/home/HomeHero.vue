@@ -390,8 +390,7 @@ const raysSaturation = computed(() =>
 
 .hero__metadata-stack {
   gap: var(--space-4);
-  padding: var(--space-4) 0 var(--space-4) var(--space-5);
-  border-inline-start: 1px solid var(--color-border);
+  padding: var(--space-4) 0;
 }
 
 .hero__metadata-technology {
@@ -461,11 +460,16 @@ const raysSaturation = computed(() =>
     max-inline-size: 40rem;
     justify-self: end;
   }
+
+  .hero__metadata-stack {
+    padding-inline-start: var(--space-5);
+    border-inline-start: 1px solid var(--color-border);
+  }
 }
 
 @media (width < 42rem) {
   .hero__layout {
-    padding-block: var(--space-6) var(--space-12);
+    padding-block: calc(var(--header-height) + var(--space-10)) var(--space-12);
   }
 
   .hero__name {

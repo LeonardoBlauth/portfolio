@@ -67,9 +67,11 @@ describe('movune case study', () => {
 
       expect(article.get('h1').text()).toBe(headline)
       expect(article.get('[data-case-role]').text()).toBe(role)
-      expect(
-        article.get('a[data-case-evidence][href="#interface-heading"]').text(),
-      ).toBe(evidenceLabel)
+      const evidence = article.get('button[data-case-evidence]')
+      expect(evidence.attributes('type')).toBe('button')
+      expect(evidence.attributes('href')).toBeUndefined()
+      expect(evidence.text()).toBe(evidenceLabel)
+      expect(article.findAll('a[data-case-evidence]')).toHaveLength(0)
       const backControls = article.findAll(
         'button.case-hero__back, button.case-next__back',
       )

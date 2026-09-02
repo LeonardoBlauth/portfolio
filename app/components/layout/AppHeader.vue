@@ -18,6 +18,7 @@ const menuOpen = ref(false)
 const mounted = ref(false)
 const currentHash = ref(route.hash)
 const showReturnToHero = ref(false)
+const footerObscuresReturn = ref(false)
 const activeSectionId = ref('')
 
 let desktopMediaQuery: MediaQueryList | null = null
@@ -26,6 +27,8 @@ let scrollAnimationFrame: number | null = null
 let routeAlignmentFrame: number | null = null
 let returnToHeroFrame: number | null = null
 let sectionObserver: IntersectionObserver | null = null
+let footerOverlapObserver: IntersectionObserver | null = null
+let footerObserverRetries = 0
 
 const SECTION_SCROLL_DURATION_MS = 360
 
@@ -240,7 +243,65 @@ const updateReturnToHeroVisibility = () => {
   const scrollPadding = Number.parseFloat(
     getComputedStyle(document.documentElement).scrollPaddingBlockStart,
   )
-  showReturnToHero.value = hero.getBoundingClientRect().bottom <= scrollPadding
+  const heroHasLeftView = hero.getBoundingClientRect().bottom <= scrollPadding
+  showReturnToHero.value = heroHasLeftView && !footerObscuresReturn.value
+}
+const disconnectFooterOverlapObserver = () => {
+  footerOverlapObserver?.disconnect()
+  footerOverlapObserver = null
+  footerObserverRetries = 0
+  footerObscuresReturn.value = false
+}
+const setupFooterOverlapObserver = () => {
+  footerOverlapObserver?.disconnect()
+  footerOverlapObserver = null
+  if (!isHomeRoute.value) {
+    footerObserverRetries = 0
+    footerObscuresReturn.value = false
+    return
+  }
+
+  const footer = document.querySelector('.site-footer')
+  if (!footer) {
+    if (footerObserverRetries >= 12) return
+    footerObserverRetries += 1
+    window.requestAnimationFrame(setupFooterOverlapObserver)
+    return
+  }
+
+  footerObserverRetries = 0
+
+  const returnButton = document.querySelector<HTMLElement>('.return-to-hero')
+  const inset = (() => {
+    if (returnButton) {
+      const styles = getComputedStyle(returnButton)
+      if (styles.insetBlockEnd && styles.insetBlockEnd !== 'auto') {
+        return styles.insetBlockEnd
+      }
+
+      const token = styles.getPropertyValue('--return-to-hero-inset').trim()
+      if (token) return token
+    }
+
+    return (
+      getComputedStyle(document.documentElement)
+        .getPropertyValue('--space-6')
+        .trim() || '1.5rem'
+    )
+  })()
+
+  footerOverlapObserver = new IntersectionObserver(
+    (entries) => {
+      footerObscuresReturn.value = Boolean(entries[0]?.isIntersecting)
+      updateReturnToHeroVisibility()
+    },
+    {
+      root: null,
+      threshold: 0,
+      rootMargin: `0px 0px -${inset} 0px`,
+    },
+  )
+  footerOverlapObserver.observe(footer)
 }
 const syncReturnToHeroVisibility = async () => {
   await nextTick()
@@ -267,10 +328,17 @@ watch(
     const currentPath = fullPath.split('#', 1)[0]
     const previousPath = previousFullPath?.split('#', 1)[0]
     if (route.hash && currentPath !== previousPath) void alignRouteHash()
-    if (mounted.value) void syncReturnToHeroVisibility()
+    if (mounted.value) {
+      setupFooterOverlapObserver()
+      void syncReturnToHeroVisibility()
+    }
   },
 )
-watch(isHomeRoute, () => nextTick(setupSectionObserver))
+watch(isHomeRoute, async () => {
+  await nextTick()
+  setupSectionObserver()
+  setupFooterOverlapObserver()
+})
 
 const getDialogFocusableElements = () =>
   dialog.value
@@ -318,8 +386,11 @@ onMounted(() => {
   desktopMediaQuery = window.matchMedia('(min-width: 52rem)')
   desktopMediaQuery.addEventListener('change', handleDesktopTransition)
   if (desktopMediaQuery.matches) closeMenu({ restoreFocus: false })
-  setupSectionObserver()
-  void syncReturnToHeroVisibility()
+  void nextTick(() => {
+    setupSectionObserver()
+    setupFooterOverlapObserver()
+    void syncReturnToHeroVisibility()
+  })
 })
 
 onBeforeUnmount(() => {
@@ -331,6 +402,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleViewportScroll)
   desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
   sectionObserver?.disconnect()
+  disconnectFooterOverlapObserver()
   cancelReturnToHeroFrame()
   cancelRouteAlignment()
   cancelScrollAnimation()
@@ -541,6 +613,7 @@ onBeforeUnmount(() => {
       class="return-to-hero"
       :class="{ 'return-to-hero--visible': showReturnToHero }"
       type="button"
+      data-return-to-hero
       :aria-hidden="!showReturnToHero"
       :tabindex="showReturnToHero ? 0 : -1"
       :aria-label="t('controls.backToTop')"
@@ -707,9 +780,11 @@ onBeforeUnmount(() => {
 }
 
 .return-to-hero {
+  --return-to-hero-inset: var(--space-6);
+
   position: fixed;
   z-index: 101;
-  inset-block-end: var(--space-6);
+  inset-block-end: var(--return-to-hero-inset);
   inset-inline-end: var(--layout-gutter);
   display: grid;
   width: 3rem;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LogoLoop from '~/components/ui/LogoLoop.vue'
+import ScrollReveal from '~/components/ui/ScrollReveal.vue'
 import { technologyCategories, technologyLogos } from '~/data/tech-stack'
 
 const { t } = useI18n()
@@ -45,10 +46,10 @@ onBeforeUnmount(() =>
     aria-labelledby="stack-heading"
   >
     <div class="layout-container">
-      <header class="tech-stack__header">
+      <ScrollReveal as="header" class="tech-stack__header">
         <p class="tech-stack__label">{{ t('techStack.label') }}</p>
         <h2 id="stack-heading">{{ t('techStack.headline') }}</h2>
-      </header>
+      </ScrollReveal>
 
       <div class="tech-stack__logo-loop">
         <LogoLoop
@@ -64,7 +65,7 @@ onBeforeUnmount(() =>
         />
       </div>
 
-      <div class="tech-stack__groups">
+      <ScrollReveal as="div" class="tech-stack__groups">
         <article
           v-for="(category, index) in technologyCategories"
           :key="category.id"
@@ -128,7 +129,7 @@ onBeforeUnmount(() =>
             </li>
           </ul>
         </article>
-      </div>
+      </ScrollReveal>
     </div>
   </section>
 </template>
@@ -274,8 +275,8 @@ onBeforeUnmount(() =>
   }
 
   .tech-stack__logo-loop {
-    padding-block: 0;
-    margin-block: var(--space-2) 0;
+    padding-block: var(--space-2) 0;
+    margin-block: var(--space-12) var(--space-8);
   }
 
   .tech-stack-group,

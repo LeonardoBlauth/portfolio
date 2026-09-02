@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ScrollReveal from '~/components/ui/ScrollReveal.vue'
+
 const { t } = useI18n()
 
 const principles = ['understand', 'decide', 'evolve'] as const
@@ -11,14 +13,14 @@ const principles = ['understand', 'decide', 'evolve'] as const
     aria-labelledby="work-approach-heading"
   >
     <div class="work-approach__layout layout-container">
-      <header class="work-approach__header">
+      <ScrollReveal as="header" class="work-approach__header">
         <p class="work-approach__label">{{ t('workApproach.label') }}</p>
         <h2 id="work-approach-heading">
           {{ t('workApproach.headline') }}
         </h2>
-      </header>
+      </ScrollReveal>
 
-      <div class="work-approach__content">
+      <ScrollReveal as="div" class="work-approach__content">
         <div class="work-approach__copy">
           <p>{{ t('workApproach.paragraphs.context') }}</p>
           <p>{{ t('workApproach.paragraphs.ai') }}</p>
@@ -36,7 +38,7 @@ const principles = ['understand', 'decide', 'evolve'] as const
             <strong>{{ t(`workApproach.principles.${principle}`) }}</strong>
           </li>
         </ol>
-      </div>
+      </ScrollReveal>
     </div>
   </section>
 </template>

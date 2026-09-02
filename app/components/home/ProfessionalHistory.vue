@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ScrollReveal from '~/components/ui/ScrollReveal.vue'
 import { education, professionalExperience } from '~/data/professional-history'
 import { technologyLogoSources } from '~/data/technology-logos'
 
@@ -12,12 +13,16 @@ const { t } = useI18n()
     aria-labelledby="experience-heading"
   >
     <div class="layout-container">
-      <header class="professional-history__header">
+      <ScrollReveal as="header" class="professional-history__header">
         <p class="professional-history__label">{{ t('experience.label') }}</p>
         <h2 id="experience-heading">{{ t('experience.headline') }}</h2>
-      </header>
+      </ScrollReveal>
 
-      <article class="experience-record" data-professional-experience>
+      <ScrollReveal
+        as="article"
+        class="experience-record"
+        data-professional-experience
+      >
         <div class="experience-record__identity">
           <div>
             <h3>{{ professionalExperience.company }}</h3>
@@ -84,7 +89,7 @@ const { t } = useI18n()
             </svg>
           </a>
         </div>
-      </article>
+      </ScrollReveal>
 
       <aside
         class="education"
