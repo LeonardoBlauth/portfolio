@@ -145,6 +145,20 @@ const raysSaturation = computed(() =>
   overflow: clip;
 }
 
+.hero::after {
+  position: absolute;
+  z-index: 0;
+  inset: auto 0 0;
+  height: 28%;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-post-hero-canvas)
+  );
+}
+
 :global(:root[data-theme='light'] .hero) {
   --hero-accent: #245fdf;
   --hero-accent-hover: #1d4ed8;
@@ -430,6 +444,11 @@ const raysSaturation = computed(() =>
 }
 
 @media (width >= 68rem) {
+  .hero {
+    min-block-size: 94vh;
+    min-block-size: 94svh;
+  }
+
   .hero__layout {
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
     align-items: center;

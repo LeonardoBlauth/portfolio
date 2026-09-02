@@ -15,7 +15,6 @@ interface LogoLoopProps {
   gap?: number
   hoverSpeed?: number
   fadeOut?: boolean
-  fadeOutColor?: string
   scaleOnHover?: boolean
 }
 
@@ -26,7 +25,6 @@ const props = withDefaults(defineProps<LogoLoopProps>(), {
   gap: 48,
   hoverSpeed: 14,
   fadeOut: true,
-  fadeOutColor: 'var(--color-canvas)',
   scaleOnHover: false,
 })
 
@@ -48,7 +46,6 @@ const directionMultiplier = computed(() =>
 const rootStyle = computed(() => ({
   '--logo-loop-gap': `${props.gap}px`,
   '--logo-loop-logo-height': `${props.logoHeight}px`,
-  '--logo-loop-fade-color': props.fadeOutColor,
 }))
 
 let animationFrame: number | null = null
@@ -187,7 +184,10 @@ onBeforeUnmount(() => {
   <div
     ref="rootRef"
     class="logo-loop"
-    :class="{ 'logo-loop--scale-on-hover': scaleOnHover }"
+    :class="{
+      'logo-loop--fade-out': fadeOut,
+      'logo-loop--scale-on-hover': scaleOnHover,
+    }"
     :style="rootStyle"
     role="region"
     data-logo-loop
@@ -219,11 +219,6 @@ onBeforeUnmount(() => {
         </li>
       </ul>
     </div>
-
-    <template v-if="fadeOut">
-      <span class="logo-loop__fade logo-loop__fade--start" aria-hidden="true" />
-      <span class="logo-loop__fade logo-loop__fade--end" aria-hidden="true" />
-    </template>
   </div>
 </template>
 
@@ -271,30 +266,25 @@ onBeforeUnmount(() => {
   -webkit-user-drag: none;
 }
 
-.logo-loop__fade {
-  position: absolute;
-  z-index: 1;
-  inset-block: 0;
-  width: clamp(2rem, 8%, 7.5rem);
-  pointer-events: none;
-}
+.logo-loop--fade-out {
+  --logo-loop-fade-width: clamp(2rem, 8%, 7.5rem);
 
-.logo-loop__fade--start {
-  inset-inline-start: 0;
-  background: linear-gradient(
+  -webkit-mask-image: linear-gradient(
     to right,
-    var(--logo-loop-fade-color),
+    transparent,
+    #000 var(--logo-loop-fade-width),
+    #000 calc(100% - var(--logo-loop-fade-width)),
     transparent
   );
-}
-
-.logo-loop__fade--end {
-  inset-inline-end: 0;
-  background: linear-gradient(
-    to left,
-    var(--logo-loop-fade-color),
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--logo-loop-fade-width),
+    #000 calc(100% - var(--logo-loop-fade-width)),
     transparent
   );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
 .logo-loop--scale-on-hover .logo-loop__sequence img {

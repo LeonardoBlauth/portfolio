@@ -120,7 +120,6 @@ const message = (key: string) => t(`${selectedProject.messageKey}.${key}`)
 <style scoped>
 .selected-projects {
   position: relative;
-  border-block-start: 1px solid var(--color-border);
 }
 
 @media (width >= 64rem) and (height >= 52rem) {
