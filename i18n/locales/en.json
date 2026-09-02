@@ -164,13 +164,13 @@
     "movune": {
       "back": "Back to projects",
       "headline": "Organizing a complex product before implementation.",
-      "lead": "movune is an evolving B2B SaaS product for managing Physiotherapy and Pilates clinics in Brazil. This case study documents the path from the initial idea to product definition, flows, screen architecture, visual identity, and prototyping.",
+      "lead": "movune is an evolving B2B SaaS product for managing physiotherapy and Pilates clinics in Brazil. This case study documents the path from the initial idea to product definition, flows, screen architecture, visual identity, and prototyping.",
       "roleLabel": "Role in the project",
       "role": "Product definition, flows, screen architecture, UI/UX direction, and prototyping.",
       "viewEvidence": "View interface representations",
       "overview": {
         "title": "Overview",
-        "context": "The product aims to centralize management activities for Physiotherapy and Pilates clinics. The considered domain includes schedules, patients, appointments, classes, packages, finance, documents, and communication, as well as distinct operational rules.",
+        "context": "The product aims to centralize management activities for physiotherapy and Pilates clinics. The considered domain includes schedules, patients, appointments, classes, packages, finance, documents, and communication, as well as distinct operational rules.",
         "challenge": "The challenge was to organize a broad idea into a coherent product structure and validate the experience before defining production architecture."
       },
       "process": {

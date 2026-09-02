@@ -164,13 +164,13 @@
     "movune": {
       "back": "Voltar para projetos",
       "headline": "Organizando um produto complexo antes de implementar.",
-      "lead": "O movune é um SaaS B2B em evolução para gestão de clínicas de Fisioterapia e Pilates no Brasil. Este case registra o caminho da ideia à definição do produto, fluxos, arquitetura de telas, identidade visual e prototipação.",
+      "lead": "O movune é um SaaS B2B em evolução para gestão de clínicas de fisioterapia e Pilates no Brasil. Este case registra o caminho da ideia à definição do produto, fluxos, arquitetura de telas, identidade visual e prototipação.",
       "roleLabel": "Atuação no projeto",
       "role": "Definição de produto, fluxos, arquitetura de telas, direção de UI/UX e prototipação.",
       "viewEvidence": "Ver representações da interface",
       "overview": {
         "title": "Visão geral",
-        "context": "O produto busca centralizar atividades de gestão de clínicas de Fisioterapia e Pilates. O domínio considerado reúne agendas, pacientes, atendimentos, turmas, pacotes, finanças, documentos e comunicação, além de regras operacionais distintas.",
+        "context": "O produto busca centralizar atividades de gestão de clínicas de fisioterapia e Pilates. O domínio considerado reúne agendas, pacientes, atendimentos, turmas, pacotes, finanças, documentos e comunicação, além de regras operacionais distintas.",
         "challenge": "O desafio foi organizar uma ideia ampla em uma estrutura de produto coerente e validar a experiência antes de definir a arquitetura de produção."
       },
       "process": {
