@@ -58,7 +58,7 @@ const headerOffsetIsClear = async (
 test.describe('desktop shell navigation', () => {
   test.use({ viewport: { width: 1440, height: 900 } })
 
-  test('uses native hashes, fixed-header offset, and predictable history', async ({
+  test('scrolls to sections without changing the homepage URL', async ({
     page,
   }) => {
     const clientErrors: string[] = []
@@ -74,23 +74,24 @@ test.describe('desktop shell navigation', () => {
     ).toBeVisible()
     await expect(page.getByRole('button', { name: 'Abrir menu' })).toBeHidden()
 
-    await page
-      .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('link', { name: 'Projetos' })
-      .click()
-    await expect(page).toHaveURL(/#projects$/)
+    const initialHistoryState = await page.evaluate(() => history.state)
+    const navigation = page.getByRole('navigation', {
+      name: 'Navegação principal',
+    })
+
+    await navigation.getByRole('button', { name: 'Projetos' }).click()
+    await expect(page).toHaveURL(/\/$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(0)
     await headerOffsetIsClear(page, 'projects')
 
-    await page
-      .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('link', { name: 'Stack' })
-      .click()
-    await expect(page).toHaveURL(/#stack$/)
-    await page.goBack()
-    await expect(page).toHaveURL(/#projects$/)
+    await navigation.getByRole('button', { name: 'Stack' }).click()
+    await expect(page).toHaveURL(/\/$/)
+    await headerOffsetIsClear(page, 'stack')
+    expect(await page.evaluate(() => history.state)).toEqual(
+      initialHistoryState,
+    )
     expect(clientErrors).toEqual([])
   })
 
@@ -110,7 +111,7 @@ test.describe('desktop shell navigation', () => {
     expect(clientErrors).toEqual([])
   })
 
-  test('preserves router history state for controlled hash entries', async ({
+  test('does not create a history entry when a section is selected', async ({
     page,
   }) => {
     await gotoHydrated(page, '/')
@@ -118,37 +119,85 @@ test.describe('desktop shell navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('link', { name: 'Projetos' })
+      .getByRole('button', { name: 'Projetos' })
       .click()
 
-    expect(await page.evaluate(() => history.state)).toMatchObject({
-      back: '/',
-      current: '/#projects',
-      forward: null,
-      position: initialHistoryState.position + 1,
-      replaced: false,
-    })
+    await headerOffsetIsClear(page, 'projects')
+    await expect(page).toHaveURL(/\/$/)
+    expect(await page.evaluate(() => history.state)).toEqual(
+      initialHistoryState,
+    )
   })
 
-  test('keeps hash history reachable across locale navigation', async ({
+  test('reveals a floating return control after leaving the Hero', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const returnToHero = page.getByRole('button', {
+      name: 'Voltar ao início',
+    })
+
+    await expect(returnToHero).toBeHidden()
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('button', { name: 'Contato' })
+      .click()
+    await headerOffsetIsClear(page, 'contact')
+
+    await expect(returnToHero).toBeVisible()
+    await expect(returnToHero).toHaveCSS('position', 'fixed')
+    await returnToHero.click()
+    await expect(page).toHaveURL(/\/$/)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeCloseTo(0, 0)
+    await expect(returnToHero).toBeHidden()
+  })
+
+  test('keeps the floating return control visible in the light theme', async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('portfolio-theme', 'light')
+    })
+    await gotoHydrated(page, '/')
+
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('button', { name: 'Contato' })
+      .click()
+    await headerOffsetIsClear(page, 'contact')
+
+    const returnToHero = page.getByRole('button', {
+      name: 'Voltar ao início',
+    })
+    await expect(returnToHero).toBeVisible()
+    await expect(returnToHero).toHaveCSS('color', 'rgb(36, 95, 223)')
+    await expect(returnToHero).toHaveCSS(
+      'background-color',
+      'rgb(255, 255, 255)',
+    )
+  })
+
+  test('keeps the selected section URL-free across locale navigation', async ({
     page,
   }) => {
     await gotoHydrated(page, '/')
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('link', { name: 'Stack' })
+      .getByRole('button', { name: 'Stack' })
       .click()
     await headerOffsetIsClear(page, 'stack')
     await page.getByRole('link', { name: 'Mudar idioma para English' }).click()
-    await expect(page).toHaveURL(/\/en#stack$/)
+    await expect(page).toHaveURL(/\/en$/)
 
     await page.goBack()
-    await expect(page).toHaveURL(/\/#stack$/)
-    await headerOffsetIsClear(page, 'stack')
+    await expect(page).toHaveURL(/\/$/)
 
     await page.goForward()
-    await expect(page).toHaveURL(/\/en#stack$/)
+    await expect(page).toHaveURL(/\/en$/)
   })
 
   test('treats a localized trailing slash as the same page', async ({
@@ -163,10 +212,10 @@ test.describe('desktop shell navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Primary navigation' })
-      .getByRole('link', { name: 'Projects' })
+      .getByRole('button', { name: 'Projects' })
       .click()
 
-    await expect(page).toHaveURL(/\/en#projects$/)
+    await expect(page).toHaveURL(/\/en\/$/)
     expect(
       await page.evaluate(
         () =>
@@ -194,11 +243,15 @@ test.describe('localized and persisted controls', () => {
     ).toBeVisible()
     await expect(page.locator('article section')).toHaveCount(6)
 
-    await page
-      .getByRole('link', { name: 'Voltar para projetos' })
-      .first()
-      .click()
-    await expect(page).toHaveURL(/\/#projects$/)
+    const backToProjects = page.getByRole('button', {
+      name: 'Voltar para projetos',
+    })
+    await expect(backToProjects).toHaveCount(2)
+    await expect(
+      page.getByRole('link', { name: 'Voltar para projetos' }),
+    ).toHaveCount(0)
+    await backToProjects.first().click()
+    await expect(page).toHaveURL(/\/$/)
     await headerOffsetIsClear(page, 'projects')
   })
 
@@ -346,6 +399,16 @@ test.describe('mobile navigation', () => {
         () => document.documentElement.scrollWidth <= window.innerWidth,
       ),
     ).toBe(true)
+
+    const footerLayout = page.locator('.site-footer__layout')
+    const footerIdentity = page.locator('.site-footer__identity')
+    const footerCopyright = page.locator('[data-footer-copyright]')
+    await expect(footerLayout).toHaveCSS('flex-direction', 'row')
+    const identityBox = await footerIdentity.boundingBox()
+    const copyrightBox = await footerCopyright.boundingBox()
+    expect(identityBox).not.toBeNull()
+    expect(copyrightBox).not.toBeNull()
+    expect(Math.abs(identityBox!.y - copyrightBox!.y)).toBeLessThanOrEqual(8)
   })
 
   test('supports keyboard dismissal, focus restoration, and selection close', async ({
@@ -363,16 +426,17 @@ test.describe('mobile navigation', () => {
       page.getByRole('button', { name: 'Fechar menu' }),
     ).toBeFocused()
     await page.keyboard.press('Shift+Tab')
-    await expect(dialog.getByRole('link', { name: 'Contato' })).toBeFocused()
+    await expect(dialog.getByRole('button', { name: 'Contato' })).toBeFocused()
 
     await page.keyboard.press('Escape')
     await expect(dialog).toBeHidden()
     await expect(trigger).toBeFocused()
 
     await trigger.click()
-    await dialog.getByRole('link', { name: 'Projetos' }).click()
+    await dialog.getByRole('button', { name: 'Projetos' }).click()
     await expect(dialog).toBeHidden()
-    await expect(page).toHaveURL(/#projects$/)
+    await expect(page).toHaveURL(/\/$/)
+    await headerOffsetIsClear(page, 'projects')
   })
 
   test('closes the mobile menu when the Header transitions to desktop', async ({
@@ -442,6 +506,50 @@ test.describe('mobile navigation', () => {
 })
 
 test.describe('contact and footer', () => {
+  test('keeps footer content inside the shared page container on desktop', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await gotoHydrated(page, '/')
+
+    const [contactLayoutBox, footerLayoutBox] = await Promise.all([
+      page.locator('.contact__layout').boundingBox(),
+      page.locator('.site-footer__layout').boundingBox(),
+    ])
+
+    expect(contactLayoutBox).not.toBeNull()
+    expect(footerLayoutBox).not.toBeNull()
+    expect(footerLayoutBox!.x).toBeCloseTo(contactLayoutBox!.x, 0)
+    expect(footerLayoutBox!.width).toBeCloseTo(contactLayoutBox!.width, 0)
+  })
+
+  test('keeps the contact breathing room while the footer remains compact', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await gotoHydrated(page, '/')
+
+    const contactLayout = page.locator('.contact__layout')
+    const footer = page.locator('footer')
+    const footerLayout = page.locator('.site-footer__layout')
+
+    const [contactLayoutBox, footerBox, footerLayoutBox] = await Promise.all([
+      contactLayout.boundingBox(),
+      footer.boundingBox(),
+      footerLayout.boundingBox(),
+    ])
+
+    expect(contactLayoutBox).not.toBeNull()
+    expect(footerBox).not.toBeNull()
+    expect(footerLayoutBox).not.toBeNull()
+    const contactToFooterGap =
+      footerBox!.y - (contactLayoutBox!.y + contactLayoutBox!.height)
+
+    expect(contactToFooterGap).toBeGreaterThanOrEqual(112)
+    expect(contactToFooterGap).toBeLessThanOrEqual(136)
+    expect(footerLayoutBox!.height).toBeLessThanOrEqual(96)
+  })
+
   test('exposes the approved destinations in logical keyboard order', async ({
     page,
   }) => {
@@ -485,6 +593,17 @@ test.describe('contact and footer', () => {
     await expect(footer).toContainText('Leonardo Blauth')
     await expect(footer).toContainText('© 2026')
     await expect(footer.getByRole('link')).toHaveCount(0)
+    const footerMonogram = footer.locator('[data-footer-monogram]')
+    await expect(footerMonogram).toHaveAttribute('aria-hidden', 'true')
+    await expect(footerMonogram.locator('img')).toHaveCount(2)
+    await expect(footerMonogram.locator('img').first()).toHaveAttribute(
+      'src',
+      '/brand/lb-monogram-color.svg',
+    )
+    await expect(footerMonogram.locator('img').last()).toHaveAttribute(
+      'src',
+      '/brand/lb-monogram-cobalt.svg',
+    )
   })
 
   test('keeps contact actions comfortable and overflow-free on mobile', async ({
@@ -553,9 +672,9 @@ test.describe('reduced motion navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('link', { name: 'Contato' })
+      .getByRole('button', { name: 'Contato' })
       .click()
-    await expect(page).toHaveURL(/#contact$/)
+    await expect(page).toHaveURL(/\/$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(scrollMetrics.expectedFinalY, 0)
@@ -580,13 +699,7 @@ test.describe('reduced motion navigation', () => {
   test('returns immediately to the Hero with reduced motion enabled', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
-    const navigation = page.getByRole('navigation', {
-      name: 'Navegação principal',
-    })
-
-    await navigation.getByRole('link', { name: 'Contato' }).click()
-    await expect(page).toHaveURL(/#contact$/)
+    await gotoHydrated(page, '/#contact')
     await headerOffsetIsClear(page, 'contact', false)
 
     const scrollMetrics = await page.evaluate(() => {
@@ -618,8 +731,13 @@ test.describe('reduced motion navigation', () => {
       }
     })
 
-    await page.getByRole('link', { name: 'Ir para o início' }).click()
-    await expect(page).toHaveURL(/#top$/)
+    const homeControl = page.getByRole('button', { name: 'Ir para o início' })
+    await expect(homeControl).toHaveCount(1)
+    await expect(
+      page.getByRole('link', { name: 'Ir para o início' }),
+    ).toHaveCount(0)
+    await homeControl.click()
+    await expect(page).toHaveURL(/\/#contact$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(scrollMetrics.expectedFinalY, 0)
@@ -639,9 +757,7 @@ test.describe('reduced motion navigation', () => {
 
     expect(intermediatePositions.size).toBe(0)
     expect(await page.evaluate(() => window.history.state)).toMatchObject({
-      back: '/#contact',
-      current: '/#top',
-      position: scrollMetrics.historyPosition + 1,
+      position: scrollMetrics.historyPosition,
     })
     const header = await page.locator('.site-header').boundingBox()
     const heroTitle = await page.locator('#hero-title').boundingBox()
@@ -650,9 +766,7 @@ test.describe('reduced motion navigation', () => {
     expect(heroTitle).not.toBeNull()
     expect(heroTitle!.y).toBeGreaterThanOrEqual(header!.y + header!.height)
 
-    await page.goBack()
-    await expect(page).toHaveURL(/#contact$/)
-    await headerOffsetIsClear(page, 'contact', false)
+    await expect(page).toHaveURL(/\/#contact$/)
   })
 
   test('makes both native Hero hash links immediate with reduced motion enabled', async ({
@@ -708,7 +822,7 @@ test.describe('reduced motion navigation', () => {
     }
   })
 
-  test('cancels an in-flight animation when browser history changes', async ({
+  test('cancels an in-flight animation when another section is selected', async ({
     page,
   }) => {
     await gotoHydrated(page, '/')
@@ -716,20 +830,18 @@ test.describe('reduced motion navigation', () => {
       name: 'Navegação principal',
     })
 
-    await navigation.getByRole('link', { name: 'Projetos' }).click()
-    await expect(page).toHaveURL(/#projects$/)
+    await navigation.getByRole('button', { name: 'Projetos' }).click()
+    await expect(page).toHaveURL(/\/$/)
     await headerOffsetIsClear(page, 'projects')
 
     const projectsY = await page.evaluate(() => window.scrollY)
-    await navigation.getByRole('link', { name: 'Stack' }).click()
-    await expect(page).toHaveURL(/#stack$/)
+    await navigation.getByRole('button', { name: 'Stack' }).click()
+    await expect(page).toHaveURL(/\/$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(projectsY + 10)
 
-    await page.goBack()
-    await expect(page).toHaveURL(/#projects$/)
-    await page.waitForTimeout(450)
+    await navigation.getByRole('button', { name: 'Projetos' }).click()
     await headerOffsetIsClear(page, 'projects')
   })
 
@@ -753,9 +865,9 @@ test.describe('reduced motion navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('link', { name: 'Contato' })
+      .getByRole('button', { name: 'Contato' })
       .click()
-    await expect(page).toHaveURL(/#contact$/)
+    await expect(page).toHaveURL(/\/$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(10)
@@ -799,14 +911,14 @@ test.describe('cross-cutting integration', () => {
         switchName: 'Mudar idioma para English',
         switchedPath: '/en/projects/movune',
         backName: 'Back to projects',
-        homePath: '/en#projects',
+        homePath: '/en',
       },
       {
         casePath: '/en/projects/movune',
         switchName: 'Switch language to português',
         switchedPath: '/projetos/movune',
         backName: 'Voltar para projetos',
-        homePath: '/#projects',
+        homePath: '/',
       },
     ]
 
@@ -816,9 +928,15 @@ test.describe('cross-cutting integration', () => {
       await expect(page).toHaveURL(new RegExp(`${journey.switchedPath}$`))
 
       for (const position of ['first', 'last'] as const) {
-        const returnLinks = page.getByRole('link', { name: journey.backName })
+        const returnButtons = page.getByRole('button', {
+          name: journey.backName,
+        })
+        await expect(returnButtons).toHaveCount(2)
+        await expect(
+          page.getByRole('link', { name: journey.backName }),
+        ).toHaveCount(0)
         await (
-          position === 'first' ? returnLinks.first() : returnLinks.last()
+          position === 'first' ? returnButtons.first() : returnButtons.last()
         ).click()
         await expect(page).toHaveURL(
           new RegExp(`${journey.homePath.replace('#', '\\#')}$`),

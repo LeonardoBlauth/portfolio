@@ -8,7 +8,6 @@ describe('movune case study', () => {
     {
       route: '/projetos/movune',
       backLabel: 'Voltar para projetos',
-      backRoute: '/#projects',
       headline: 'Organizando um produto complexo antes de implementar.',
       role: 'Definição de produto, fluxos, arquitetura de telas, direção de UI/UX e prototipação.',
       evidenceLabel: 'Ver representações da interface',
@@ -32,7 +31,6 @@ describe('movune case study', () => {
     {
       route: '/en/projects/movune',
       backLabel: 'Back to projects',
-      backRoute: '/en#projects',
       headline: 'Organizing a complex product before implementation.',
       role: 'Product definition, flows, screen architecture, UI/UX direction, and prototyping.',
       evidenceLabel: 'View interface representations',
@@ -58,7 +56,6 @@ describe('movune case study', () => {
     async ({
       route,
       backLabel,
-      backRoute,
       headline,
       role,
       evidenceLabel,
@@ -73,7 +70,17 @@ describe('movune case study', () => {
       expect(
         article.get('a[data-case-evidence][href="#interface-heading"]').text(),
       ).toBe(evidenceLabel)
-      expect(article.get(`a[href="${backRoute}"]`).text()).toBe(backLabel)
+      const backControls = article.findAll(
+        'button.case-hero__back, button.case-next__back',
+      )
+      expect(backControls).toHaveLength(2)
+      expect(backControls.map((control) => control.text())).toEqual([
+        backLabel,
+        backLabel,
+      ])
+      expect(
+        article.findAll('a.case-hero__back, a.case-next__back'),
+      ).toHaveLength(0)
       expect(article.findAll('section')).toHaveLength(6)
       expect(
         article.findAll('section h2').map((heading) => heading.text()),

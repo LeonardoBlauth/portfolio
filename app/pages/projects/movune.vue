@@ -3,11 +3,19 @@ import { localizedRoutes } from '~/data/localized-routes'
 
 const { locale, t } = useI18n()
 
-const projectsRoute = computed(() =>
+const homeRoute = computed(() =>
   locale.value === 'en'
-    ? `${localizedRoutes.home.paths.en}#projects`
-    : `${localizedRoutes.home.paths['pt-BR']}#projects`,
+    ? localizedRoutes.home.paths.en
+    : localizedRoutes.home.paths['pt-BR'],
 )
+const pendingHomeSection = useState<string | null>(
+  'pending-home-section',
+  () => null,
+)
+const returnToProjects = () => {
+  pendingHomeSection.value = 'projects'
+  return navigateTo(homeRoute.value)
+}
 
 const processSteps = [
   'product',
@@ -23,12 +31,12 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
 <template>
   <article class="case-study" data-project-id="movune">
     <header id="top" class="case-hero layout-container">
-      <NuxtLink class="case-hero__back" :to="projectsRoute">
+      <button class="case-hero__back" type="button" @click="returnToProjects">
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path d="M16 10H5m4-4-4 4 4 4" />
         </svg>
         {{ t('pages.movune.back') }}
-      </NuxtLink>
+      </button>
       <div class="case-hero__identity" aria-hidden="true">
         <span class="case-hero__mark">m</span><span>movune</span>
       </div>
@@ -201,12 +209,16 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
             <h3>{{ t('pages.movune.next.learningsTitle') }}</h3>
             <p>{{ t('pages.movune.next.learnings') }}</p>
           </div>
-          <NuxtLink class="case-next__back" :to="projectsRoute">
+          <button
+            class="case-next__back"
+            type="button"
+            @click="returnToProjects"
+          >
             {{ t('pages.movune.back') }}
             <svg viewBox="0 0 20 20" aria-hidden="true">
               <path d="M4 10h11m-4-4 4 4-4 4" />
             </svg>
-          </NuxtLink>
+          </button>
         </div>
       </section>
     </div>
@@ -225,13 +237,20 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
 .case-hero__back,
 .case-next__back {
   display: inline-flex;
+  padding: 0;
   min-block-size: 2.75rem;
   align-items: center;
   gap: var(--space-3);
   color: var(--color-text-secondary);
+  font: inherit;
   font-weight: var(--font-weight-semibold);
+  text-align: start;
+  text-decoration: underline;
   text-decoration-color: var(--color-border);
   text-underline-offset: 0.35em;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
 }
 .case-hero__back:hover,
 .case-next__back:hover {

@@ -7,7 +7,20 @@
           data-footer-monogram
           aria-hidden="true"
         >
-          LB
+          <img
+            class="site-footer__monogram-dark"
+            src="/brand/lb-monogram-color.svg"
+            alt=""
+            width="120"
+            height="120"
+          />
+          <img
+            class="site-footer__monogram-light"
+            src="/brand/lb-monogram-cobalt.svg"
+            alt=""
+            width="120"
+            height="120"
+          />
         </span>
         <span data-footer-name>Leonardo Blauth</span>
       </div>
@@ -18,49 +31,82 @@
 
 <style scoped>
 .site-footer {
-  border-block-start: 1px solid var(--color-border);
+  position: relative;
+  isolation: isolate;
+  background: var(--color-footer-canvas);
+}
+
+.site-footer::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0 0 auto;
+  width: 100%;
+  height: min(4rem, 100%);
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--color-post-hero-canvas),
+    color-mix(
+        in srgb,
+        var(--color-post-hero-canvas) 52%,
+        var(--color-footer-canvas)
+      )
+      50%,
+    var(--color-footer-canvas)
+  );
 }
 
 .site-footer__layout {
+  position: relative;
+  z-index: 1;
   display: flex;
   gap: var(--space-8);
   align-items: center;
   justify-content: space-between;
-  min-block-size: 8rem;
-  padding-block: var(--space-8);
+  min-block-size: 6rem;
+  padding-block: var(--space-5);
 }
 
 .site-footer__identity {
   display: flex;
   gap: var(--space-4);
   align-items: center;
+  min-width: 0;
   font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
 }
 
 .site-footer__monogram {
-  display: grid;
+  position: relative;
+  display: block;
   width: 2.5rem;
   height: 2.5rem;
-  place-items: center;
-  color: var(--color-accent);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: -0.04em;
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
+}
+
+.site-footer__monogram img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.site-footer__monogram-light {
+  display: none;
+}
+
+:global(:root[data-theme='light'] .site-footer__monogram-dark) {
+  display: none;
+}
+
+:global(:root[data-theme='light'] .site-footer__monogram-light) {
+  display: block;
 }
 
 .site-footer p {
   margin: 0;
   color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
-}
-
-@media (max-width: 32rem) {
-  .site-footer__layout {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: var(--space-5);
-  }
+  white-space: nowrap;
 }
 </style>

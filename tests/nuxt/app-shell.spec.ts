@@ -31,7 +31,7 @@ describe('application shell', () => {
     document.body.innerHTML = ''
   })
 
-  it('renders semantic landmarks and locale-aware section links', async () => {
+  it('renders semantic landmarks and section controls on the homepage', async () => {
     const wrapper = await mountSuspended(App, {
       route: '/',
       attachTo: document.body,
@@ -40,13 +40,15 @@ describe('application shell', () => {
     expect(wrapper.get('header')).toBeTruthy()
     expect(wrapper.get('nav[aria-label="Navegação principal"]')).toBeTruthy()
     expect(wrapper.get('main#main-content')).toBeTruthy()
-    expect(
-      wrapper.get('a[aria-label="Ir para o início"]').attributes('href'),
-    ).toBe('/#top')
+    const homeControl = wrapper.get('button[aria-label="Ir para o início"]')
+    expect(homeControl.attributes('aria-controls')).toBe('top')
+    expect(wrapper.find('a[aria-label="Ir para o início"]').exists()).toBe(
+      false,
+    )
 
     const destinations = ['projects', 'experience', 'stack', 'contact']
     for (const destination of destinations) {
-      expect(wrapper.get(`a[href="/#${destination}"]`)).toBeTruthy()
+      expect(wrapper.get(`button[aria-controls="${destination}"]`)).toBeTruthy()
       expect(wrapper.get(`#${destination}`)).toBeTruthy()
     }
 
@@ -134,7 +136,7 @@ describe('application shell', () => {
     await dialog.trigger('keydown', { key: 'Tab' })
     expect(document.activeElement).toBe(first.element)
 
-    await dialog.get('a[href="/#projects"]').trigger('click')
+    await dialog.get('button[aria-controls="projects"]').trigger('click')
     await flushPromises()
     expect(dialog.attributes('open')).toBeUndefined()
     wrapper.unmount()

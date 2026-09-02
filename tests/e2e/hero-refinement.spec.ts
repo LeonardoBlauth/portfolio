@@ -28,6 +28,38 @@ test.describe('Hero refinement', () => {
     expect(Math.abs(layout.identityTop - layout.detailsTop)).toBeLessThan(180)
   })
 
+  test('keeps the professional context and core stack on one desktop row', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/')
+
+    const metadata = await page.evaluate(() => {
+      const context = document.querySelector<HTMLElement>(
+        '.hero__metadata-context',
+      )
+      const stack = document.querySelector<HTMLElement>('.hero__metadata-stack')
+
+      if (!context || !stack)
+        throw new Error('Hero metadata groups are missing')
+
+      const contextRect = context.getBoundingClientRect()
+      const stackRect = stack.getBoundingClientRect()
+      const stackStyle = getComputedStyle(stack)
+
+      return {
+        verticalDistance: Math.abs(contextRect.top - stackRect.top),
+        stackLeft: stackRect.left,
+        contextRight: contextRect.right,
+        stackDividerWidth: stackStyle.borderInlineStartWidth,
+      }
+    })
+
+    expect(metadata.verticalDistance).toBeLessThanOrEqual(1)
+    expect(metadata.stackLeft).toBeGreaterThanOrEqual(metadata.contextRight)
+    expect(metadata.stackDividerWidth).toBe('1px')
+  })
+
   test('stacks the same semantic groups without horizontal overflow on mobile', async ({
     page,
   }) => {

@@ -59,7 +59,6 @@ onBeforeUnmount(() =>
           :gap="48"
           :hover-speed="14"
           :fade-out="true"
-          fade-out-color="var(--color-canvas)"
           :scale-on-hover="false"
           :aria-label="t('techStack.logoLoop.label')"
         />

@@ -1,6 +1,23 @@
 import { expect, test } from '@playwright/test'
 
 test.describe('Tech Stack logo loop', () => {
+  test('fades the loop edges without painting a canvas-colored overlay', async ({
+    page,
+  }) => {
+    await page.goto('/')
+
+    const loop = page.locator('[data-logo-loop]')
+    await expect(loop).toBeVisible()
+
+    const fadeState = await loop.evaluate((element) => ({
+      overlays: element.querySelectorAll('.logo-loop__fade').length,
+      maskImage: getComputedStyle(element).maskImage,
+    }))
+
+    expect(fadeState.overlays).toBe(0)
+    expect(fadeState.maskImage).not.toBe('none')
+  })
+
   test('shows one accessible technology sequence without motion or horizontal overflow when reduced motion is enabled', async ({
     page,
   }) => {

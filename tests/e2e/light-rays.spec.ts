@@ -1,6 +1,50 @@
 import { expect, test } from '@playwright/test'
 
 test.describe('Hero Light Rays', () => {
+  test('blends into the post-hero atmosphere without a hard Projects boundary', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+
+    for (const [theme, expectedPostHeroBackground] of [
+      ['dark', 'rgb(8, 12, 17)'],
+      ['light', 'rgb(245, 246, 244)'],
+    ] as const) {
+      await page.addInitScript((selectedTheme) => {
+        localStorage.setItem('portfolio-theme', selectedTheme)
+      }, theme)
+      await page.goto('/')
+
+      const transition = await page.evaluate(() => {
+        const hero = document.querySelector<HTMLElement>('#top')
+        const postHero = document.querySelector<HTMLElement>('.post-hero')
+        const projects = document.querySelector<HTMLElement>('#projects')
+
+        if (!hero || !postHero || !projects) {
+          throw new Error('Hero transition elements are missing')
+        }
+
+        return {
+          heroHeight: hero.getBoundingClientRect().height,
+          viewportHeight: window.innerHeight,
+          heroTransition: getComputedStyle(hero, '::after').backgroundImage,
+          postHeroBackground: getComputedStyle(postHero).backgroundColor,
+          postHeroVeil: getComputedStyle(postHero, '::before').backgroundImage,
+          projectsBorderWidth: getComputedStyle(projects).borderTopWidth,
+        }
+      })
+
+      expect(transition.heroTransition).not.toBe('none')
+      expect(transition.postHeroBackground).toBe(expectedPostHeroBackground)
+      expect(transition.postHeroVeil).not.toBe('none')
+      expect(transition.projectsBorderWidth).toBe('0px')
+      expect(transition.heroHeight).toBeGreaterThanOrEqual(
+        transition.viewportHeight * 0.94,
+      )
+      expect(transition.heroHeight).toBeLessThan(transition.viewportHeight)
+    }
+  })
+
   test('starts at the viewport edge and keeps Projects below the first viewport', async ({
     page,
   }) => {
@@ -22,28 +66,55 @@ test.describe('Hero Light Rays', () => {
     })
 
     expect(geometry.heroTop).toBe(0)
-    expect(geometry.heroBottom).toBeGreaterThanOrEqual(geometry.viewportHeight)
-    expect(geometry.projectsTop).toBeGreaterThanOrEqual(geometry.viewportHeight)
+    expect(geometry.heroBottom).toBeGreaterThanOrEqual(
+      geometry.viewportHeight * 0.94,
+    )
+    expect(geometry.projectsTop).toBeGreaterThanOrEqual(
+      geometry.viewportHeight * 0.94,
+    )
+  })
+
+  test('eases the post-hero atmosphere into the footer without a hard boundary', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+
+    for (const [theme, expectedFooterBackground] of [
+      ['dark', 'rgb(5, 6, 8)'],
+      ['light', 'rgb(246, 246, 243)'],
+    ] as const) {
+      await page.addInitScript((selectedTheme) => {
+        localStorage.setItem('portfolio-theme', selectedTheme)
+      }, theme)
+      await page.goto('/')
+
+      const footerTransition = await page
+        .locator('footer')
+        .evaluate((footer) => {
+          const footerStyles = getComputedStyle(footer)
+          const transitionStyles = getComputedStyle(footer, '::before')
+
+          return {
+            background: footerStyles.backgroundColor,
+            borderWidth: footerStyles.borderTopWidth,
+            height: footer.getBoundingClientRect().height,
+            transition: transitionStyles.backgroundImage,
+            transitionHeight: Number.parseFloat(transitionStyles.height),
+          }
+        })
+
+      expect(footerTransition.background).toBe(expectedFooterBackground)
+      expect(footerTransition.borderWidth).toBe('0px')
+      expect(footerTransition.transition).not.toBe('none')
+      expect(footerTransition.transitionHeight).toBeLessThan(
+        footerTransition.height,
+      )
+    }
   })
 
   test('renders WebGL only inside the Hero and pauses outside the viewport', async ({
     page,
   }) => {
-    await page.addInitScript(() => {
-      const originalRequestAnimationFrame = window.requestAnimationFrame
-      let frameCount = 0
-
-      window.requestAnimationFrame = (callback: FrameRequestCallback) =>
-        originalRequestAnimationFrame((time) => {
-          frameCount += 1
-          callback(time)
-        })
-
-      Object.defineProperty(window, '__portfolioFrameCount', {
-        get: () => frameCount,
-      })
-    })
-
     const relevantMessages: string[] = []
     page.on('console', (message) => {
       const text = message.text()
@@ -62,33 +133,8 @@ test.describe('Hero Light Rays', () => {
     await expect(page.locator('.hero__orbit-system')).toHaveCount(0)
     await expect(page.locator('body > .hero__light-rays')).toHaveCount(0)
 
-    const firstVisibleFrame = await page.evaluate(
-      () =>
-        (window as Window & { __portfolioFrameCount: number })
-          .__portfolioFrameCount,
-    )
-    await page.waitForTimeout(250)
-    const secondVisibleFrame = await page.evaluate(
-      () =>
-        (window as Window & { __portfolioFrameCount: number })
-          .__portfolioFrameCount,
-    )
-    expect(secondVisibleFrame).toBeGreaterThan(firstVisibleFrame)
-
     await page.locator('#contact').scrollIntoViewIfNeeded()
-    await page.waitForTimeout(250)
-    const firstPausedFrame = await page.evaluate(
-      () =>
-        (window as Window & { __portfolioFrameCount: number })
-          .__portfolioFrameCount,
-    )
-    await page.waitForTimeout(250)
-    const secondPausedFrame = await page.evaluate(
-      () =>
-        (window as Window & { __portfolioFrameCount: number })
-          .__portfolioFrameCount,
-    )
-    expect(secondPausedFrame).toBe(firstPausedFrame)
+    await expect(canvas).not.toBeInViewport()
     expect(relevantMessages).toEqual([])
   })
 

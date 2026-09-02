@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import LightRays from '~/components/ui/LightRays.vue'
 import TextType from '~/components/ui/TextType.vue'
+import { heroTechnologyLogos } from '~/data/tech-stack'
 
 const { t } = useI18n()
 const { resolvedTheme } = useTheme()
@@ -97,9 +98,26 @@ const raysSaturation = computed(() =>
         </nav>
 
         <ul class="hero__metadata" :aria-label="t('hero.metadata.label')">
-          <li>{{ t('hero.metadata.location') }}</li>
-          <li>{{ t('hero.metadata.experience') }}</li>
-          <li>Vue.js · TypeScript · Laravel · MySQL</li>
+          <li class="hero__metadata-context">
+            <span>{{ t('hero.metadata.location') }}</span>
+            <span>{{ t('hero.metadata.experience') }}</span>
+          </li>
+          <li class="hero__metadata-stack">
+            <span
+              v-for="technology in heroTechnologyLogos"
+              :key="technology.id"
+              class="hero__metadata-technology"
+            >
+              <img
+                :src="technology.src"
+                width="16"
+                height="16"
+                alt=""
+                aria-hidden="true"
+              />
+              <span>{{ technology.name }}</span>
+            </span>
+          </li>
         </ul>
       </div>
     </div>
@@ -125,6 +143,20 @@ const raysSaturation = computed(() =>
   min-block-size: 100vh;
   min-block-size: 100svh;
   overflow: clip;
+}
+
+.hero::after {
+  position: absolute;
+  z-index: 0;
+  inset: auto 0 0;
+  height: 28%;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-post-hero-canvas)
+  );
 }
 
 :global(:root[data-theme='light'] .hero) {
@@ -320,8 +352,9 @@ const raysSaturation = computed(() =>
 }
 
 .hero__metadata {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   max-inline-size: 100%;
   padding: 0;
   margin: var(--space-8) 0 0;
@@ -331,23 +364,48 @@ const raysSaturation = computed(() =>
   border-block-start: 1px solid var(--color-border);
 }
 
-.hero__metadata li {
+.hero__metadata-context,
+.hero__metadata-stack {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-inline-size: 0;
+}
+
+.hero__metadata-context {
+  gap: 0;
+}
+
+.hero__metadata-context > span {
   min-inline-size: 0;
   padding: var(--space-4) var(--space-5);
   white-space: nowrap;
   border-inline-start: 1px solid var(--color-border);
 }
 
-.hero__metadata li:first-child {
+.hero__metadata-context > span:first-child {
   padding-inline-start: 0;
   border-inline-start: 0;
 }
 
-.hero__metadata li:last-child {
-  grid-column: 1 / -1;
-  padding-inline-start: 0;
-  border-block-start: 1px solid var(--color-border);
-  border-inline-start: 0;
+.hero__metadata-stack {
+  gap: var(--space-4);
+  padding: var(--space-4) 0 var(--space-4) var(--space-5);
+  border-inline-start: 1px solid var(--color-border);
+}
+
+.hero__metadata-technology {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-inline-size: 0;
+  white-space: nowrap;
+}
+
+.hero__metadata-technology img {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
 }
 
 @keyframes hero-role-reveal {
@@ -386,14 +444,21 @@ const raysSaturation = computed(() =>
 }
 
 @media (width >= 68rem) {
+  .hero {
+    min-block-size: 94vh;
+    min-block-size: 94svh;
+  }
+
   .hero__layout {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
     align-items: center;
     column-gap: clamp(var(--space-12), 6vw, var(--space-24));
     padding-block: clamp(var(--space-16), 9vh, var(--space-20)) var(--space-12);
   }
 
   .hero__details {
+    inline-size: 100%;
+    max-inline-size: 40rem;
     justify-self: end;
   }
 }
@@ -422,21 +487,32 @@ const raysSaturation = computed(() =>
   }
 
   .hero__metadata {
-    grid-template-columns: minmax(0, 1fr);
     margin-block-start: var(--space-4);
   }
 
-  .hero__metadata li {
+  .hero__metadata-context,
+  .hero__metadata-stack {
+    inline-size: 100%;
+  }
+
+  .hero__metadata-context {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero__metadata-context > span {
     padding: var(--space-3) 0;
     white-space: normal;
     border-block-end: 1px solid var(--color-border);
     border-inline-start: 0;
   }
 
-  .hero__metadata li:last-child {
-    grid-column: auto;
-    padding-inline-start: 0;
-    border-block-start: 0;
+  .hero__metadata-stack {
+    gap: var(--space-3) var(--space-5);
+    padding: var(--space-3) 0;
+    margin-inline-start: 0;
+    border-block-end: 1px solid var(--color-border);
+    border-inline-start: 0;
   }
 
   .hero__light-rays {
