@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { localizedRoutes } from '~/data/localized-routes'
+import LiquidGlass from '~/components/ui/LiquidGlass.vue'
+import MorphingTabs from '~/components/ui/MorphingTabs.vue'
+import UnderlineText from '~/components/ui/UnderlineText.vue'
 import type { SupportedLocale } from '~/utils/locale'
 import { writeLocalePreference } from '~/utils/locale'
 
@@ -15,12 +18,14 @@ const menuOpen = ref(false)
 const mounted = ref(false)
 const currentHash = ref(route.hash)
 const showReturnToHero = ref(false)
+const activeSectionId = ref('')
 
 let desktopMediaQuery: MediaQueryList | null = null
 let restoreFocusAfterClose = true
 let scrollAnimationFrame: number | null = null
 let routeAlignmentFrame: number | null = null
 let returnToHeroFrame: number | null = null
+let sectionObserver: IntersectionObserver | null = null
 
 const SECTION_SCROLL_DURATION_MS = 360
 
@@ -154,6 +159,24 @@ const handleSectionControlNavigation = (id: string) => {
   const target = document.getElementById(id)
   if (target) scrollToSection(target)
 }
+const handleDesktopSectionNavigation = (event: MouseEvent, id: string) => {
+  if (!isHomeRoute.value) return
+  event.preventDefault()
+  activeSectionId.value = id
+  handleSectionControlNavigation(id)
+}
+const setupSectionObserver = () => {
+  sectionObserver?.disconnect()
+  if (!isHomeRoute.value) return
+  sectionObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+      if (visible) activeSectionId.value = visible.target.id
+    },
+    { rootMargin: '-18% 0px -52% 0px', threshold: [0.05, 0.25, 0.5] },
+  )
+  navigationItems.value.forEach(({ id }) => document.getElementById(id) && sectionObserver?.observe(document.getElementById(id)!))
+}
 
 const openMenu = async () => {
   if (menuOpen.value) return
@@ -239,6 +262,7 @@ watch(
     if (mounted.value) void syncReturnToHeroVisibility()
   },
 )
+watch(isHomeRoute, () => nextTick(setupSectionObserver))
 
 const getDialogFocusableElements = () =>
   dialog.value
@@ -286,6 +310,7 @@ onMounted(() => {
   desktopMediaQuery = window.matchMedia('(min-width: 52rem)')
   desktopMediaQuery.addEventListener('change', handleDesktopTransition)
   if (desktopMediaQuery.matches) closeMenu({ restoreFocus: false })
+  setupSectionObserver()
   void syncReturnToHeroVisibility()
 })
 
@@ -297,6 +322,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleScrollKeydown)
   window.removeEventListener('scroll', handleViewportScroll)
   desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
+  sectionObserver?.disconnect()
   cancelReturnToHeroFrame()
   cancelRouteAlignment()
   cancelScrollAnimation()
@@ -306,7 +332,9 @@ onBeforeUnmount(() => {
 
 <template>
   <header class="site-header">
-    <div class="site-header__bar layout-container">
+    <div class="site-header__shell layout-container">
+    <LiquidGlass :radius="16" :border="0.04" :lightness="50" blend="difference" :alpha="0.9" :blur="6" :scale="-70" :frost="0.08">
+    <div class="site-header__bar">
       <button
         v-if="isHomeRoute"
         class="site-header__brand"
@@ -360,26 +388,19 @@ onBeforeUnmount(() => {
         class="site-header__desktop-nav"
         :aria-label="t('navigation.primary')"
       >
-        <template v-if="isHomeRoute">
-          <button
+        <MorphingTabs :active-tab="activeSectionId" :margin="5" :blur-std-deviation="2">
+          <UnderlineText
             v-for="item in navigationItems"
             :key="item.id"
-            type="button"
-            :aria-controls="item.id"
-            @click="handleSectionControlNavigation(item.id)"
+            as="a"
+            :href="sectionHref(item.id)"
+            :data-tab-id="item.id"
+            :active="activeSectionId === item.id"
+            @click="handleDesktopSectionNavigation($event, item.id)"
           >
             {{ item.label }}
-          </button>
-        </template>
-        <template v-else>
-          <NuxtLink
-            v-for="item in navigationItems"
-            :key="item.id"
-            :to="sectionHref(item.id)"
-          >
-            {{ item.label }}
-          </NuxtLink>
-        </template>
+          </UnderlineText>
+        </MorphingTabs>
       </nav>
 
       <div class="site-header__controls">
@@ -442,6 +463,8 @@ onBeforeUnmount(() => {
           </svg>
         </button>
       </div>
+    </div>
+    </LiquidGlass>
     </div>
 
     <dialog
@@ -524,14 +547,10 @@ onBeforeUnmount(() => {
   align-items: center;
   min-height: calc(var(--header-height) - var(--space-3));
   padding: var(--space-2);
-  background: var(--color-surface);
-  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-border) 74%, transparent);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-subtle);
-  backdrop-filter: blur(1rem);
   pointer-events: auto;
 }
+
+.site-header__shell { pointer-events: auto; }
 
 .site-header__brand,
 .site-header__control {
@@ -581,7 +600,13 @@ onBeforeUnmount(() => {
   gap: clamp(var(--space-4), 2.4vw, var(--space-8));
 }
 
+.site-header__desktop-nav :deep(.morphing-tabs) {
+  gap: clamp(var(--space-4), 2.4vw, var(--space-8));
+}
+
 .site-header__desktop-nav :is(a, button) {
+  position: relative;
+  z-index: 1;
   padding: 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
