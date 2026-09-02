@@ -33,6 +33,9 @@ export default defineNuxtConfig({
     },
   },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n'],
+  build: {
+    transpile: ['gsap'],
+  },
   nitro: {
     prerender: {
       routes: Object.values(localizedRoutes).flatMap((route) =>
