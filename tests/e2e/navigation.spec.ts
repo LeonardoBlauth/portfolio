@@ -180,6 +180,31 @@ test.describe('desktop shell navigation', () => {
     )
   })
 
+  test('hides the floating return control before it can cover the footer', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const returnToHero = page.getByRole('button', {
+      name: 'Voltar ao início',
+    })
+
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link', { name: 'Experiência' })
+      .click()
+    await headerOffsetIsClear(page, 'experience')
+    await expect(returnToHero).toBeVisible()
+
+    await page.locator('.site-footer').scrollIntoViewIfNeeded()
+    await expect(returnToHero).toBeHidden()
+    await expect(page.locator('[data-return-to-hero]')).not.toHaveClass(
+      /return-to-hero--visible/,
+    )
+
+    await page.locator('#experience').scrollIntoViewIfNeeded()
+    await expect(returnToHero).toBeVisible()
+  })
+
   test('keeps the selected section URL-free across locale navigation', async ({
     page,
   }) => {
@@ -454,6 +479,53 @@ test.describe('mobile navigation', () => {
     await expect(dialog).toBeHidden()
     await expect(page).toHaveURL(/\/$/)
     await headerOffsetIsClear(page, 'projects')
+  })
+
+  test('hides the floating return control before it can cover the footer', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const returnToHero = page.getByRole('button', {
+      name: 'Voltar ao início',
+    })
+
+    await page.getByRole('button', { name: 'Abrir menu' }).click()
+    await page
+      .getByRole('dialog', { name: 'Navegação móvel' })
+      .getByRole('button', { name: 'Experiência' })
+      .click()
+    await headerOffsetIsClear(page, 'experience')
+    await expect(returnToHero).toBeVisible()
+
+    await page.locator('.site-footer').scrollIntoViewIfNeeded()
+    await expect(returnToHero).toBeHidden()
+
+    const overlap = await page.evaluate(() => {
+      const button = document.querySelector('.return-to-hero')
+      const monogram = document.querySelector('[data-footer-monogram]')
+      if (!button || !monogram) return true
+      if (!button.classList.contains('return-to-hero--visible')) return false
+
+      const a = button.getBoundingClientRect()
+      const b = monogram.getBoundingClientRect()
+      return !(
+        a.right <= b.left ||
+        a.left >= b.right ||
+        a.bottom <= b.top ||
+        a.top >= b.bottom
+      )
+    })
+    expect(overlap).toBe(false)
+
+    await page.setViewportSize({ width: 390, height: 560 })
+    await page.locator('.site-footer').scrollIntoViewIfNeeded()
+    await expect(returnToHero).toBeHidden()
+
+    await page.evaluate(() => {
+      const experience = document.getElementById('experience')
+      if (experience) window.scrollTo(0, experience.offsetTop)
+    })
+    await expect(returnToHero).toBeVisible()
   })
 
   test('closes the mobile menu when the Header transitions to desktop', async ({
