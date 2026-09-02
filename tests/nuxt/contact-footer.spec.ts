@@ -10,7 +10,7 @@ describe('contact and footer', () => {
       label: 'Contato',
       headline: 'Vamos conversar sobre a próxima oportunidade?',
       description:
-        'Se meu perfil fizer sentido para o seu time, quero conhecer melhor a oportunidade.',
+        'Projetos, desafios ou ideias para tirar do papel — quero conhecer o que você tem em mente.',
       emailLabel: 'Email',
       githubLabel: 'GitHub (abre em uma nova aba)',
       linkedinLabel: 'LinkedIn (abre em uma nova aba)',
@@ -20,7 +20,7 @@ describe('contact and footer', () => {
       label: 'Contact',
       headline: 'Let’s talk about the next opportunity.',
       description:
-        'If my profile feels like a good fit for your team, I’d like to learn more about the opportunity.',
+        'Projects, challenges, or ideas worth bringing to life — I’d like to hear what you have in mind.',
       emailLabel: 'Email',
       githubLabel: 'GitHub (opens in a new tab)',
       linkedinLabel: 'LinkedIn (opens in a new tab)',

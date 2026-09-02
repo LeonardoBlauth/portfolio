@@ -5,6 +5,12 @@ import { technologyCategories, technologyLogos } from '~/data/tech-stack'
 
 const { t } = useI18n()
 
+const stackHeadlinePhrases = computed(() =>
+  t('techStack.headline')
+    .split(/(?<=\.)\s+/)
+    .filter(Boolean),
+)
+
 type TechnologyCategoryId = (typeof technologyCategories)[number]['id']
 
 const compactMediaQuery = ref<MediaQueryList | null>(null)
@@ -48,7 +54,17 @@ onBeforeUnmount(() =>
     <div class="layout-container">
       <ScrollReveal as="header" class="tech-stack__header">
         <p class="tech-stack__label">{{ t('techStack.label') }}</p>
-        <h2 id="stack-heading">{{ t('techStack.headline') }}</h2>
+        <h2 id="stack-heading">
+          <template
+            v-for="(phrase, index) in stackHeadlinePhrases"
+            :key="index"
+          >
+            <span class="tech-stack__headline-phrase">{{ phrase }}</span>
+            <template v-if="index < stackHeadlinePhrases.length - 1">{{
+              ' '
+            }}</template>
+          </template>
+        </h2>
       </ScrollReveal>
 
       <div class="tech-stack__logo-loop">
@@ -159,7 +175,17 @@ onBeforeUnmount(() =>
   font-size: var(--font-size-3xl);
   line-height: var(--line-height-tight);
   letter-spacing: -0.035em;
-  text-wrap: balance;
+  text-wrap: pretty;
+}
+
+.tech-stack__headline-phrase {
+  display: inline;
+}
+
+@media (width >= 42rem) {
+  .tech-stack__headline-phrase {
+    white-space: nowrap;
+  }
 }
 
 .tech-stack__groups {

@@ -51,7 +51,7 @@
       "productType": "SaaS B2B",
       "status": "Em prototipação",
       "classification": "Produto e experiência",
-      "description": "O movune é um projeto pessoal em evolução: um SaaS B2B para apoiar a gestão de clínicas de fisioterapia e Pilates no Brasil. O case acompanha as decisões e o processo de desenvolvimento do produto.",
+      "description": "O Movune é um projeto pessoal em evolução: um SaaS B2B para apoiar a gestão de clínicas de fisioterapia e Pilates no Brasil. O case acompanha as decisões e o processo de desenvolvimento do produto.",
       "scopeLabel": "Escopo atual",
       "scope": "Produto · Fluxos · Arquitetura de telas · UI/UX · Prototipação",
       "cta": "Ver estudo de caso",
@@ -63,15 +63,15 @@
     "headline": "Minha experiência como desenvolvedor.",
     "present": "atual",
     "location": "Brasil",
-    "description": "Atuação no desenvolvimento e na evolução de produtos web, envolvendo frontend, backend, banco de dados, integrações, bots e automações.",
+    "description": "Atuação no desenvolvimento e na evolução de produtos web, envolvendo frontend, backend, bancos de dados, integrações e bots de automação.",
     "contributions": {
       "product": {
         "title": "Produto e interfaces",
-        "description": "Dashboards, interfaces e funcionalidades de apoio a processos comerciais, pesquisas e atendimento ou primeiro contato."
+        "description": "Dashboards, interfaces e funcionalidades de apoio a processos comerciais, pesquisas e atendimento."
       },
       "automation": {
         "title": "Integrações e automação",
-        "description": "Integrações, bots e automações para rotinas operacionais."
+        "description": "Bots de automação para rotinas operacionais e integrações."
       },
       "applications": {
         "title": "Aplicações e dados",
@@ -102,15 +102,15 @@
     "categories": {
       "core": {
         "title": "Stack profissional principal",
-        "description": "Tecnologias utilizadas no trabalho profissional."
+        "description": "Tecnologias que uso no dia a dia."
       },
       "additional": {
         "title": "Experiência complementar",
-        "description": "Tecnologias já utilizadas ou com as quais tive contato."
+        "description": "Tecnologias que já utilizei."
       },
       "exploring": {
         "title": "Explorando atualmente",
-        "description": "Áreas de estudo e experimentação, sem apresentá-las como domínio profissional."
+        "description": "Áreas que estou estudando e explorando."
       }
     },
     "technologies": {
@@ -127,8 +127,7 @@
       "ai-assisted-development": "IA aplicada ao desenvolvimento",
       "ai-agents": "Agentes de IA",
       "postgresql": "PostgreSQL",
-      "redis": "Redis",
-      "real-time-applications": "Aplicações em tempo real"
+      "redis": "Redis"
     }
   },
   "workApproach": {
@@ -147,7 +146,7 @@
   "contact": {
     "label": "Contato",
     "headline": "Vamos conversar sobre a próxima oportunidade?",
-    "description": "Se meu perfil fizer sentido para o seu time, quero conhecer melhor a oportunidade.",
+    "description": "Projetos, desafios ou ideias para tirar do papel — quero conhecer o que você tem em mente.",
     "actions": {
       "label": "Formas de contato",
       "email": "Email",
@@ -165,13 +164,13 @@
     "movune": {
       "back": "Voltar para projetos",
       "headline": "Organizando um produto complexo antes de implementar.",
-      "lead": "O movune é um SaaS B2B em evolução para gestão de clínicas de Fisioterapia e Pilates no Brasil. Este case registra o caminho da ideia à definição do produto, fluxos, arquitetura de telas, identidade visual e prototipação.",
+      "lead": "O movune é um SaaS B2B em evolução para gestão de clínicas de fisioterapia e Pilates no Brasil. Este case registra o caminho da ideia à definição do produto, fluxos, arquitetura de telas, identidade visual e prototipação.",
       "roleLabel": "Atuação no projeto",
       "role": "Definição de produto, fluxos, arquitetura de telas, direção de UI/UX e prototipação.",
       "viewEvidence": "Ver representações da interface",
       "overview": {
         "title": "Visão geral",
-        "context": "O produto busca centralizar atividades de gestão de clínicas de Fisioterapia e Pilates. O domínio considerado reúne agendas, pacientes, atendimentos, turmas, pacotes, finanças, documentos e comunicação, além de regras operacionais distintas.",
+        "context": "O produto busca centralizar atividades de gestão de clínicas de fisioterapia e Pilates. O domínio considerado reúne agendas, pacientes, atendimentos, turmas, pacotes, finanças, documentos e comunicação, além de regras operacionais distintas.",
         "challenge": "O desafio foi organizar uma ideia ampla em uma estrutura de produto coerente e validar a experiência antes de definir a arquitetura de produção."
       },
       "process": {
