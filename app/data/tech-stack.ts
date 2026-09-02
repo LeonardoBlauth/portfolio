@@ -16,7 +16,6 @@ export const technologyCategories = [
       'ai-agents',
       'postgresql',
       'redis',
-      'real-time-applications',
     ],
   },
 ] as const

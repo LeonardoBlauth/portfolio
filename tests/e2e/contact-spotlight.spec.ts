@@ -38,7 +38,7 @@ test.describe('contact spotlight card', () => {
     ).toBeVisible()
     await expect(
       contact.getByText(
-        'Se meu perfil fizer sentido para o seu time, quero conhecer melhor a oportunidade.',
+        'Projetos, desafios ou ideias para tirar do papel — quero conhecer o que você tem em mente.',
       ),
     ).toBeVisible()
 

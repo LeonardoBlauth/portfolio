@@ -24,7 +24,7 @@ describe('skills and tech stack', () => {
       categories: [
         {
           title: 'Stack profissional principal',
-          description: 'Tecnologias utilizadas no trabalho profissional.',
+          description: 'Tecnologias que uso no dia a dia.',
           technologies: [
             'Vue.js',
             'JavaScript / TypeScript',
@@ -35,20 +35,17 @@ describe('skills and tech stack', () => {
         },
         {
           title: 'Experiência complementar',
-          description:
-            'Tecnologias já utilizadas ou com as quais tive contato.',
+          description: 'Tecnologias que já utilizei.',
           technologies: ['Node.js', 'Python', 'Git', 'Linux', 'Docker'],
         },
         {
           title: 'Explorando atualmente',
-          description:
-            'Áreas de estudo e experimentação, sem apresentá-las como domínio profissional.',
+          description: 'Áreas que estou estudando e explorando.',
           technologies: [
             'IA aplicada ao desenvolvimento',
             'Agentes de IA',
             'PostgreSQL',
             'Redis',
-            'Aplicações em tempo real',
           ],
         },
       ],
@@ -72,7 +69,7 @@ describe('skills and tech stack', () => {
       categories: [
         {
           title: 'Core professional stack',
-          description: 'Technologies used in professional work.',
+          description: 'Technologies I use day to day.',
           technologies: [
             'Vue.js',
             'JavaScript / TypeScript',
@@ -83,19 +80,17 @@ describe('skills and tech stack', () => {
         },
         {
           title: 'Additional experience',
-          description: 'Technologies I have used or had practical exposure to.',
+          description: 'Technologies I’ve used before.',
           technologies: ['Node.js', 'Python', 'Git', 'Linux', 'Docker'],
         },
         {
           title: 'Currently exploring',
-          description:
-            'Topics I am studying and experimenting with, without presenting them as professional expertise.',
+          description: 'Areas I’m studying and exploring.',
           technologies: [
             'AI-assisted development',
             'AI agents',
             'PostgreSQL',
             'Redis',
-            'Real-time applications',
           ],
         },
       ],

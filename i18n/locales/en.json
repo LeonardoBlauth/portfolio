@@ -51,7 +51,7 @@
       "productType": "B2B SaaS",
       "status": "In prototyping",
       "classification": "Product and experience",
-      "description": "movune is an evolving personal project: a B2B SaaS designed to support the management of physiotherapy and Pilates clinics in Brazil. The case study documents the decisions and product development process.",
+      "description": "Movune is an evolving personal project: a B2B SaaS designed to support the management of physiotherapy and Pilates clinics in Brazil. The case study documents the decisions and product development process.",
       "scopeLabel": "Current scope",
       "scope": "Product · Flows · Screen architecture · UI/UX · Prototyping",
       "cta": "View case study",
@@ -63,15 +63,15 @@
     "headline": "My experience as a developer.",
     "present": "present",
     "location": "Brazil",
-    "description": "Work focused on developing and evolving web products, involving frontend, backend, databases, integrations, bots, and automations.",
+    "description": "Work focused on developing and evolving web products, involving frontend, backend, databases, integrations, and automation bots.",
     "contributions": {
       "product": {
         "title": "Product and interfaces",
-        "description": "Dashboards, interfaces, and features supporting sales processes, surveys, customer service, or initial contact."
+        "description": "Dashboards, interfaces, and features supporting sales processes, surveys, and customer service."
       },
       "automation": {
         "title": "Integrations and automation",
-        "description": "Integrations, bots, and automations for operational workflows."
+        "description": "Automation bots for operational workflows and integrations."
       },
       "applications": {
         "title": "Applications and data",
@@ -102,15 +102,15 @@
     "categories": {
       "core": {
         "title": "Core professional stack",
-        "description": "Technologies used in professional work."
+        "description": "Technologies I use day to day."
       },
       "additional": {
         "title": "Additional experience",
-        "description": "Technologies I have used or had practical exposure to."
+        "description": "Technologies I’ve used before."
       },
       "exploring": {
         "title": "Currently exploring",
-        "description": "Topics I am studying and experimenting with, without presenting them as professional expertise."
+        "description": "Areas I’m studying and exploring."
       }
     },
     "technologies": {
@@ -127,8 +127,7 @@
       "ai-assisted-development": "AI-assisted development",
       "ai-agents": "AI agents",
       "postgresql": "PostgreSQL",
-      "redis": "Redis",
-      "real-time-applications": "Real-time applications"
+      "redis": "Redis"
     }
   },
   "workApproach": {
@@ -147,7 +146,7 @@
   "contact": {
     "label": "Contact",
     "headline": "Let’s talk about the next opportunity.",
-    "description": "If my profile feels like a good fit for your team, I’d like to learn more about the opportunity.",
+    "description": "Projects, challenges, or ideas worth bringing to life — I’d like to hear what you have in mind.",
     "actions": {
       "label": "Contact options",
       "email": "Email",
