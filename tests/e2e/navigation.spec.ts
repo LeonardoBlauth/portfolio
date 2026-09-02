@@ -79,14 +79,14 @@ test.describe('desktop shell navigation', () => {
       name: 'Navegação principal',
     })
 
-    await navigation.getByRole('button', { name: 'Projetos' }).click()
+    await navigation.getByRole('link', { name: 'Projetos' }).click()
     await expect(page).toHaveURL(/\/$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(0)
     await headerOffsetIsClear(page, 'projects')
 
-    await navigation.getByRole('button', { name: 'Stack' }).click()
+    await navigation.getByRole('link', { name: 'Stack' }).click()
     await expect(page).toHaveURL(/\/$/)
     await headerOffsetIsClear(page, 'stack')
     expect(await page.evaluate(() => history.state)).toEqual(
@@ -119,7 +119,7 @@ test.describe('desktop shell navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('button', { name: 'Projetos' })
+      .getByRole('link', { name: 'Projetos' })
       .click()
 
     await headerOffsetIsClear(page, 'projects')
@@ -140,7 +140,7 @@ test.describe('desktop shell navigation', () => {
     await expect(returnToHero).toBeHidden()
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('button', { name: 'Contato' })
+      .getByRole('link', { name: 'Contato' })
       .click()
     await headerOffsetIsClear(page, 'contact')
 
@@ -165,7 +165,7 @@ test.describe('desktop shell navigation', () => {
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('button', { name: 'Contato' })
+      .getByRole('link', { name: 'Contato' })
       .click()
     await headerOffsetIsClear(page, 'contact')
 
@@ -187,7 +187,7 @@ test.describe('desktop shell navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('button', { name: 'Stack' })
+      .getByRole('link', { name: 'Stack' })
       .click()
     await headerOffsetIsClear(page, 'stack')
     await page.getByRole('link', { name: 'Mudar idioma para English' }).click()
@@ -212,7 +212,7 @@ test.describe('desktop shell navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Primary navigation' })
-      .getByRole('button', { name: 'Projects' })
+      .getByRole('link', { name: 'Projects' })
       .click()
 
     await expect(page).toHaveURL(/\/en\/$/)
@@ -672,7 +672,7 @@ test.describe('reduced motion navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('button', { name: 'Contato' })
+      .getByRole('link', { name: 'Contato' })
       .click()
     await expect(page).toHaveURL(/\/$/)
     await expect
@@ -830,18 +830,18 @@ test.describe('reduced motion navigation', () => {
       name: 'Navegação principal',
     })
 
-    await navigation.getByRole('button', { name: 'Projetos' }).click()
+    await navigation.getByRole('link', { name: 'Projetos' }).click()
     await expect(page).toHaveURL(/\/$/)
     await headerOffsetIsClear(page, 'projects')
 
     const projectsY = await page.evaluate(() => window.scrollY)
-    await navigation.getByRole('button', { name: 'Stack' }).click()
+    await navigation.getByRole('link', { name: 'Stack' }).click()
     await expect(page).toHaveURL(/\/$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(projectsY + 10)
 
-    await navigation.getByRole('button', { name: 'Projetos' }).click()
+    await navigation.getByRole('link', { name: 'Projetos' }).click()
     await headerOffsetIsClear(page, 'projects')
   })
 
@@ -865,7 +865,7 @@ test.describe('reduced motion navigation', () => {
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
-      .getByRole('button', { name: 'Contato' })
+      .getByRole('link', { name: 'Contato' })
       .click()
     await expect(page).toHaveURL(/\/$/)
     await expect

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { localizedRoutes } from '~/data/localized-routes'
+import LiquidGlass from '~/components/ui/LiquidGlass.vue'
+import MorphingTabs from '~/components/ui/MorphingTabs.vue'
+import UnderlineText from '~/components/ui/UnderlineText.vue'
 import type { SupportedLocale } from '~/utils/locale'
 import { writeLocalePreference } from '~/utils/locale'
 
@@ -15,12 +18,14 @@ const menuOpen = ref(false)
 const mounted = ref(false)
 const currentHash = ref(route.hash)
 const showReturnToHero = ref(false)
+const activeSectionId = ref('')
 
 let desktopMediaQuery: MediaQueryList | null = null
 let restoreFocusAfterClose = true
 let scrollAnimationFrame: number | null = null
 let routeAlignmentFrame: number | null = null
 let returnToHeroFrame: number | null = null
+let sectionObserver: IntersectionObserver | null = null
 
 const SECTION_SCROLL_DURATION_MS = 360
 
@@ -154,6 +159,30 @@ const handleSectionControlNavigation = (id: string) => {
   const target = document.getElementById(id)
   if (target) scrollToSection(target)
 }
+const handleDesktopSectionNavigation = (event: MouseEvent, id: string) => {
+  if (!isHomeRoute.value) return
+  event.preventDefault()
+  activeSectionId.value = id
+  handleSectionControlNavigation(id)
+}
+const setupSectionObserver = () => {
+  sectionObserver?.disconnect()
+  if (!isHomeRoute.value) return
+  sectionObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+      if (visible) activeSectionId.value = visible.target.id
+    },
+    { rootMargin: '-18% 0px -52% 0px', threshold: [0.05, 0.25, 0.5] },
+  )
+  navigationItems.value.forEach(
+    ({ id }) =>
+      document.getElementById(id) &&
+      sectionObserver?.observe(document.getElementById(id)!),
+  )
+}
 
 const openMenu = async () => {
   if (menuOpen.value) return
@@ -239,6 +268,7 @@ watch(
     if (mounted.value) void syncReturnToHeroVisibility()
   },
 )
+watch(isHomeRoute, () => nextTick(setupSectionObserver))
 
 const getDialogFocusableElements = () =>
   dialog.value
@@ -286,6 +316,7 @@ onMounted(() => {
   desktopMediaQuery = window.matchMedia('(min-width: 52rem)')
   desktopMediaQuery.addEventListener('change', handleDesktopTransition)
   if (desktopMediaQuery.matches) closeMenu({ restoreFocus: false })
+  setupSectionObserver()
   void syncReturnToHeroVisibility()
 })
 
@@ -297,6 +328,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleScrollKeydown)
   window.removeEventListener('scroll', handleViewportScroll)
   desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
+  sectionObserver?.disconnect()
   cancelReturnToHeroFrame()
   cancelRouteAlignment()
   cancelScrollAnimation()
@@ -306,142 +338,152 @@ onBeforeUnmount(() => {
 
 <template>
   <header class="site-header">
-    <div class="site-header__bar layout-container">
-      <button
-        v-if="isHomeRoute"
-        class="site-header__brand"
-        type="button"
-        aria-controls="top"
-        :aria-label="t('navigation.home')"
-        @click="handleSectionControlNavigation('top')"
+    <div class="site-header__shell layout-container">
+      <LiquidGlass
+        :radius="16"
+        :border="0.04"
+        :lightness="50"
+        blend="difference"
+        :alpha="0.9"
+        :blur="6"
+        :scale="-70"
+        :frost="0.08"
       >
-        <span class="site-header__mark" aria-hidden="true">
-          <img
-            class="site-header__mark-dark"
-            src="/brand/lb-monogram-color.svg"
-            alt=""
-            width="120"
-            height="120"
-          />
-          <img
-            class="site-header__mark-light"
-            src="/brand/lb-monogram-cobalt.svg"
-            alt=""
-            width="120"
-            height="120"
-          />
-        </span>
-      </button>
-      <NuxtLink
-        v-else
-        class="site-header__brand"
-        :to="`${homePath}#top`"
-        :aria-label="t('navigation.home')"
-      >
-        <span class="site-header__mark" aria-hidden="true">
-          <img
-            class="site-header__mark-dark"
-            src="/brand/lb-monogram-color.svg"
-            alt=""
-            width="120"
-            height="120"
-          />
-          <img
-            class="site-header__mark-light"
-            src="/brand/lb-monogram-cobalt.svg"
-            alt=""
-            width="120"
-            height="120"
-          />
-        </span>
-      </NuxtLink>
-
-      <nav
-        class="site-header__desktop-nav"
-        :aria-label="t('navigation.primary')"
-      >
-        <template v-if="isHomeRoute">
+        <div class="site-header__bar">
           <button
-            v-for="item in navigationItems"
-            :key="item.id"
+            v-if="isHomeRoute"
+            class="site-header__brand"
             type="button"
-            :aria-controls="item.id"
-            @click="handleSectionControlNavigation(item.id)"
+            aria-controls="top"
+            :aria-label="t('navigation.home')"
+            @click="handleSectionControlNavigation('top')"
           >
-            {{ item.label }}
+            <span class="site-header__mark" aria-hidden="true">
+              <img
+                class="site-header__mark-dark"
+                src="/brand/lb-monogram-color.svg"
+                alt=""
+                width="120"
+                height="120"
+              />
+              <img
+                class="site-header__mark-light"
+                src="/brand/lb-monogram-cobalt.svg"
+                alt=""
+                width="120"
+                height="120"
+              />
+            </span>
           </button>
-        </template>
-        <template v-else>
           <NuxtLink
-            v-for="item in navigationItems"
-            :key="item.id"
-            :to="sectionHref(item.id)"
+            v-else
+            class="site-header__brand"
+            :to="`${homePath}#top`"
+            :aria-label="t('navigation.home')"
           >
-            {{ item.label }}
+            <span class="site-header__mark" aria-hidden="true">
+              <img
+                class="site-header__mark-dark"
+                src="/brand/lb-monogram-color.svg"
+                alt=""
+                width="120"
+                height="120"
+              />
+              <img
+                class="site-header__mark-light"
+                src="/brand/lb-monogram-cobalt.svg"
+                alt=""
+                width="120"
+                height="120"
+              />
+            </span>
           </NuxtLink>
-        </template>
-      </nav>
 
-      <div class="site-header__controls">
-        <NuxtLink
-          class="site-header__control site-header__locale"
-          :to="targetLocaleHref"
-          :hreflang="targetLocale"
-          :aria-label="
-            t('controls.locale', {
-              locale: targetLocale === 'en' ? 'English' : 'português',
-            })
-          "
-          @click="handleLocaleSwitch"
-        >
-          <span :lang="targetLocale">{{
-            targetLocale === 'en' ? 'EN' : 'PT'
-          }}</span>
-        </NuxtLink>
-
-        <button class="site-header__control" type="button" @click="toggleTheme">
-          <span class="visually-hidden site-header__theme-label--light">
-            {{ t('controls.theme.light') }}
-          </span>
-          <span class="visually-hidden site-header__theme-label--dark">
-            {{ t('controls.theme.dark') }}
-          </span>
-          <svg
-            class="site-header__theme-icon site-header__theme-icon--light"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+          <nav
+            class="site-header__desktop-nav"
+            :aria-label="t('navigation.primary')"
           >
-            <circle cx="12" cy="12" r="4" />
-            <path
-              d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
-            />
-          </svg>
-          <svg
-            class="site-header__theme-icon site-header__theme-icon--dark"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"
-            />
-          </svg>
-        </button>
+            <MorphingTabs :active-tab="activeSectionId">
+              <UnderlineText
+                v-for="item in navigationItems"
+                :key="item.id"
+                as="a"
+                :href="sectionHref(item.id)"
+                :data-tab-id="item.id"
+                :active="activeSectionId === item.id"
+                @click="handleDesktopSectionNavigation($event, item.id)"
+              >
+                {{ item.label }}
+              </UnderlineText>
+            </MorphingTabs>
+          </nav>
 
-        <button
-          ref="menuTrigger"
-          class="site-header__control site-header__menu-trigger"
-          type="button"
-          aria-controls="mobile-navigation"
-          :aria-expanded="menuOpen"
-          :aria-label="t('controls.menu.open')"
-          data-testid="mobile-menu-trigger"
-          @click="openMenu"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 7h16M4 17h16" />
-          </svg>
-        </button>
-      </div>
+          <div class="site-header__controls">
+            <NuxtLink
+              class="site-header__control site-header__locale"
+              :to="targetLocaleHref"
+              :hreflang="targetLocale"
+              :aria-label="
+                t('controls.locale', {
+                  locale: targetLocale === 'en' ? 'English' : 'português',
+                })
+              "
+              @click="handleLocaleSwitch"
+            >
+              <span :lang="targetLocale">{{
+                targetLocale === 'en' ? 'EN' : 'PT'
+              }}</span>
+            </NuxtLink>
+
+            <button
+              class="site-header__control"
+              type="button"
+              @click="toggleTheme"
+            >
+              <span class="visually-hidden site-header__theme-label--light">
+                {{ t('controls.theme.light') }}
+              </span>
+              <span class="visually-hidden site-header__theme-label--dark">
+                {{ t('controls.theme.dark') }}
+              </span>
+              <svg
+                class="site-header__theme-icon site-header__theme-icon--light"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path
+                  d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+                />
+              </svg>
+              <svg
+                class="site-header__theme-icon site-header__theme-icon--dark"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"
+                />
+              </svg>
+            </button>
+
+            <button
+              ref="menuTrigger"
+              class="site-header__control site-header__menu-trigger"
+              type="button"
+              aria-controls="mobile-navigation"
+              :aria-expanded="menuOpen"
+              :aria-label="t('controls.menu.open')"
+              data-testid="mobile-menu-trigger"
+              @click="openMenu"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16M4 17h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </LiquidGlass>
     </div>
 
     <dialog
@@ -524,12 +566,10 @@ onBeforeUnmount(() => {
   align-items: center;
   min-height: calc(var(--header-height) - var(--space-3));
   padding: var(--space-2);
-  background: var(--color-surface);
-  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-border) 74%, transparent);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-subtle);
-  backdrop-filter: blur(1rem);
+  pointer-events: auto;
+}
+
+.site-header__shell {
   pointer-events: auto;
 }
 
@@ -581,7 +621,13 @@ onBeforeUnmount(() => {
   gap: clamp(var(--space-4), 2.4vw, var(--space-8));
 }
 
+.site-header__desktop-nav :deep(.morphing-tabs) {
+  gap: clamp(var(--space-4), 2.4vw, var(--space-8));
+}
+
 .site-header__desktop-nav :is(a, button) {
+  position: relative;
+  z-index: 1;
   padding: 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
@@ -593,7 +639,8 @@ onBeforeUnmount(() => {
   transition: color var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
-.site-header__desktop-nav :is(a, button):hover {
+.site-header__desktop-nav :is(a, button):hover,
+.site-header__desktop-nav :is(a, button).underline-text--active {
   color: var(--color-text-primary);
 }
 
