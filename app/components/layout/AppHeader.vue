@@ -107,40 +107,6 @@ const scrollingKeys = new Set([
 const handleScrollKeydown = (event: KeyboardEvent) => {
   if (scrollingKeys.has(event.key)) cancelScrollAnimation()
 }
-const pushHashHistoryEntry = (current: URL, destination: URL) => {
-  const currentUrl = `${current.pathname}${current.search}${current.hash}`
-  const destinationUrl = `${destination.pathname}${destination.search}${destination.hash}`
-  const currentState = window.history.state as
-    (Record<string, unknown> & { position?: number }) | null
-  const currentPosition =
-    typeof currentState?.position === 'number'
-      ? currentState.position
-      : window.history.length - 1
-
-  window.history.replaceState(
-    {
-      ...(currentState ?? {}),
-      forward: destinationUrl,
-      scroll: { left: window.scrollX, top: window.scrollY },
-    },
-    '',
-    currentUrl,
-  )
-  window.history.pushState(
-    {
-      ...(currentState ?? {}),
-      back: currentUrl,
-      current: destinationUrl,
-      forward: null,
-      position: currentPosition + 1,
-      replaced: false,
-      scroll: null,
-    },
-    '',
-    destinationUrl,
-  )
-}
-
 const scrollToSection = (target: HTMLElement) => {
   const scrollPadding = Number.parseFloat(
     getComputedStyle(document.documentElement).scrollPaddingBlockStart,
@@ -187,47 +153,6 @@ const scrollToSection = (target: HTMLElement) => {
 const handleSectionControlNavigation = (id: string) => {
   const target = document.getElementById(id)
   if (target) scrollToSection(target)
-}
-const handleSectionNavigation = (event: MouseEvent) => {
-  if (
-    event.defaultPrevented ||
-    event.button !== 0 ||
-    event.metaKey ||
-    event.ctrlKey ||
-    event.shiftKey ||
-    event.altKey
-  ) {
-    return
-  }
-
-  const link = event.currentTarget as HTMLAnchorElement | null
-  if (!link || link.target || link.hasAttribute('download')) return
-
-  const destination = new URL(link.href, window.location.href)
-  const current = new URL(window.location.href)
-  if (
-    destination.origin !== current.origin ||
-    normalizePathname(destination.pathname) !==
-      normalizePathname(current.pathname) ||
-    destination.search !== current.search ||
-    !destination.hash
-  ) {
-    return
-  }
-
-  const target = document.getElementById(
-    decodeURIComponent(destination.hash.slice(1)),
-  )
-  if (!target) return
-
-  event.preventDefault()
-
-  if (current.hash !== destination.hash) {
-    pushHashHistoryEntry(current, destination)
-  }
-  currentHash.value = destination.hash
-
-  scrollToSection(target)
 }
 
 const openMenu = async () => {
@@ -382,11 +307,13 @@ onBeforeUnmount(() => {
 <template>
   <header class="site-header">
     <div class="site-header__bar layout-container">
-      <a
+      <button
+        v-if="isHomeRoute"
         class="site-header__brand"
-        :href="`${homePath}#top`"
+        type="button"
+        aria-controls="top"
         :aria-label="t('navigation.home')"
-        @click="handleSectionNavigation"
+        @click="handleSectionControlNavigation('top')"
       >
         <span class="site-header__mark" aria-hidden="true">
           <img
@@ -404,7 +331,30 @@ onBeforeUnmount(() => {
             height="120"
           />
         </span>
-      </a>
+      </button>
+      <NuxtLink
+        v-else
+        class="site-header__brand"
+        :to="`${homePath}#top`"
+        :aria-label="t('navigation.home')"
+      >
+        <span class="site-header__mark" aria-hidden="true">
+          <img
+            class="site-header__mark-dark"
+            src="/brand/lb-monogram-color.svg"
+            alt=""
+            width="120"
+            height="120"
+          />
+          <img
+            class="site-header__mark-light"
+            src="/brand/lb-monogram-cobalt.svg"
+            alt=""
+            width="120"
+            height="120"
+          />
+        </span>
+      </NuxtLink>
 
       <nav
         class="site-header__desktop-nav"
@@ -593,7 +543,11 @@ onBeforeUnmount(() => {
 }
 
 .site-header__brand {
+  padding: 0;
   color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
 }
 
 .site-header__mark {

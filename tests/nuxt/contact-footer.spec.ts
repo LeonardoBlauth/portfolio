@@ -56,7 +56,15 @@ describe('contact and footer', () => {
     const wrapper = await mountSuspended(App, { route: '/' })
     const footer = wrapper.get('footer')
 
-    expect(footer.get('[data-footer-monogram]').text()).toBe('LB')
+    const monogram = footer.get('[data-footer-monogram]')
+    expect(monogram.attributes('aria-hidden')).toBe('true')
+    expect(monogram.findAll('img')).toHaveLength(2)
+    expect(monogram.get('.site-footer__monogram-dark').attributes('src')).toBe(
+      '/brand/lb-monogram-color.svg',
+    )
+    expect(monogram.get('.site-footer__monogram-light').attributes('src')).toBe(
+      '/brand/lb-monogram-cobalt.svg',
+    )
     expect(footer.get('[data-footer-name]').text()).toBe('Leonardo Blauth')
     expect(footer.get('[data-footer-copyright]').text()).toBe('© 2026')
     expect(footer.findAll('a')).toHaveLength(0)

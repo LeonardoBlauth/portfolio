@@ -40,9 +40,11 @@ describe('application shell', () => {
     expect(wrapper.get('header')).toBeTruthy()
     expect(wrapper.get('nav[aria-label="Navegação principal"]')).toBeTruthy()
     expect(wrapper.get('main#main-content')).toBeTruthy()
-    expect(
-      wrapper.get('a[aria-label="Ir para o início"]').attributes('href'),
-    ).toBe('/#top')
+    const homeControl = wrapper.get('button[aria-label="Ir para o início"]')
+    expect(homeControl.attributes('aria-controls')).toBe('top')
+    expect(wrapper.find('a[aria-label="Ir para o início"]').exists()).toBe(
+      false,
+    )
 
     const destinations = ['projects', 'experience', 'stack', 'contact']
     for (const destination of destinations) {
