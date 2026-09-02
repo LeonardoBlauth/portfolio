@@ -28,6 +28,7 @@
     "description": "I build end-to-end web solutions, connecting product needs with clear technical decisions.",
     "actions": {
       "contact": "Get in touch",
+      "contactSecondary": "Let's talk",
       "projects": "View projects"
     },
     "social": {

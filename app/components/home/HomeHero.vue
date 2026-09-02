@@ -57,11 +57,29 @@ const raysSaturation = computed(() =>
         <p class="hero__description">{{ t('hero.description') }}</p>
 
         <div class="hero__actions">
-          <a class="hero__cta hero__cta--primary" href="#contact">
-            {{ t('hero.actions.contact') }}
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M4 10h11m-4-4 4 4-4 4" />
-            </svg>
+          <a
+            class="hero__cta hero__cta--primary"
+            href="#contact"
+            :aria-label="t('hero.actions.contact')"
+          >
+            <span class="hero__cta-slide" aria-hidden="true">
+              <span
+                class="hero__cta-slide__layer hero__cta-slide__layer--primary"
+              >
+                {{ t('hero.actions.contact') }}
+                <svg viewBox="0 0 20 20">
+                  <path d="M4 10h11m-4-4 4 4-4 4" />
+                </svg>
+              </span>
+              <span
+                class="hero__cta-slide__layer hero__cta-slide__layer--secondary"
+              >
+                {{ t('hero.actions.contactSecondary') }}
+                <svg viewBox="0 0 20 20">
+                  <path d="M4 10h11m-4-4 4 4-4 4" />
+                </svg>
+              </span>
+            </span>
           </a>
           <a class="hero__cta hero__cta--secondary" href="#projects">
             {{ t('hero.actions.projects') }}
@@ -308,6 +326,67 @@ const raysSaturation = computed(() =>
 .hero__cta--primary:hover {
   color: #ffffff;
   background: var(--hero-button-hover);
+}
+
+.hero__cta-slide {
+  display: grid;
+  overflow: hidden;
+  justify-items: start;
+  align-items: center;
+}
+
+.hero__cta-slide__layer {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  gap: var(--space-4);
+  white-space: nowrap;
+  transition: transform var(--motion-duration-slow) var(--motion-ease-standard);
+}
+
+.hero__cta-slide__layer--primary {
+  transform: translateY(0);
+}
+
+.hero__cta-slide__layer--secondary {
+  transform: translateY(100%);
+}
+
+.hero__cta--primary:focus-visible .hero__cta-slide__layer--primary {
+  transform: translateY(-100%);
+}
+
+.hero__cta--primary:focus-visible .hero__cta-slide__layer--secondary {
+  transform: translateY(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero__cta--primary:hover .hero__cta-slide__layer--primary {
+    transform: translateY(-100%);
+  }
+
+  .hero__cta--primary:hover .hero__cta-slide__layer--secondary {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__cta-slide__layer {
+    transition: none;
+  }
+
+  .hero__cta--primary:is(:hover, :focus-visible)
+    .hero__cta-slide__layer--primary,
+  .hero__cta-slide__layer--primary {
+    transform: translateY(0);
+  }
+
+  .hero__cta--primary:is(:hover, :focus-visible)
+    .hero__cta-slide__layer--secondary,
+  .hero__cta-slide__layer--secondary {
+    visibility: hidden;
+    transform: translateY(100%);
+  }
 }
 
 .hero__cta--secondary:hover {
