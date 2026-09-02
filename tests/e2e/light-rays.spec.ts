@@ -88,18 +88,20 @@ test.describe('Hero Light Rays', () => {
       }, theme)
       await page.goto('/')
 
-      const footerTransition = await page.locator('footer').evaluate((footer) => {
-        const footerStyles = getComputedStyle(footer)
-        const transitionStyles = getComputedStyle(footer, '::before')
+      const footerTransition = await page
+        .locator('footer')
+        .evaluate((footer) => {
+          const footerStyles = getComputedStyle(footer)
+          const transitionStyles = getComputedStyle(footer, '::before')
 
-        return {
-          background: footerStyles.backgroundColor,
-          borderWidth: footerStyles.borderTopWidth,
-          height: footer.getBoundingClientRect().height,
-          transition: transitionStyles.backgroundImage,
-          transitionHeight: Number.parseFloat(transitionStyles.height),
-        }
-      })
+          return {
+            background: footerStyles.backgroundColor,
+            borderWidth: footerStyles.borderTopWidth,
+            height: footer.getBoundingClientRect().height,
+            transition: transitionStyles.backgroundImage,
+            transitionHeight: Number.parseFloat(transitionStyles.height),
+          }
+        })
 
       expect(footerTransition.background).toBe(expectedFooterBackground)
       expect(footerTransition.borderWidth).toBe('0px')

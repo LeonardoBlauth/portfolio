@@ -70,13 +70,17 @@ describe('movune case study', () => {
       expect(
         article.get('a[data-case-evidence][href="#interface-heading"]').text(),
       ).toBe(evidenceLabel)
-      const backControls = article.findAll('button.case-hero__back, button.case-next__back')
+      const backControls = article.findAll(
+        'button.case-hero__back, button.case-next__back',
+      )
       expect(backControls).toHaveLength(2)
       expect(backControls.map((control) => control.text())).toEqual([
         backLabel,
         backLabel,
       ])
-      expect(article.findAll('a.case-hero__back, a.case-next__back')).toHaveLength(0)
+      expect(
+        article.findAll('a.case-hero__back, a.case-next__back'),
+      ).toHaveLength(0)
       expect(article.findAll('section')).toHaveLength(6)
       expect(
         article.findAll('section h2').map((heading) => heading.text()),

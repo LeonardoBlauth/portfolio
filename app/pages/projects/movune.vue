@@ -31,11 +31,7 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
 <template>
   <article class="case-study" data-project-id="movune">
     <header id="top" class="case-hero layout-container">
-      <button
-        class="case-hero__back"
-        type="button"
-        @click="returnToProjects"
-      >
+      <button class="case-hero__back" type="button" @click="returnToProjects">
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path d="M16 10H5m4-4-4 4 4 4" />
         </svg>
