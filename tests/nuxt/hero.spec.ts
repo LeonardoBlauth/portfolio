@@ -10,6 +10,7 @@ describe('Home Hero', () => {
       'Disponível para oportunidades',
       'Desenvolvo soluções web de ponta a ponta, conectando necessidades de produto a decisões técnicas claras.',
       'Entrar em contato',
+      'Vamos conversar',
       'Ver projetos',
       'Brasil',
       'Desenvolvimento web desde 2021',
@@ -19,6 +20,7 @@ describe('Home Hero', () => {
       'Open to opportunities',
       'I build end-to-end web solutions, connecting product needs with clear technical decisions.',
       'Get in touch',
+      "Let's talk",
       'View projects',
       'Brazil',
       'Web development since 2021',
@@ -30,6 +32,7 @@ describe('Home Hero', () => {
       availability,
       description,
       contact,
+      contactSecondary,
       projects,
       location,
       experience,
@@ -61,8 +64,17 @@ describe('Home Hero', () => {
         expect(logo.attributes('alt')).toBe('')
       }
 
-      expect(hero.get('a[href="#contact"]').text()).toContain(contact)
+      const contactLink = hero.get('a[href="#contact"]')
+      expect(contactLink.attributes('aria-label')).toBe(contact)
+      expect(
+        contactLink.get('.hero__cta-slide').attributes('aria-hidden'),
+      ).toBe('true')
+      expect(contactLink.text()).toContain(contact)
+      expect(contactLink.text()).toContain(contactSecondary)
       expect(hero.get('a[href="#projects"]').text()).toContain(projects)
+      expect(hero.find('.hero__cta--secondary .hero__cta-slide').exists()).toBe(
+        false,
+      )
       expect(hero.get('.hero__light-rays').attributes('aria-hidden')).toBe(
         'true',
       )

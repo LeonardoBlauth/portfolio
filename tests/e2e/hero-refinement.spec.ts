@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { devices, expect, test } from '@playwright/test'
 
 test.describe('Hero refinement', () => {
   test('uses both desktop columns for identity and professional details', async ({
@@ -171,5 +171,127 @@ test.describe('Hero refinement', () => {
     expect(schedule.detailsDelay).toBeGreaterThanOrEqual(
       schedule.availabilityDelay + schedule.availabilityDuration,
     )
+  })
+})
+
+const contactSlideMetrics = (page: import('@playwright/test').Page) =>
+  page.evaluate(() => {
+    const cta = document.querySelector<HTMLElement>('.hero__cta--primary')
+    const primary = document.querySelector<HTMLElement>(
+      '.hero__cta-slide__layer--primary',
+    )
+    const secondary = document.querySelector<HTMLElement>(
+      '.hero__cta-slide__layer--secondary',
+    )
+
+    if (!cta || !primary || !secondary) {
+      throw new Error('Hero contact slide layers are missing')
+    }
+
+    const box = cta.getBoundingClientRect()
+
+    return {
+      width: box.width,
+      height: box.height,
+      accessibleName: cta.getAttribute('aria-label'),
+      hover: matchMedia('(hover: hover) and (pointer: fine)').matches,
+      primaryY: new DOMMatrix(getComputedStyle(primary).transform).f,
+      secondaryY: new DOMMatrix(getComputedStyle(secondary).transform).f,
+    }
+  })
+
+test.describe('Hero primary CTA slide text', () => {
+  test.use({ viewport: { width: 1440, height: 900 } })
+
+  test('slides the contact label as a unit without resizing the button', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const contact = page.getByRole('link', { name: 'Entrar em contato' })
+    await expect(contact).toBeVisible()
+
+    const rest = await contactSlideMetrics(page)
+    expect(rest.accessibleName).toBe('Entrar em contato')
+    expect(rest.hover).toBe(true)
+    expect(rest.primaryY).toBeCloseTo(0, 0)
+    expect(rest.secondaryY).toBeGreaterThan(0)
+
+    await contact.hover()
+    await expect
+      .poll(async () => (await contactSlideMetrics(page)).primaryY)
+      .toBeLessThan(-8)
+    const hovered = await contactSlideMetrics(page)
+    expect(hovered.secondaryY).toBeCloseTo(0, 0)
+    expect(hovered.width).toBeCloseTo(rest.width, 0)
+    expect(hovered.height).toBeCloseTo(rest.height, 0)
+    expect(hovered.accessibleName).toBe('Entrar em contato')
+
+    await page.mouse.move(0, 0)
+    await expect
+      .poll(async () => (await contactSlideMetrics(page)).primaryY)
+      .toBeCloseTo(0, 0)
+
+    await contact.focus()
+    await page.keyboard.press('Shift+Tab')
+    await page.keyboard.press('Tab')
+    await expect
+      .poll(async () => (await contactSlideMetrics(page)).primaryY)
+      .toBeLessThan(-8)
+
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/#contact$/)
+  })
+
+  test('keeps the primary contact label when reduced motion is requested', async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto('/')
+    const contact = page.getByRole('link', { name: 'Entrar em contato' })
+    await contact.hover()
+    const hovered = await contactSlideMetrics(page)
+    expect(hovered.primaryY).toBeCloseTo(0, 0)
+    expect(hovered.secondaryY).toBeGreaterThan(0)
+  })
+
+  test('updates both slide labels after a client-side locale switch', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    await page.getByRole('link', { name: 'Mudar idioma para English' }).click()
+    await expect(page).toHaveURL(/\/en$/)
+    const contact = page.getByRole('link', { name: 'Get in touch' })
+    await expect(contact).toBeVisible()
+    await expect(page.locator('.hero__cta-slide__layer--secondary')).toHaveText(
+      /Let's talk/,
+    )
+    await contact.hover()
+    await expect
+      .poll(async () => (await contactSlideMetrics(page)).secondaryY)
+      .toBeCloseTo(0, 0)
+  })
+})
+
+test.describe('Hero primary CTA on a touch device', () => {
+  test.use({ ...devices['iPhone 13'] })
+
+  test('keeps the primary label and navigates on the first tap', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const rest = await contactSlideMetrics(page)
+    expect(rest.hover).toBe(false)
+    expect(rest.accessibleName).toBe('Entrar em contato')
+    expect(rest.primaryY).toBeCloseTo(0, 0)
+
+    const contact = page.getByRole('link', { name: 'Entrar em contato' })
+    await contact.hover()
+    const afterHover = await contactSlideMetrics(page)
+    expect(afterHover.primaryY).toBeCloseTo(0, 0)
+    expect(afterHover.secondaryY).toBeGreaterThan(0)
+    expect(afterHover.width).toBeCloseTo(rest.width, 0)
+
+    await contact.click()
+    await expect(page).toHaveURL(/#contact$/)
   })
 })

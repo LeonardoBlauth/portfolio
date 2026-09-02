@@ -28,6 +28,7 @@
     "description": "Desenvolvo soluções web de ponta a ponta, conectando necessidades de produto a decisões técnicas claras.",
     "actions": {
       "contact": "Entrar em contato",
+      "contactSecondary": "Vamos conversar",
       "projects": "Ver projetos"
     },
     "social": {
