@@ -275,8 +275,8 @@ onBeforeUnmount(() =>
   }
 
   .tech-stack__logo-loop {
-    padding-block: 0;
-    margin-block: var(--space-2) 0;
+    padding-block: var(--space-2) 0;
+    margin-block: var(--space-12) var(--space-8);
   }
 
   .tech-stack-group,

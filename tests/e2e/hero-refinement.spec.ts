@@ -60,6 +60,40 @@ test.describe('Hero refinement', () => {
     expect(metadata.stackDividerWidth).toBe('1px')
   })
 
+  test('keeps hero copy below the header and drops the wrapped stack divider on a phone', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+
+    const layout = await page.evaluate(() => {
+      const header = document.querySelector<HTMLElement>(
+        'header .site-header__bar',
+      )
+      const identity = document.querySelector<HTMLElement>('.hero__identity')
+      const stack = document.querySelector<HTMLElement>('.hero__metadata-stack')
+
+      if (!header || !identity || !stack) {
+        throw new Error('Hero mobile layout elements are missing')
+      }
+
+      const headerRect = header.getBoundingClientRect()
+      const identityRect = identity.getBoundingClientRect()
+      const stackStyle = getComputedStyle(stack)
+
+      return {
+        identityTop: identityRect.top,
+        headerBottom: headerRect.bottom,
+        stackDividerWidth: stackStyle.borderInlineStartWidth,
+        stackPaddingInlineStart: stackStyle.paddingInlineStart,
+      }
+    })
+
+    expect(layout.identityTop).toBeGreaterThanOrEqual(layout.headerBottom)
+    expect(layout.stackDividerWidth).toBe('0px')
+    expect(Number.parseFloat(layout.stackPaddingInlineStart)).toBe(0)
+  })
+
   test('stacks the same semantic groups without horizontal overflow on mobile', async ({
     page,
   }) => {

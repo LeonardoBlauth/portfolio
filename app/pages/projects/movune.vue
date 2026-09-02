@@ -17,6 +17,28 @@ const returnToProjects = () => {
   return navigateTo(homeRoute.value)
 }
 
+const scrollToInterfaceRepresentations = () => {
+  const target = document.getElementById('interface-heading')
+  if (!target) return
+
+  const scrollPadding = Number.parseFloat(
+    getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+  )
+  const top = Math.max(
+    0,
+    window.scrollY +
+      target.getBoundingClientRect().top -
+      (Number.isFinite(scrollPadding) ? scrollPadding : 0),
+  )
+
+  window.scrollTo({
+    top,
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? 'instant'
+      : 'smooth',
+  })
+}
+
 const processSteps = [
   'product',
   'flows',
@@ -46,16 +68,17 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
         <p>{{ t('pages.movune.roleLabel') }}</p>
         <p data-case-role>{{ t('pages.movune.role') }}</p>
       </div>
-      <a
+      <button
         class="case-hero__evidence"
-        href="#interface-heading"
+        type="button"
         data-case-evidence
+        @click="scrollToInterfaceRepresentations"
       >
         {{ t('pages.movune.viewEvidence') }}
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path d="M10 4v11m-4-4 4 4 4-4" />
         </svg>
-      </a>
+      </button>
     </header>
 
     <div class="case-content layout-container">
@@ -319,14 +342,21 @@ const decisions = ['schedule', 'recurrence', 'status', 'registration'] as const
 }
 .case-hero__evidence {
   display: inline-flex;
+  padding: 0;
   min-block-size: 2.75rem;
   align-items: center;
   gap: var(--space-3);
   margin-block-start: var(--space-8);
   color: var(--color-text-primary);
+  font: inherit;
   font-weight: var(--font-weight-semibold);
+  text-align: start;
+  text-decoration: underline;
   text-decoration-color: var(--movune-green-bright);
   text-underline-offset: 0.35em;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
 }
 .case-hero__evidence:hover {
   color: var(--movune-green-bright);
