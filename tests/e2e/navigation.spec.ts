@@ -190,8 +190,25 @@ test.describe('desktop shell navigation', () => {
       .getByRole('link', { name: 'Stack' })
       .click()
     await headerOffsetIsClear(page, 'stack')
+    await page.evaluate(() => {
+      ;(
+        window as typeof window & { __localeSwitchSentinel?: boolean }
+      ).__localeSwitchSentinel = true
+    })
+    const stackY = await page.evaluate(() => window.scrollY)
     await page.getByRole('link', { name: 'Mudar idioma para English' }).click()
     await expect(page).toHaveURL(/\/en$/)
+    expect(
+      await page.evaluate(
+        () =>
+          (window as typeof window & { __localeSwitchSentinel?: boolean })
+            .__localeSwitchSentinel,
+      ),
+    ).toBe(true)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeGreaterThan(stackY - 24)
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 
     await page.goBack()
     await expect(page).toHaveURL(/\/$/)

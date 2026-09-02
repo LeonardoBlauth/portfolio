@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import { THEME_ATTRIBUTE } from '~/utils/theme'
 
 const { locale, t } = useI18n()
+const getRouteBaseName = useRouteBaseName()
 const { initializeTheme, resolvedTheme } = useTheme()
 
 initializeTheme()
+
+const pageKey = (pageRoute: RouteLocationNormalizedLoaded) => {
+  const baseName = getRouteBaseName(pageRoute)
+  return typeof baseName === 'string' ? baseName : pageRoute.path
+}
 
 useHead(() => ({
   htmlAttrs: {
@@ -18,7 +25,7 @@ useHead(() => ({
   <a class="skip-link" href="#main-content">{{ t('navigation.skip') }}</a>
   <LayoutAppHeader />
   <main id="main-content" :data-locale="locale" tabindex="-1">
-    <NuxtPage />
+    <NuxtPage :page-key="pageKey" />
   </main>
 </template>
 

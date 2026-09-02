@@ -44,11 +44,13 @@ const isHomeRoute = computed(
 const targetLocalePath = computed(
   () => switchLocalePath(targetLocale.value).split('#', 1)[0] || '/',
 )
-const targetLocaleHref = computed(() =>
-  mounted.value && currentHash.value
-    ? `${targetLocalePath.value}${currentHash.value}`
-    : targetLocalePath.value,
-)
+const targetLocaleTo = computed(() => {
+  const path = targetLocalePath.value
+  if (mounted.value && currentHash.value) {
+    return { path, hash: currentHash.value }
+  }
+  return { path }
+})
 const targetTheme = computed(() =>
   resolvedTheme.value === 'dark' ? 'light' : 'dark',
 )
@@ -421,7 +423,7 @@ onBeforeUnmount(() => {
           <div class="site-header__controls">
             <NuxtLink
               class="site-header__control site-header__locale"
-              :to="targetLocaleHref"
+              :to="targetLocaleTo"
               :hreflang="targetLocale"
               :aria-label="
                 t('controls.locale', {
