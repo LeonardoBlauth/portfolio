@@ -22,7 +22,6 @@
             height="120"
           />
         </span>
-        <span data-footer-name>Leonardo Blauth</span>
       </div>
       <p data-footer-copyright>© 2026</p>
     </div>
@@ -70,11 +69,7 @@
 
 .site-footer__identity {
   display: flex;
-  gap: var(--space-4);
   align-items: center;
-  min-width: 0;
-  font-weight: var(--font-weight-semibold);
-  white-space: nowrap;
 }
 
 .site-footer__monogram {
