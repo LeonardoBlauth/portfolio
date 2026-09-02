@@ -46,15 +46,6 @@ const principles = ['understand', 'decide', 'evolve'] as const
   border-block-start: 1px solid var(--color-border);
 }
 
-@media (width >= 64rem) and (height >= 52rem) {
-  .work-approach {
-    display: grid;
-    min-block-size: 100vh;
-    min-block-size: 100svh;
-    align-content: center;
-  }
-}
-
 .work-approach__layout {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(24rem, 1.05fr);

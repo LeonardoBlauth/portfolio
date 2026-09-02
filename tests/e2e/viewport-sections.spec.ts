@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 test.describe('viewport section rhythm', () => {
-  test('uses a full viewport for Projects and Work Approach on spacious desktops', async ({
+  test('keeps Work Approach content-sized while Projects retains its full viewport on spacious desktops', async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
@@ -19,13 +19,10 @@ test.describe('viewport section rhythm', () => {
       }),
     )
 
-    expect(sectionMetrics.map((section) => section.minBlockSize)).toEqual([
-      '900px',
-      '900px',
-    ])
-    sectionMetrics.forEach((section) => {
-      expect(section.height).toBeGreaterThanOrEqual(900)
-    })
+    expect(sectionMetrics[0].minBlockSize).toBe('900px')
+    expect(sectionMetrics[0].height).toBeGreaterThanOrEqual(900)
+    expect(sectionMetrics[1].minBlockSize).toBe('0px')
+    expect(sectionMetrics[1].height).toBeLessThan(900)
   })
 
   test('keeps the same sections content-sized below the desktop height threshold', async ({
