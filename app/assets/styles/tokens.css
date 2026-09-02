@@ -66,6 +66,8 @@
   --color-accent: #60a5fa;
   --color-accent-interactive: #93c5fd;
   --color-accent-contrast: #08090b;
+  --color-contact-spotlight: rgb(255 255 255 / 12%);
+  --contact-spotlight-opacity: 0.48;
   --color-border: #252a32;
   --color-focus: #60a5fa;
   --color-selection: rgb(37 99 235 / 35%);
@@ -87,6 +89,8 @@
   --color-accent: #245fdf;
   --color-accent-interactive: #1d4ed8;
   --color-accent-contrast: #ffffff;
+  --color-contact-spotlight: rgb(255 209 102 / 18%);
+  --contact-spotlight-opacity: 0.36;
   --color-border: #d9dce1;
   --color-focus: #1d4ed8;
   --color-selection: rgb(37 99 235 / 22%);
