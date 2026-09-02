@@ -1,4 +1,4 @@
-import { devices, expect, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 test.describe('Hero refinement', () => {
   test('uses both desktop columns for identity and professional details', async ({
@@ -273,7 +273,11 @@ test.describe('Hero primary CTA slide text', () => {
 })
 
 test.describe('Hero primary CTA on a touch device', () => {
-  test.use({ ...devices['iPhone 13'] })
+  test.use({
+    hasTouch: true,
+    isMobile: true,
+    viewport: { width: 390, height: 844 },
+  })
 
   test('keeps the primary label and navigates on the first tap', async ({
     page,
