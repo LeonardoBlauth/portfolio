@@ -42,7 +42,9 @@ describe('application shell', () => {
     expect(wrapper.get('[data-liquid-glass]')).toBeTruthy()
     expect(wrapper.get('[data-morphing-tabs]')).toBeTruthy()
     const morphingIndicator = wrapper.get('[data-morphing-indicator]')
-    expect(morphingIndicator.attributes('data-indicator-kind')).toBe('underline')
+    expect(morphingIndicator.attributes('data-indicator-kind')).toBe(
+      'underline',
+    )
     expect(wrapper.get('main#main-content')).toBeTruthy()
     const homeControl = wrapper.get('button[aria-label="Ir para o início"]')
     expect(homeControl.attributes('aria-controls')).toBe('top')
