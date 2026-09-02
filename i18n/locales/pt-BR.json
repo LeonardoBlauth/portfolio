@@ -11,6 +11,7 @@
     "contact": "Contato"
   },
   "controls": {
+    "backToTop": "Voltar ao início",
     "locale": "Mudar idioma para {locale}",
     "theme": {
       "toggle": "Alternar tema de cores",

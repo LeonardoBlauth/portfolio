@@ -14,11 +14,13 @@ const menuClose = useTemplateRef<HTMLButtonElement>('menuClose')
 const menuOpen = ref(false)
 const mounted = ref(false)
 const currentHash = ref(route.hash)
+const showReturnToHero = ref(false)
 
 let desktopMediaQuery: MediaQueryList | null = null
 let restoreFocusAfterClose = true
 let scrollAnimationFrame: number | null = null
 let routeAlignmentFrame: number | null = null
+let returnToHeroFrame: number | null = null
 
 const SECTION_SCROLL_DURATION_MS = 360
 
@@ -28,7 +30,12 @@ const currentLocale = computed<SupportedLocale>(() =>
 const targetLocale = computed<SupportedLocale>(() =>
   currentLocale.value === 'pt-BR' ? 'en' : 'pt-BR',
 )
+const normalizePathname = (pathname: string) =>
+  pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
 const homePath = computed(() => localizedRoutes.home.paths[currentLocale.value])
+const isHomeRoute = computed(
+  () => normalizePathname(route.path) === normalizePathname(homePath.value),
+)
 const targetLocalePath = computed(
   () => switchLocalePath(targetLocale.value).split('#', 1)[0] || '/',
 )
@@ -50,8 +57,6 @@ const navigationItems = computed(() => [
 const sectionHref = (id: string) => `${homePath.value}#${id}`
 const handleLocaleSwitch = () => writeLocalePreference(targetLocale.value)
 const toggleTheme = () => setTheme(targetTheme.value)
-const normalizePathname = (pathname: string) =>
-  pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
 const cancelScrollAnimation = () => {
   if (scrollAnimationFrame === null) return
 
@@ -136,6 +141,53 @@ const pushHashHistoryEntry = (current: URL, destination: URL) => {
   )
 }
 
+const scrollToSection = (target: HTMLElement) => {
+  const scrollPadding = Number.parseFloat(
+    getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+  )
+  const startY = window.scrollY
+  const targetY = Math.max(
+    0,
+    Math.min(
+      document.documentElement.scrollHeight - window.innerHeight,
+      startY + target.getBoundingClientRect().top - scrollPadding,
+    ),
+  )
+
+  cancelScrollAnimation()
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.scrollTo({ top: targetY, behavior: 'instant' })
+    return
+  }
+
+  const distance = targetY - startY
+  const startedAt = performance.now()
+  const animateScroll = (timestamp: number) => {
+    const progress = Math.min(
+      (timestamp - startedAt) / SECTION_SCROLL_DURATION_MS,
+      1,
+    )
+    const easedProgress = 1 - Math.pow(1 - progress, 3)
+
+    window.scrollTo({
+      top: startY + distance * easedProgress,
+      behavior: 'instant',
+    })
+
+    if (progress < 1) {
+      scrollAnimationFrame = window.requestAnimationFrame(animateScroll)
+    } else {
+      scrollAnimationFrame = null
+    }
+  }
+
+  scrollAnimationFrame = window.requestAnimationFrame(animateScroll)
+}
+const handleSectionControlNavigation = (id: string) => {
+  const target = document.getElementById(id)
+  if (target) scrollToSection(target)
+}
 const handleSectionNavigation = (event: MouseEvent) => {
   if (
     event.defaultPrevented ||
@@ -170,52 +222,12 @@ const handleSectionNavigation = (event: MouseEvent) => {
 
   event.preventDefault()
 
-  const scrollPadding = Number.parseFloat(
-    getComputedStyle(document.documentElement).scrollPaddingBlockStart,
-  )
-  const startY = window.scrollY
-  const targetY = Math.max(
-    0,
-    Math.min(
-      document.documentElement.scrollHeight - window.innerHeight,
-      startY + target.getBoundingClientRect().top - scrollPadding,
-    ),
-  )
-
   if (current.hash !== destination.hash) {
     pushHashHistoryEntry(current, destination)
   }
   currentHash.value = destination.hash
 
-  cancelScrollAnimation()
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    window.scrollTo({ top: targetY, behavior: 'instant' })
-    return
-  }
-
-  const distance = targetY - startY
-  const startedAt = performance.now()
-  const animateScroll = (timestamp: number) => {
-    const progress = Math.min(
-      (timestamp - startedAt) / SECTION_SCROLL_DURATION_MS,
-      1,
-    )
-    const easedProgress = 1 - Math.pow(1 - progress, 3)
-
-    window.scrollTo({
-      top: startY + distance * easedProgress,
-      behavior: 'instant',
-    })
-
-    if (progress < 1) {
-      scrollAnimationFrame = window.requestAnimationFrame(animateScroll)
-    } else {
-      scrollAnimationFrame = null
-    }
-  }
-
-  scrollAnimationFrame = window.requestAnimationFrame(animateScroll)
+  scrollToSection(target)
 }
 
 const openMenu = async () => {
@@ -246,9 +258,45 @@ const closeMenu = (options?: { restoreFocus?: boolean }) => {
   }
 }
 
-const handleMobileSectionNavigation = (event: MouseEvent) => {
-  handleSectionNavigation(event)
+const handleMobileSectionNavigation = (id: string) => {
+  handleSectionControlNavigation(id)
   closeMenu()
+}
+
+const cancelReturnToHeroFrame = () => {
+  if (returnToHeroFrame === null) return
+
+  window.cancelAnimationFrame(returnToHeroFrame)
+  returnToHeroFrame = null
+}
+const updateReturnToHeroVisibility = () => {
+  if (!isHomeRoute.value) {
+    showReturnToHero.value = false
+    return
+  }
+
+  const hero = document.getElementById('top')
+  if (!hero) {
+    showReturnToHero.value = false
+    return
+  }
+
+  const scrollPadding = Number.parseFloat(
+    getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+  )
+  showReturnToHero.value = hero.getBoundingClientRect().bottom <= scrollPadding
+}
+const syncReturnToHeroVisibility = async () => {
+  await nextTick()
+  updateReturnToHeroVisibility()
+}
+const handleViewportScroll = () => {
+  if (returnToHeroFrame !== null) return
+
+  returnToHeroFrame = window.requestAnimationFrame(() => {
+    returnToHeroFrame = null
+    updateReturnToHeroVisibility()
+  })
 }
 
 const handleDesktopTransition = (event: MediaQueryListEvent) => {
@@ -263,6 +311,7 @@ watch(
     const currentPath = fullPath.split('#', 1)[0]
     const previousPath = previousFullPath?.split('#', 1)[0]
     if (route.hash && currentPath !== previousPath) void alignRouteHash()
+    if (mounted.value) void syncReturnToHeroVisibility()
   },
 )
 
@@ -308,9 +357,11 @@ onMounted(() => {
     passive: true,
   })
   window.addEventListener('keydown', handleScrollKeydown)
+  window.addEventListener('scroll', handleViewportScroll, { passive: true })
   desktopMediaQuery = window.matchMedia('(min-width: 52rem)')
   desktopMediaQuery.addEventListener('change', handleDesktopTransition)
   if (desktopMediaQuery.matches) closeMenu({ restoreFocus: false })
+  void syncReturnToHeroVisibility()
 })
 
 onBeforeUnmount(() => {
@@ -319,7 +370,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('wheel', cancelScrollAnimation)
   window.removeEventListener('touchstart', cancelScrollAnimation)
   window.removeEventListener('keydown', handleScrollKeydown)
+  window.removeEventListener('scroll', handleViewportScroll)
   desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
+  cancelReturnToHeroFrame()
   cancelRouteAlignment()
   cancelScrollAnimation()
   if (dialog.value?.open) dialog.value.close()
@@ -357,14 +410,26 @@ onBeforeUnmount(() => {
         class="site-header__desktop-nav"
         :aria-label="t('navigation.primary')"
       >
-        <a
-          v-for="item in navigationItems"
-          :key="item.id"
-          :href="sectionHref(item.id)"
-          @click="handleSectionNavigation"
-        >
-          {{ item.label }}
-        </a>
+        <template v-if="isHomeRoute">
+          <button
+            v-for="item in navigationItems"
+            :key="item.id"
+            type="button"
+            :aria-controls="item.id"
+            @click="handleSectionControlNavigation(item.id)"
+          >
+            {{ item.label }}
+          </button>
+        </template>
+        <template v-else>
+          <NuxtLink
+            v-for="item in navigationItems"
+            :key="item.id"
+            :to="sectionHref(item.id)"
+          >
+            {{ item.label }}
+          </NuxtLink>
+        </template>
       </nav>
 
       <div class="site-header__controls">
@@ -454,16 +519,43 @@ onBeforeUnmount(() => {
         </button>
       </div>
       <nav :aria-label="t('navigation.mobile')">
-        <a
-          v-for="item in navigationItems"
-          :key="item.id"
-          :href="sectionHref(item.id)"
-          @click="handleMobileSectionNavigation"
-        >
-          {{ item.label }}
-        </a>
+        <template v-if="isHomeRoute">
+          <button
+            v-for="item in navigationItems"
+            :key="item.id"
+            type="button"
+            :aria-controls="item.id"
+            @click="handleMobileSectionNavigation(item.id)"
+          >
+            {{ item.label }}
+          </button>
+        </template>
+        <template v-else>
+          <NuxtLink
+            v-for="item in navigationItems"
+            :key="item.id"
+            :to="sectionHref(item.id)"
+          >
+            {{ item.label }}
+          </NuxtLink>
+        </template>
       </nav>
     </dialog>
+
+    <button
+      v-if="isHomeRoute"
+      class="return-to-hero"
+      :class="{ 'return-to-hero--visible': showReturnToHero }"
+      type="button"
+      :aria-hidden="!showReturnToHero"
+      :tabindex="showReturnToHero ? 0 : -1"
+      :aria-label="t('controls.backToTop')"
+      @click="handleSectionControlNavigation('top')"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 19V5m0 0-5 5m5-5 5 5" />
+      </svg>
+    </button>
   </header>
 </template>
 
@@ -535,15 +627,19 @@ onBeforeUnmount(() => {
   gap: clamp(var(--space-4), 2.4vw, var(--space-8));
 }
 
-.site-header__desktop-nav a {
+.site-header__desktop-nav :is(a, button) {
+  padding: 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   text-decoration: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
   transition: color var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
-.site-header__desktop-nav a:hover {
+.site-header__desktop-nav :is(a, button):hover {
   color: var(--color-text-primary);
 }
 
@@ -607,6 +703,65 @@ onBeforeUnmount(() => {
   font-weight: var(--font-weight-semibold);
 }
 
+.return-to-hero {
+  position: fixed;
+  z-index: 101;
+  inset-block-end: var(--space-6);
+  inset-inline-end: var(--layout-gutter);
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  place-items: center;
+  color: var(--color-text-primary);
+  visibility: hidden;
+  pointer-events: none;
+  cursor: pointer;
+  opacity: 0;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+  translate: 0 var(--space-3);
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-standard),
+    translate var(--motion-duration-fast) var(--motion-ease-standard),
+    visibility 0s linear var(--motion-duration-fast);
+}
+
+.return-to-hero--visible {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+  translate: 0;
+  transition-delay: 0s;
+}
+
+.return-to-hero:hover {
+  color: var(--color-accent-interactive);
+  background: var(--color-surface);
+}
+
+:global(:root[data-theme='light'] .return-to-hero) {
+  color: var(--color-accent);
+  background: var(--color-surface);
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent) 32%,
+    var(--color-border)
+  );
+}
+
+.return-to-hero svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
 .mobile-navigation {
   position: fixed;
   inset: var(--space-4) var(--space-4) auto auto;
@@ -643,19 +798,22 @@ onBeforeUnmount(() => {
   margin-block-start: var(--space-4);
 }
 
-.mobile-navigation nav a {
+.mobile-navigation nav :is(a, button) {
+  width: 100%;
   min-height: 3rem;
   padding: var(--space-3) var(--space-4);
   color: var(--color-text-primary);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
   text-decoration: none;
+  text-align: start;
   background: var(--color-surface-elevated);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
+  cursor: pointer;
 }
 
-.mobile-navigation nav a:hover {
+.mobile-navigation nav :is(a, button):hover {
   color: var(--color-accent-interactive);
   border-color: var(--color-border);
 }
@@ -666,6 +824,12 @@ onBeforeUnmount(() => {
   }
   .site-header__menu-trigger {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .return-to-hero {
+    transition: none;
   }
 }
 </style>

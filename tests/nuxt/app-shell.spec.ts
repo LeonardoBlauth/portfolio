@@ -31,7 +31,7 @@ describe('application shell', () => {
     document.body.innerHTML = ''
   })
 
-  it('renders semantic landmarks and locale-aware section links', async () => {
+  it('renders semantic landmarks and section controls on the homepage', async () => {
     const wrapper = await mountSuspended(App, {
       route: '/',
       attachTo: document.body,
@@ -46,7 +46,7 @@ describe('application shell', () => {
 
     const destinations = ['projects', 'experience', 'stack', 'contact']
     for (const destination of destinations) {
-      expect(wrapper.get(`a[href="/#${destination}"]`)).toBeTruthy()
+      expect(wrapper.get(`button[aria-controls="${destination}"]`)).toBeTruthy()
       expect(wrapper.get(`#${destination}`)).toBeTruthy()
     }
 
@@ -134,7 +134,7 @@ describe('application shell', () => {
     await dialog.trigger('keydown', { key: 'Tab' })
     expect(document.activeElement).toBe(first.element)
 
-    await dialog.get('a[href="/#projects"]').trigger('click')
+    await dialog.get('button[aria-controls="projects"]').trigger('click')
     await flushPromises()
     expect(dialog.attributes('open')).toBeUndefined()
     wrapper.unmount()

@@ -34,7 +34,9 @@
   display: flex;
   gap: var(--space-4);
   align-items: center;
+  min-width: 0;
   font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
 }
 
 .site-footer__monogram {
@@ -54,13 +56,6 @@
   margin: 0;
   color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
-}
-
-@media (max-width: 32rem) {
-  .site-footer__layout {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: var(--space-5);
-  }
+  white-space: nowrap;
 }
 </style>
