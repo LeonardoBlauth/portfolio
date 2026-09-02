@@ -590,7 +590,7 @@ test.describe('contact and footer', () => {
     await expect(linkedin).toBeFocused()
 
     const footer = page.locator('footer')
-    await expect(footer).toContainText('Leonardo Blauth')
+    await expect(footer).not.toContainText('Leonardo Blauth')
     await expect(footer).toContainText('© 2026')
     await expect(footer.getByRole('link')).toHaveCount(0)
     const footerMonogram = footer.locator('[data-footer-monogram]')
