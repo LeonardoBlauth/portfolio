@@ -43,7 +43,24 @@ describe('Home Hero', () => {
       expect(hero.text()).toContain(description)
       expect(hero.text()).toContain(location)
       expect(hero.text()).toContain(experience)
-      expect(hero.text()).toContain('Vue.js · TypeScript · Laravel · MySQL')
+
+      const metadata = hero.get('.hero__metadata')
+      expect(metadata.get('.hero__metadata-context').text()).toContain(location)
+      expect(metadata.get('.hero__metadata-context').text()).toContain(
+        experience,
+      )
+
+      const stack = metadata.get('.hero__metadata-stack')
+      expect(stack.text()).toContain('Vue.js')
+      expect(stack.text()).toContain('TypeScript')
+      expect(stack.text()).toContain('Laravel')
+      expect(stack.text()).toContain('MySQL')
+      expect(stack.findAll('img')).toHaveLength(4)
+      for (const logo of stack.findAll('img')) {
+        expect(logo.attributes('aria-hidden')).toBe('true')
+        expect(logo.attributes('alt')).toBe('')
+      }
+
       expect(hero.get('a[href="#contact"]').text()).toContain(contact)
       expect(hero.get('a[href="#projects"]').text()).toContain(projects)
       expect(hero.get('.hero__light-rays').attributes('aria-hidden')).toBe(

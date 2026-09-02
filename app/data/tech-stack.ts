@@ -58,3 +58,7 @@ export const technologyLogos = [
     src: technologyLogoSources.Docker,
   },
 ] as const
+
+export const heroTechnologyLogos = technologyLogos.filter(({ id }) =>
+  ['vue', 'typescript', 'laravel', 'mysql'].includes(id),
+)
