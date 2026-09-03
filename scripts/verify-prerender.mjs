@@ -17,7 +17,7 @@ const generatedRoutes = [
   {
     file: 'projetos/rigset/index.html',
     lang: 'pt-BR',
-    heading: 'Configure and manage your workstation, your way.',
+    heading: 'Configure e gerencie sua workstation do seu jeito.',
   },
   {
     file: 'en/projects/rigset/index.html',
