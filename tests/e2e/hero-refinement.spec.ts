@@ -207,13 +207,23 @@ test.describe('Hero primary CTA slide text', () => {
     page,
   }) => {
     await page.goto('/')
+    await page.waitForFunction(() =>
+      Boolean(
+        (
+          document.querySelector('#__nuxt') as
+            (HTMLElement & { __vue_app__?: unknown }) | null
+        )?.__vue_app__,
+      ),
+    )
     const contact = page.getByRole('link', { name: 'Entrar em contato' })
     await expect(contact).toBeVisible()
+    await expect
+      .poll(async () => (await contactSlideMetrics(page)).primaryY)
+      .toBeCloseTo(0, 0)
 
     const rest = await contactSlideMetrics(page)
     expect(rest.accessibleName).toBe('Entrar em contato')
     expect(rest.hover).toBe(true)
-    expect(rest.primaryY).toBeCloseTo(0, 0)
     expect(rest.secondaryY).toBeGreaterThan(0)
 
     await contact.hover()

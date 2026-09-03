@@ -59,7 +59,6 @@ onMounted(() => {
 <style scoped>
 .selected-projects {
   position: relative;
-  scroll-margin-top: var(--scroll-offset);
 }
 
 @media (width >= 64rem) and (height >= 52rem) {

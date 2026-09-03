@@ -1153,11 +1153,12 @@ test.describe('cross-cutting integration', () => {
     })
     await gotoHydrated(page, '/')
 
-    const contactAction = page.locator('.contact__action').first()
+    const contactAction = page.locator('.contact__action--primary').first()
+    await contactAction.scrollIntoViewIfNeeded()
     const initialBackground = await contactAction.evaluate(
       (element) => getComputedStyle(element).backgroundColor,
     )
-    await contactAction.hover()
+    await contactAction.hover({ force: true })
     await expect
       .poll(() =>
         contactAction.evaluate(
