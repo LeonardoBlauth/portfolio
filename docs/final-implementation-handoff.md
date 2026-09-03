@@ -2,41 +2,44 @@
 
 **Project:** Leonardo Blauth's personal portfolio
 
-**Status:** Prototyping completed and approved
+**Status:** Prototyping completed; V1 implementation in progress on `master`
 
-**Approved public reference:** Version 38
+**Approved public reference:** Prototype version 38 is the baseline. Where later approved implementation on `master` diverges, `master` prevails. The prototype remains a reference only for outcomes that have not been subsequently replaced.
+
+**Canonical production origin:** `https://leonardoblauth.dev`
 
 **Consolidated:** August 27, 2026
+
+**Last reconciled:** September 3, 2026
 
 ## 1. Purpose
 
 This document closes the portfolio prototyping phase and records the approved product, content, identity, layout, behavior, and responsive requirements for the final implementation.
 
-The approved prototype defines the expected result, but its generated code is not considered production architecture. The final implementation prioritizes maintainability, semantic HTML, accessibility, performance, SEO, testability, and a clean component structure while preserving the approved experience.
+The approved prototype defined the expected result at the close of prototyping, but its generated code is not production architecture. Subsequent approved merges on `master` are part of V1 and replace prototype-only visual or product constraints when they diverge. The final implementation prioritizes maintainability, semantic HTML, accessibility, performance, SEO, testability, and a clean component structure while preserving the currently approved experience.
 
 The handoff does not introduce new product, design, or architecture decisions. Future functionality remains excluded unless explicitly identified as a later evolution.
 
 ## 2. Approved Prototype
 
-The approved visual and functional reference is public prototype version 38:
+The approved visual and functional baseline is public prototype version 38:
 
 <https://leonardo-blauth-portfolio.l-blauth00.chatgpt.site/>
 
-The following aspects are authoritative for V1:
+Prototype version 38 remains authoritative only where later approved implementation on `master` has not replaced it. Confirmed supersessions include the Home multi-project carousel and the Hero decorative treatment (light rays rather than the prototype orbit/glow system). Technical correctness and accessibility still take precedence over reproducing an unsuitable prototype mechanism.
+
+The following aspects remain the intended V1 baseline except where `master` later replaced them:
 
 - visual identity and typography;
 - composition and hierarchy;
 - theme palettes and surface treatment;
 - spacing rhythm;
 - section structure and order;
-- approved PT-BR and English content;
+- approved PT-BR and English factual content, extended by later published cases;
 - responsive behavior;
 - the visual intent of hover, focus, and touch states;
-- Header, Hero, orbit, and glow composition;
-- Home and `movune` case-study presentation;
-- navigation and global controls, subject to the implementation gaps documented below.
-
-Interactive prototype states define the intended visual and behavioral result. They are not authoritative when their mechanism conflicts with correct semantics, keyboard support, `focus-visible`, touch behavior, contrast, or assistive technology. Technical correctness and accessibility take precedence over reproducing an unsuitable prototype mechanism without changing the approved visual direction.
+- Header, Hero, and navigation, subject to later approved refinements;
+- Home and case-study presentation, including the additional published cases.
 
 ### 2.1 Prototype versus production implementation
 
@@ -72,9 +75,11 @@ The portfolio presents Leonardo Blauth primarily for professional opportunities 
 ### 3.1 Approved routes
 
 - `/` — portfolio Home;
-- `/projetos/movune` — `movune` case study.
+- `/projetos/movune` — `movune` case study;
+- `/projetos/rigset` — Rigset case study;
+- `/projetos/automacao-horas-extras` — overtime-automation case study;
 
-Localized route behavior is defined in the technical definition.
+plus English equivalents under `/en` and `/en/projects/...` as defined in the technical definition.
 
 ### 3.2 Approved Home order
 
@@ -179,9 +184,9 @@ GitHub and LinkedIn links are also displayed in the Hero.
 - Description and CTAs follow the primary title block.
 - Social links remain visually secondary.
 - Professional metadata follows the main composition.
-- Orbits and glow operate as one decorative system and are ignored by assistive technology.
+- A decorative light-ray layer sits behind the composition and is ignored by assistive technology.
 
-On wider screens, text and orbits form one spatial composition. The visual center of the orbit/glow system aligns approximately with the `Full Stack Developer` region. On smaller screens, the orbit system may become a visual layer behind or above the content without reducing readability or blocking interaction.
+On wider screens, text and the decorative layer form one spatial composition. On smaller screens, the decorative layer may sit behind the content without reducing readability or blocking interaction.
 
 The layout must respond to available space rather than use resolution-specific hacks. Professional metadata remains on one row while space permits and stacks cleanly on narrow screens.
 
@@ -193,17 +198,15 @@ The layout must respond to available space rather than use resolution-specific h
 | Headline | Projetos e soluções que desenvolvo. | Projects and solutions I develop. |
 | Introduction | Apresento cada projeto com seu contexto, processo, decisões e estado real de desenvolvimento. | I present each project with its context, process, decisions, and current stage of development. |
 
-V1 contains one real project: `movune`. Its presentation uses two areas—visual representation and project information—and preserves:
+The current approved Home presents three published projects — `movune`, `rigset`, and overtime automation — through a multi-project carousel with localized case CTAs. Presentation preserves:
 
-- identifier `01`;
-- project type;
-- status and classification;
-- description;
-- current scope;
+- project identity and type/categories;
+- honest status and classification;
+- description and current scope or maturity note where applicable;
 - case-study CTA;
-- an explicit label identifying the representation as demonstrative.
+- an explicit label identifying demonstrative or conceptual representations when used.
 
-A project carousel is intentionally excluded from V1. Controls, dots, arrows, swipe behavior, placeholders, fictional projects, and speculative multi-project infrastructure must not be added.
+Empty placeholder slides and fictional completed products remain excluded. The original single-project/no-carousel V1 constraint is superseded by the approved multi-project implementation on `master` (PR #23).
 
 ### 5.4 `movune` on the Home page
 
@@ -259,15 +262,62 @@ The case study documents the path from the initial idea through product definiti
 
 This content must not be extended into unsupported promises, metrics, or completed functionality.
 
-### 5.6 Temporary `movune` representations
+Localized editorial copy for `movune` continues to live in `i18n/locales` under `pages.movune`. The table above records the approved factual baseline.
 
-The interfaces shown on the Home page and in the case study are temporary representations created to validate the portfolio composition. They are not final product screenshots.
+### 5.6 Rigset case study
 
-V1 may reproduce these approved representations without blocking release. Once real, approved screenshots exist, they may replace the representations while preserving composition, visual quality, proportions, legibility, optimization, and accessible descriptions.
+Route: `/projetos/rigset` (English: `/en/projects/rigset`).
 
-All data shown inside the representations is demonstrative and must remain clearly identified as such. It must not be interpreted as product metrics or facts.
+Rigset is an open-source CLI for describing, configuring, and managing workstation state declaratively. V1 publishes it as a **planned** product: product, architecture, CLI experience, and v1 roadmap are defined; implementation has not started.
 
-### 5.7 Professional Experience
+Stable facts:
+
+- categories: Developer Tool · Open Source;
+- Home and case visuals are conceptual and must remain labeled as not the final interface;
+- the case must not claim a released CLI, users, or production operations.
+
+Case structure in the current implementation:
+
+1. The problem;
+2. The proposal;
+3. How Rigset understands a workstation;
+4. Security before automation;
+5. Proving the Core in v1;
+6. Current status.
+
+Editorial copy, detailed capability lists, and section prose live in `i18n/locales` under `pages.rigset` and must not be duplicated here.
+
+### 5.7 Overtime automation case study
+
+Route: `/projetos/automacao-horas-extras` (English: `/en/projects/overtime-automation`).
+
+Overtime automation is a concept for identifying overtime opportunities in messages, checking schedule, availability, and limits, and replying automatically only when the opportunity is eligible. V1 publishes it as a **concept**: the problem, main rules, and initial decision flow are defined; technical requirements and implementation have not started.
+
+Stable facts:
+
+- categories: Automation · WhatsApp;
+- Home visual is an editorial diagram of the decision flow, not a product screenshot;
+- the case must not claim a deployed bot, live WhatsApp integration, or production use.
+
+Case structure in the current implementation:
+
+1. The problem;
+2. How the decision works;
+3. Rules already identified;
+4. Limits of the current concept;
+5. Current status.
+
+Editorial copy and flow labels live in `i18n/locales` under `pages.overtime` and must not be duplicated here.
+
+### 5.8 Temporary and conceptual representations
+
+Home and case visuals may be prototype screenshots, conceptual images, or editorial diagrams. They are not claims of a shipped product interface unless a case explicitly says otherwise.
+
+V1 may ship these approved representations. Once real, approved screenshots exist, they may replace temporary assets while preserving composition, visual quality, proportions, legibility, optimization, and accessible descriptions.
+
+Demonstrative data and conceptual visuals must remain clearly identified. They must not be interpreted as product metrics, launched UI, or production evidence.
+
+### 5.9 Professional Experience
 
 | Element | PT-BR | English |
 | --- | --- | --- |
@@ -292,7 +342,7 @@ Displayed technologies: Vue.js, JavaScript, TypeScript, Laravel, PHP, and MySQL.
 
 Only approved, general public information is included. Client identities, proprietary code or architecture, internal metrics, sensitive rules, and internal names remain outside the portfolio.
 
-### 5.8 Education
+### 5.10 Education
 
 Education follows professional experience as a visually and semantically secondary block.
 
@@ -305,7 +355,7 @@ Education follows professional experience as a visually and semantically seconda
 
 The portfolio does not make unsupported claims about the program's start date, current semester, courses, grades, or academic activities.
 
-### 5.9 Skills and Tech Stack
+### 5.11 Skills and Tech Stack
 
 | Element | PT-BR | English |
 | --- | --- | --- |
@@ -320,7 +370,7 @@ The portfolio does not make unsupported claims about the program's start date, c
 
 The interface does not add technologies, proficiency levels, percentages, skill bars, or new categories. Exploratory technologies must not be presented as professional expertise.
 
-### 5.10 How I Work
+### 5.12 How I Work
 
 This section describes Leonardo's general approach and remains independent from any specific project.
 
@@ -339,7 +389,7 @@ Approved principles:
 | Decidir com clareza | Make clear decisions |
 | Evoluir de forma incremental | Evolve incrementally |
 
-### 5.11 Contact
+### 5.13 Contact
 
 | Element | PT-BR | English |
 | --- | --- | --- |
@@ -365,7 +415,7 @@ Interaction requirements:
 
 A contact form is intentionally excluded from V1.
 
-### 5.12 Footer
+### 5.14 Footer
 
 The Footer contains:
 
@@ -399,7 +449,7 @@ Both themes are intentional experiences, not simple color inversions.
 - Semantic tokens preserve surface, border, text, and accent hierarchy.
 - Contrast is validated in both themes.
 - The monogram variant matches its background.
-- Orbits and glow retain the approved intent with theme-appropriate intensity.
+- Hero decorative layers retain theme-appropriate intensity.
 - Theme application avoids a visible flash during loading.
 
 ## 8. Responsive Behavior
@@ -420,9 +470,9 @@ Approved behavior includes:
 - consistent centered content width;
 - Header adaptation based on available space;
 - side-by-side Hero while space permits;
-- decorative orbit repositioning on mobile;
+- Hero decorative-layer placement on mobile that does not block reading or interaction;
 - inline Hero metadata when possible and clean stacking on narrow screens;
-- two-column project presentation on wider screens and stacked presentation when needed;
+- carousel/project presentation on wider screens and stacked presentation when needed;
 - preserved hierarchy between professional experience and education;
 - stacked contribution groups when columns become too narrow;
 - Skills layout progressing from three columns to two and then one;
@@ -430,7 +480,7 @@ Approved behavior includes:
 - comfortable full-width Contact actions on mobile;
 - case-study media and grids without horizontal overflow.
 
-Resolution-specific offsets, screenshot-specific media queries, duplicated layouts, compensating negative margins, and aggressive typography reduction are excluded. The Hero, orbit, and glow composition must respond as one system.
+Resolution-specific offsets, screenshot-specific media queries, duplicated layouts, compensating negative margins, and aggressive typography reduction are excluded. The Hero text and decorative layer must respond as one system.
 
 ## 9. Navigation, Interaction, and Motion
 
@@ -448,7 +498,7 @@ The mobile menu:
 
 Language and theme controls have localized labels, visible focus, adequate touch targets, and states that are not communicated through color alone.
 
-Orbit motion and approved transitions remain restrained. No content or action depends on animation, and `prefers-reduced-motion` provides an equivalent reduced or immediate experience.
+Approved motion and transitions remain restrained. No content or action depends on animation, and `prefers-reduced-motion` provides an equivalent reduced or immediate experience.
 
 ### 9.1 Known smooth-scroll gap
 
@@ -490,14 +540,14 @@ Minimum requirements:
 - understandable external-link behavior;
 - automated and manual accessibility testing where applicable.
 
-The accessible project name is simply `movune`. Decorative symbols must not be concatenated with visible text by assistive technology or crawlers.
+Published project names must remain accurate for assistive technology. Decorative symbols must not be concatenated with visible text by assistive technology or crawlers. `movune` remains lowercase.
 
 ## 11. SEO and Sharing
 
 The final implementation defines and validates:
 
 - localized page titles and meta descriptions;
-- canonical URLs;
+- canonical URLs based on `https://leonardoblauth.dev`;
 - language alternates and `hreflang`;
 - Open Graph metadata and validated social previews;
 - Twitter/X cards when applicable;
@@ -505,7 +555,7 @@ The final implementation defines and validates:
 - consistent heading structure;
 - indexing, sitemap, and robots behavior;
 - structured data only when justified by accurate data;
-- case-specific metadata for `movune`.
+- case-specific metadata for each published case (`movune`, `rigset`, overtime automation).
 
 Baseline prototype copy includes:
 
@@ -513,7 +563,7 @@ Baseline prototype copy includes:
 - Description: `Portfólio de Leonardo Blauth, Full Stack Developer orientado a produto.`;
 - the existing prototype social image.
 
-The Portuguese description above is retained only as localized product content. Final metadata must remain factually equivalent across languages and must not present `movune` as launched or commercially validated.
+The Portuguese description above is retained only as localized product content. Final metadata must remain factually equivalent across languages and must not present published projects beyond their documented maturity.
 
 ## 12. Performance
 
@@ -523,7 +573,7 @@ The Portuguese description above is retained only as localized product content. 
 - Load Instrument Sans efficiently and avoid unnecessary weights.
 - Minimize runtime JavaScript and dependencies.
 - Do not introduce heavy libraries for simple effects.
-- Keep orbit, glow, and transitions efficient.
+- Keep Hero decorative effects, blur, and transitions efficient.
 - Avoid continuous scroll work without a clear need.
 - Do not block content behind visual effects.
 - Validate production Core Web Vitals on representative mobile conditions.
@@ -548,10 +598,12 @@ Visual fidelity does not justify a heavy implementation.
 | GitHub | <https://github.com/LeonardoBlauth> |
 | LinkedIn | <https://www.linkedin.com/in/leonardo-blauth> |
 | `movune` case | `/projetos/movune` |
+| Rigset case | `/projetos/rigset` |
+| Overtime automation case | `/projetos/automacao-horas-extras` |
 
-No external `movune` URL is approved for V1.
+No external product URLs for these cases are approved for publication beyond the portfolio routes above.
 
-GitHub and LinkedIn consistently open in a new tab from their approved locations. They use appropriate `target`, secure `rel` values, and an accessible indication of new-tab behavior. Email uses `mailto:`, and the `movune` case remains internal navigation.
+GitHub and LinkedIn consistently open in a new tab from their approved locations. They use appropriate `target`, secure `rel` values, and an accessible indication of new-tab behavior. Email uses `mailto:`, and case studies remain internal navigation.
 
 ## 15. Technical Quality Expectations
 
@@ -586,28 +638,27 @@ When real, approved `movune` screenshots exist, they may replace temporary repre
 
 ### 16.3 Multiple projects
 
-A carousel may be reconsidered only after at least one additional real project exists. Its desktop, keyboard, touch/swipe, mobile, controls, and accessibility behavior must then be designed against real content as an independent feature.
+The earlier planning note that a carousel could be reconsidered after additional real projects exist has been fulfilled. The approved Home now ships a multi-project carousel with `movune`, `rigset`, and overtime automation. Desktop, keyboard, touch/swipe, mobile, controls, and accessibility behavior must continue to be maintained against that real content.
 
 ### 16.4 Explicit exclusions
 
-- project carousel and speculative multi-project infrastructure;
-- fictional projects, metrics, users, or results;
+- empty carousel placeholders or fictional projects presented as completed products;
 - contact form;
 - analytics without a defined purpose and privacy decision;
-- production claims or architecture for `movune`;
+- production claims or architecture for projects beyond what each case documents;
 - prototype code and internal component structure as production authority.
 
 ## 17. V1 Acceptance Criteria
 
 ### 17.1 Product and content
 
-- [ ] The implementation reproduces the approved prototype's visual result.
-- [ ] Home and the `movune` case study are present.
+- [ ] The implementation reproduces the approved visual result, including later approved refinements on `master`.
+- [ ] Home and the localized case studies for `movune`, `rigset`, and overtime automation are present.
 - [ ] Section order and structure are preserved.
 - [ ] Approved factual copy is preserved in both languages.
 - [ ] `movune` is consistently lowercase.
-- [ ] No project, metric, fact, or feature is invented.
-- [ ] No carousel is included.
+- [ ] No project, metric, fact, or feature is invented beyond approved published cases.
+- [ ] The multi-project carousel presents only real published projects.
 - [ ] Final `movune` screenshots are not required for release.
 
 ### 17.2 Languages and themes
@@ -621,8 +672,8 @@ A carousel may be reconsidered only after at least one additional real project e
 ### 17.3 Visual structure and responsiveness
 
 - [ ] Desktop and mobile Header behavior works as specified.
-- [ ] The Hero preserves its composition and spatial relationship with orbits and glow.
-- [ ] Projects and the case study remain faithful to the approved result.
+- [ ] The Hero preserves its current approved composition, including the decorative light-ray layer.
+- [ ] Projects and the published case studies remain faithful to the approved result.
 - [ ] Professional experience and education preserve their hierarchy.
 - [ ] Skills categories remain unchanged.
 - [ ] How I Work remains independent from a specific project.

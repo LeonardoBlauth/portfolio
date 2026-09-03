@@ -2,17 +2,34 @@
 
 **Project:** Leonardo Blauth's personal portfolio
 
-**Status:** Approved planning baseline for V1 implementation
+**Status:** Stages 1–11 complete; Stage 12 not started; V1 scope includes post-Stage-11 expansions recorded below
 
 **Plan scope:** Implementation sequencing, dependencies, validation, and release readiness
 
 **Consolidated:** August 27, 2026
 
+**Last reconciled:** September 3, 2026
+
 ## 1. Purpose
 
-This plan turns the approved portfolio handoff and technical definition into incremental, testable, and reviewable implementation units. It closes the V1 planning phase without starting application development.
+This plan turns the approved portfolio handoff and technical definition into incremental, testable, and reviewable implementation units. It originally closed the V1 planning phase before application development began.
+
+V1 is the first production version of the portfolio. Its current approved product surface is the scope in Section 4, including later expansions recorded in [Approved V1 expansions after Stage 11](#approved-v1-expansions-after-stage-11).
 
 The sequence is designed to keep the product buildable, accessible, bilingual, and theme-aware throughout development. Cross-cutting capabilities are introduced before the sections that depend on them and are validated continuously rather than deferred to a final cleanup phase.
+
+## 1.1 Implementation progress (reconciled)
+
+Confirmed from Git history on `master` and the current application tree:
+
+| Stage | State | Primary evidence |
+| --- | --- | --- |
+| 1–10 | Completed | Dedicated `feature/stage-*` branches and merged PRs through Contact/Footer |
+| 11 | Completed | PR #11 / `feature/stage-11-cross-cutting-integration` (`1c11146`, `fdc81db`); acceptance criteria checked in this plan |
+| 12 | Not started as a stage | No Stage 12 branch/commit; no sitemap/robots/canonical/OG/Twitter metadata modules; page `useHead` only sets `lang` and theme; Stage 12 acceptance checkboxes remain open |
+| 13–14 | Not started | Depend on Stage 12 and remaining release decisions |
+
+Completed Stages keep their original numbering, historical scope, and historical acceptance criteria. Product work merged after Stage 11 is not a new Stage; it is recorded in [Approved V1 expansions after Stage 11](#approved-v1-expansions-after-stage-11).
 
 ## 2. Source Documents and Precedence
 
@@ -28,7 +45,7 @@ This implementation plan converts those approved decisions into an incremental e
 - Deliver one coherent, reviewable increment per stage.
 - Begin each implementation unit from the current default branch and integrate it only after relevant validation succeeds.
 - Use logical commits that describe meaningful outcomes; avoid both component-sized fragmentation and a single portfolio-wide change.
-- Preserve the approved prototype as the reference for outcomes, not for generated code or internal architecture.
+- Preserve the approved prototype as the reference for outcomes that later merged work has not replaced. When visual or product behavior diverges, the approved implementation on `master` prevails. Prototype generated code is never production architecture.
 - Keep every completed stage buildable.
 - Introduce internationalization, themes, semantics, accessibility, responsiveness, and testing when their dependent features are created.
 - Prefer native browser and Nuxt capabilities before adding dependencies.
@@ -41,38 +58,39 @@ This implementation plan converts those approved decisions into an incremental e
 
 ## 4. V1 Scope
 
-V1 includes:
+V1 is the first production version. Current approved scope includes:
 
 - a statically generated Nuxt 4 application using Vue 3 and TypeScript;
 - PT-BR Home at `/` and English Home at `/en`;
-- PT-BR `movune` case study at `/projetos/movune` and English equivalent at `/en/projects/movune`;
-- the approved Header, Hero, Projects, Experience and Education, Skills and Tech Stack, Work Approach, Contact, and Footer;
+- localized case studies for `movune`, `rigset`, and overtime automation (`/projetos/movune`, `/projetos/rigset`, `/projetos/automacao-horas-extras`, and English equivalents under `/en/projects/...`);
+- Home Selected Projects presented through an approved multi-project carousel of those three real projects;
+- the Header, Hero, Projects, Experience and Education, Skills and Tech Stack, Work Approach, Contact, and Footer, including later approved interaction and visual refinements already merged to `master`;
 - light and dark themes with persisted explicit preference and system fallback;
 - localized navigation, content, accessible names, and metadata;
 - responsive behavior across desktop, intermediate, tablet, and mobile widths;
 - real, restrained smooth scrolling with fixed-Header offset that remains perceptible with reduced motion enabled;
-- temporary, clearly identified `movune` prototype representations;
+- temporary or conceptual project representations that remain clearly identified where demonstrative;
 - semantic HTML, keyboard support, visible focus, adequate contrast, and accessible interactions;
-- localized SEO, social metadata, sitemap, robots behavior, and static delivery;
+- localized SEO, social metadata, sitemap, robots behavior, and static delivery (Stage 12; not yet implemented);
 - proportional unit, component, end-to-end, and automated accessibility tests;
-- GitHub Actions validation and Cloudflare Pages preview and production delivery.
+- GitHub Actions validation and Cloudflare Pages preview and production delivery at the canonical origin `https://leonardoblauth.dev`.
 
 ## 5. Explicitly Out of Scope
 
-V1 does not include:
+Still out of scope unless separately approved:
 
 - a blog, CMS, backend, application API, database, authentication, or administration interface;
 - a contact form;
 - analytics or undefined visitor tracking;
 - Pinia without a demonstrated shared-state requirement;
-- Tailwind CSS or a general-purpose component framework;
-- a heavy animation library without a concrete need that native capabilities cannot meet;
-- a project carousel, carousel controls, swipe behavior, or speculative multi-project infrastructure;
-- fictional or placeholder projects;
+- Tailwind CSS or a general-purpose component framework as the styling system;
+- fictional projects presented as completed products, or speculative empty carousel placeholders;
 - final `movune` screenshots as a release dependency;
-- claims that `movune` is launched, commercially validated, complete, or operating with real users, clients, revenue, or production integrations;
+- claims that `movune`, `rigset`, or overtime automation are launched commercial products, or claims of users, clients, revenue, or production integrations that the cases do not support;
 - a custom deployment pipeline when Cloudflare Pages' native integration is sufficient;
-- unrelated refactoring or changes to the approved prototype.
+- unrelated refactoring disconnected from approved product work.
+
+Animation libraries already present in the approved implementation (`gsap`, `motion-v`, `ogl`) are in scope for their existing approved uses. New heavy animation dependencies still require a concrete need.
 
 ## 6. Dependency Map
 
@@ -814,15 +832,51 @@ A cross-cutting integration change limited to gaps revealed when completed featu
 - Handoff: Internationalization; Themes; Responsiveness; Navigation; V1 Acceptance Criteria.
 - Technical Definition: Locale Behavior; Theme Architecture; E2E Strategy; Build-Output Checks.
 
+## Approved V1 expansions after Stage 11
+
+This section is **not a numbered stage**. It records product work implemented and merged to `master` after Stage 11 closed and before Stage 12 starts. Stages 1–11 keep their original numbering, historical scope, and historical acceptance criteria.
+
+### Published projects and Home carousel
+
+PR #23 (`577bb45` … merge `d4e3574`) superseded the original V1 constraint of a single Home project without a carousel. V1 now publishes three real projects through an approved Home carousel and localized case routes:
+
+| Project | Status | PT-BR route | English route | Home visual |
+| --- | --- | --- | --- | --- |
+| `movune` | prototyping | `/projetos/movune` | `/en/projects/movune` | prototype screenshots, labeled as demonstrative |
+| Rigset | planned | `/projetos/rigset` | `/en/projects/rigset` | conceptual image, labeled as not the final interface |
+| Overtime automation | concept | `/projetos/automacao-horas-extras` | `/en/projects/overtime-automation` | editorial diagram |
+
+Empty placeholder slides and fictional completed products remain excluded. Localized editorial copy remains in `i18n/locales`; typed facts remain in `app/data/projects.ts`.
+
+### Visual and interaction refinements
+
+Approved `master` merges after Stage 11 also replaced several prototype-only treatments. Where they diverge, `master` prevails. Confirmed examples include Hero light rays and one-shot name typing (PRs #13–#14), Header liquid-glass and sliding section underline (PR #18), post-hero scroll reveal and atmosphere (PRs #16 and #20), tech-stack logo loop (PR #15), contact spotlight card (PR #17), and primary contact CTA slide label (PR #21).
+
+### Effect on remaining stages
+
+Stages 12–14 apply to this current V1 surface: eight prerendered localized routes, the Home carousel, and the approved visual/interaction refinements. They do not restore the original single-project matrix.
+
 ## 19. Stage 12 — SEO, Performance, and Security Hardening
 
 ### Objective
 
 Prepare the complete static product for indexing, sharing, efficient delivery, and safe publication.
 
+### Progress note (reconciled September 3, 2026)
+
+Stage 12 has **not been executed** as an implementation increment. There is no Stage 12 branch, commit message, or PR.
+
+Incidental precursors from earlier stages exist and must not be mistaken for Stage 12 completion:
+
+- favicon and brand SVG delivery under `/brand/`;
+- Instrument Sans font preload;
+- prerendered localized HTML with document `lang` and visible content verified by `scripts/verify-prerender.mjs`.
+
+Still missing relative to this stage's acceptance criteria: localized titles/descriptions, self-referencing canonical URLs based on `https://leonardoblauth.dev`, `hreflang` / `x-default`, Open Graph / social-preview metadata, sitemap, production/preview robots behavior, Core Web Vitals evaluation on a production build, and a static security-header policy derived from the final resource set. Route coverage is the current V1 set: Home plus the three case studies in both locales (eight prerendered routes).
+
 ### Scope
 
-- implement localized Home and `movune` case titles and descriptions using approved factual copy;
+- implement localized Home and case-study titles and descriptions using approved factual copy;
 - configure self-referencing canonical URLs, PT-BR/English `hreflang`, and `x-default` relationships;
 - add Open Graph, social-preview, favicon, and Twitter/X card metadata where applicable;
 - configure sitemap and production/preview robots behavior;
@@ -830,7 +884,7 @@ Prepare the complete static product for indexing, sharing, efficient delivery, a
 - optimize fonts, SVGs, temporary representations, dimensions, formats, loading priority, and lazy loading;
 - reduce unnecessary JavaScript and dependencies;
 - reserve media space and correct relevant layout shifts;
-- review orbit, glow, blur, and animation paint cost;
+- review light-ray, aurora, blur, and animation paint cost;
 - review dependencies, external links, public assets, metadata, and configuration for security and privacy;
 - define appropriate static security headers from actual resource requirements.
 
@@ -849,7 +903,7 @@ Prepare the complete static product for indexing, sharing, efficient delivery, a
 ### Implementation considerations
 
 - Preview environments must not compete with production URLs in search results.
-- `movune` metadata must describe a personal project in prototyping, not a launched commercial product.
+- `movune` metadata must describe a personal project in prototyping, not a launched commercial product. `rigset` and overtime-automation metadata must preserve their planned/concept framing.
 - Metadata must be present in static HTML rather than depend on client execution.
 - A Content Security Policy should reflect actual resource requirements and must not be broadly weakened for unnecessary scripts.
 - Public assets must be sanitized before their first commit.
@@ -896,18 +950,18 @@ Audit the complete V1 against product acceptance criteria, close residual access
 - perform a complete semantic, keyboard, focus, accessible-name, contrast, motion, touch, language, and zoom audit;
 - validate landmarks and heading hierarchy on all routes;
 - verify the mobile-menu focus lifecycle and all global controls;
-- confirm decorative symbols, orbits, glow, and project marks are correctly excluded when redundant;
-- confirm the accessible project name is exactly `movune`;
+- confirm decorative symbols, Hero decorative layers, and project marks are correctly excluded when redundant;
+- confirm published project names and statuses remain accurate and accessible;
 - run full automated tests, axe coverage, static checks, and production build;
 - execute the complete responsive matrix in both locales and themes;
-- review visual and content fidelity against the approved prototype and the handoff;
-- verify facts, links, temporary-content disclosures, V1 exclusions, console output, and generated assets;
+- review visual and content fidelity against the current approved V1 surface on `master`; the prototype remains a reference only where later merged work has not replaced it;
+- verify facts, links, temporary-content disclosures, remaining exclusions, console output, and generated assets;
 - review the complete change set for accidental files and sensitive information.
 
 ### Out of scope
 
 - adding accessibility for the first time;
-- new product features, visual redesign, speculative abstraction, final `movune` screenshots, or a carousel;
+- new product features, visual redesign, speculative abstraction, or final `movune` screenshots as a release dependency;
 - production deployment.
 
 ### Dependencies
@@ -925,26 +979,26 @@ Audit the complete V1 against product acceptance criteria, close residual access
 ### Validation
 
 - formatting, lint, typecheck, unit/component tests, full Playwright suite, axe checks, and production static build;
-- direct loading and generated-output checks for all four routes;
+- direct loading and generated-output checks for all localized Home and case routes;
 - manual keyboard and representative screen-reader review;
 - `focus-visible`, focus order, mobile focus containment, and restoration checks;
 - contrast checks in both themes and interactive states;
 - reduced-motion and standard-motion comparison;
 - 200% zoom and reflow review;
 - responsive visual QA at 1440×900, 1024×768, 853×1280, 390×844, intermediate widths, and continuous resizing;
-- content and factual searches for 2021, 2027, lowercase `movune`, single-project scope, and prohibited claims;
+- content and factual searches for 2021, 2027, lowercase `movune`, published-project scope, and prohibited claims;
 - clean-tree, diff, asset, secret, privacy, and broken-link review.
 
 ### Acceptance criteria
 
 - [ ] All defined automated validation passes without relevant warnings.
-- [ ] All four routes pass manual accessibility and responsive review.
-- [ ] Visual and content fidelity match the approved handoff in both locales and themes.
+- [ ] All localized routes pass manual accessibility and responsive review.
+- [ ] Visual and content fidelity match the current approved V1 surface in both locales and themes.
 - [ ] Smooth scroll, deep links, mobile navigation, locale, theme, project navigation, and external links pass end to end.
 - [ ] Professional facts use 2021 and expected education completion uses 2027.
-- [ ] V1 contains only `movune`, in lowercase, accurately framed as in prototyping.
-- [ ] No carousel, contact form, analytics, final-screenshot dependency, or other excluded feature is present.
-- [ ] The release-candidate diff is clean, sanitized, and limited to approved V1 work.
+- [ ] Published projects remain accurately framed (`movune` lowercase and in prototyping; `rigset` and overtime automation at their documented maturity).
+- [ ] No contact form, analytics, final-screenshot dependency, or other remaining excluded feature is present.
+- [ ] The release-candidate diff is clean, sanitized, and limited to approved work.
 
 ### Implementation unit
 
@@ -975,7 +1029,7 @@ Publish the validated static V1 through Cloudflare Pages and confirm the product
 ### Out of scope
 
 - a custom deployment server or redundant deployment pipeline;
-- analytics, backend services, CMS, contact form, carousel, new projects, or final `movune` screenshots;
+- analytics, backend services, CMS, contact form, or final `movune` screenshots as a release dependency;
 - merging unrelated future work into the release.
 
 ### Dependencies
@@ -994,7 +1048,7 @@ Publish the validated static V1 through Cloudflare Pages and confirm the product
 ### Validation
 
 - verify Cloudflare build logs and deployed artifact version;
-- request all four localized routes directly and refresh them;
+- request all localized Home and case routes directly and refresh them;
 - verify custom domain, HTTPS, redirects, headers, canonical URLs, `hreflang`, sitemap, robots, favicon, and social metadata;
 - smoke-test locale switching, theme behavior, mobile menu, smooth scroll, case navigation, email, GitHub, and LinkedIn;
 - verify images, fonts, alternative text, console output, and not-found behavior;
@@ -1005,7 +1059,7 @@ Publish the validated static V1 through Cloudflare Pages and confirm the product
 
 - [ ] Cloudflare Pages serves the expected static build from the approved production revision.
 - [ ] Custom domain and HTTPS work correctly.
-- [ ] All four localized routes and direct deep links work in production.
+- [ ] All localized Home and case routes and direct deep links work in production.
 - [ ] Production metadata, sitemap, robots, social previews, assets, and headers are correct.
 - [ ] Preview deployments are not treated as canonical production pages.
 - [ ] Post-deploy functional, accessibility, responsive, security, and performance smoke checks pass.
@@ -1046,10 +1100,10 @@ CI should remain proportional:
 
 | Reference viewport | Primary risks |
 | --- | --- |
-| 1440×900 | Wide Hero/orbit balance, content width, multi-column sections |
+| 1440×900 | Wide Hero/decorative balance, content width, multi-column sections |
 | 1024×768 | Intermediate Header density, Hero balance, project and contribution layouts |
 | 853×1280 | Natural layout transitions, metadata grouping, tablet portrait composition |
-| 390×844 | Mobile menu, touch, stacking, typography, orbit placement, overflow |
+| 390×844 | Mobile menu, touch, stacking, typography, Hero decorative placement, overflow |
 
 These dimensions do not define CSS breakpoints. Each stage also validates nearby widths, longer English or Portuguese copy, orientation changes where useful, and continuous resizing. Layout changes should occur when content and available space require them.
 
@@ -1059,18 +1113,18 @@ V1 is complete only when all conditions below are satisfied.
 
 ### Product and visual fidelity
 
-- [ ] Home and the localized `movune` case reproduce the approved prototype's visual direction, hierarchy, content, and behavior.
+- [ ] Home and the localized case studies reproduce the current approved V1 visual direction, hierarchy, content, and behavior. The prototype remains a reference only where later merged work has not replaced it.
 - [ ] Header, Hero, Projects, Experience and Education, Skills and Tech Stack, Work Approach, Contact, and Footer are complete and correctly ordered.
-- [ ] Orbit, glow, monogram, typography, spacing, surfaces, and light/dark palettes preserve the approved identity.
-- [ ] Temporary `movune` representations are visually suitable, optimized, accessible, and clearly identified as demonstrative.
+- [ ] Identity elements (monogram, typography, spacing, surfaces, light/dark palettes) and approved decorative systems preserve the portfolio identity.
+- [ ] Temporary or conceptual project representations are visually suitable, optimized, accessible, and clearly identified where demonstrative.
 
 ### Content fidelity
 
 - [ ] PT-BR and English are complete and semantically equivalent across visible copy, hidden text, accessible names, and metadata.
 - [ ] Professional web development and DealerUp experience begin in 2021.
 - [ ] Software Engineering completion is expected in 2027.
-- [ ] `movune` is lowercase, the only V1 project, personal, evolving, and in prototyping.
-- [ ] No unsupported claim, project, metric, user, client, revenue, integration, or production architecture is published.
+- [ ] Published projects remain accurately framed: `movune` lowercase and in prototyping; `rigset` and overtime automation at their documented maturity.
+- [ ] No unsupported claim, metric, user, client, revenue, integration, or production architecture is published.
 
 ### Themes, responsiveness, and interaction
 
@@ -1084,7 +1138,7 @@ V1 is complete only when all conditions below are satisfied.
 - [ ] Semantic HTML, landmarks, headings, link/button roles, page language, and reading order are correct.
 - [ ] Keyboard navigation, visible focus, mobile focus management, touch targets, and external-link indications are complete.
 - [ ] Contrast passes in both themes and state is not communicated by color alone.
-- [ ] Decorative content is excluded appropriately and the accessible project name is exactly `movune`.
+- [ ] Decorative content is excluded appropriately; project names and statuses remain accurate for assistive technology.
 - [ ] The site remains usable at 200% zoom and with reduced motion.
 - [ ] Automated axe coverage and required manual accessibility review pass.
 
@@ -1101,12 +1155,12 @@ V1 is complete only when all conditions below are satisfied.
 - [ ] CI enforces the appropriate validation before integration.
 - [ ] No broken link, asset, route, hydration path, or relevant console error remains.
 - [ ] No secret, credential, private environment value, internal DealerUp information, customer data, confidential metric, sensitive asset metadata, or unnecessary personal data is published.
-- [ ] Cloudflare Pages serves the approved revision through the custom domain and HTTPS.
+- [ ] Cloudflare Pages serves the approved revision at `https://leonardoblauth.dev` over HTTPS.
 - [ ] All localized routes, metadata, links, interactions, accessibility essentials, and assets pass the post-deploy smoke test.
 
 ### Explicit nonrequirements
 
-The Definition of Done does not require a carousel, a second project, final `movune` screenshots, a contact form, analytics, a CMS, backend services, authentication, or speculative infrastructure.
+The Definition of Done does not require final `movune` screenshots, a contact form, analytics, a CMS, backend services, authentication, or speculative infrastructure beyond the approved multi-project presentation already on `master`.
 
 ## 25. Open Implementation Decisions
 
@@ -1114,14 +1168,14 @@ These decisions remain intentionally open within the approved handoff and techni
 
 | Decision | Why it is needed | Stage | Blocking status |
 | --- | --- | --- | --- |
-| Exact Node LTS, Nuxt, module, and tooling versions | Compatibility must be checked against stable releases at implementation start and recorded reproducibly. | Stage 1 | Blocks project initialization, not planning. |
-| Minimal compatible ESLint and formatting configuration | The technical definition deliberately avoids freezing tool options before the selected versions are known. | Stage 1 | Blocks completion of Stage 1, not its initial audit. |
-| Final Nuxt folder and component names | Names should follow current Nuxt conventions and actual responsibilities rather than speculative structure. | Stages 1–10 | Does not block Stage 1; resolved incrementally before each affected unit. |
-| Detailed image format and processing choices | The best strategy depends on the approved asset inventory, intrinsic dimensions, visual fidelity, and hosting/build capabilities. | Stages 2, 5, 6, and 12 | Does not block foundation; blocks final asset acceptance. |
-| Canonical production origin and approved custom domain configuration | Canonical URLs, sitemap, social previews, and production routing require the final public origin. | Stages 12 and 14 | Does not block feature implementation; blocks SEO completion and release. |
-| Final social-preview asset source and localized treatment | The prototype provides a baseline, but the actual public asset must be inventoried, sanitized, and validated for both page types and locales. | Stage 12 | Does not block implementation; blocks social-preview acceptance. |
-| Cloudflare Pages project and environment details | Production branch, build settings, domain ownership, redirects, and provider values must match the actual account configuration. | Stage 14 | Does not block application implementation; blocks deployment. |
-| Exact static security-header policy | Headers, especially CSP, must be derived from the final resource set rather than copied from a generic template. | Stages 12 and 14 | Does not block implementation; blocks release hardening. |
+| Exact Node LTS, Nuxt, module, and tooling versions | Compatibility must be checked against stable releases at implementation start and recorded reproducibly. | Stage 1 | **Resolved in code:** `package.json` pins Node `>=24.11.0 <25`, pnpm `11.24.0`, Nuxt `4.5.2`, and related tooling; CI uses Node `24.20.0`. |
+| Minimal compatible ESLint and formatting configuration | The technical definition deliberately avoids freezing tool options before the selected versions are known. | Stage 1 | **Resolved in code:** ESLint/Prettier scripts and CI `format:check` / `lint` steps are active. |
+| Final Nuxt folder and component names | Names should follow current Nuxt conventions and actual responsibilities rather than speculative structure. | Stages 1–10 | **Resolved incrementally** in the current application tree; remaining naming follows existing conventions. |
+| Detailed image format and processing choices | The best strategy depends on the approved asset inventory, intrinsic dimensions, visual fidelity, and hosting/build capabilities. | Stages 2, 5, 6, and 12 | Partially resolved by committed PNG/SVG assets; final optimization acceptance remains part of Stage 12. |
+| Canonical production origin | Canonical URLs, sitemap, social previews, and production routing use `https://leonardoblauth.dev`. Wiring this origin into generated metadata remains Stage 12 work. | Stages 12 and 14 | Origin decided; implementation still pending. |
+| Final social-preview asset source and localized treatment | The actual public asset must be inventoried, sanitized, and validated for Home and each case locale. | Stage 12 | Still open; does not block other Stage 12 work. |
+| Cloudflare Pages project and environment details | Production branch, build settings, domain ownership, redirects, and provider values must match the actual account configuration. Hosting destination is Cloudflare Pages. | Stage 14 | Destination decided; account/project settings still open. |
+| Exact static security-header policy | Headers, especially CSP, must be derived from the final resource set rather than copied from a generic template. | Stages 12 and 14 | Still open until the final resource set is reviewed in Stage 12. |
 
 No open decision authorizes a different framework, rendering model, styling system, i18n strategy, theme model, test stack, package manager, CI platform, or hosting platform.
 
@@ -1146,6 +1200,6 @@ No open decision authorizes a different framework, rendering model, styling syst
 
 ## 27. Planning Closure
 
-This plan provides the final incremental sequence for V1 implementation. It preserves the approved product and architecture, distributes accessibility, responsiveness, localization, themes, testing, and security across the work, and reserves final stages for integration evidence, hardening, and release rather than first-time implementation of essential quality.
+This plan provides the incremental sequence for implementation. It preserves the approved product and architecture, distributes accessibility, responsiveness, localization, themes, testing, and security across the work, and reserves final stages for integration evidence, hardening, and release rather than first-time implementation of essential quality.
 
-Stage 1 begins only in a separate implementation task. This document completes planning and does not initialize Nuxt, install dependencies, configure external services, create implementation branches, or add production code.
+Stages 1–11 are complete. Approved V1 expansions after Stage 11 are recorded above and are part of the first production version. Stage 12 is the next numbered implementation stage and has not started. Stages 13–14 remain release gates after hardening.
