@@ -14,6 +14,26 @@ const generatedRoutes = [
     lang: 'en',
     heading: 'Organizing a complex product before implementation.',
   },
+  {
+    file: 'projetos/rigset/index.html',
+    lang: 'pt-BR',
+    heading: 'Configure and manage your workstation, your way.',
+  },
+  {
+    file: 'en/projects/rigset/index.html',
+    lang: 'en',
+    heading: 'Configure and manage your workstation, your way.',
+  },
+  {
+    file: 'projetos/automacao-horas-extras/index.html',
+    lang: 'pt-BR',
+    heading: 'Responder rápido, sem aceitar o que não cabe na escala.',
+  },
+  {
+    file: 'en/projects/overtime-automation/index.html',
+    lang: 'en',
+    heading: 'Reply fast, without accepting what does not fit the schedule.',
+  },
 ]
 
 const caseSections = {

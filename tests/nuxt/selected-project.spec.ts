@@ -1,82 +1,120 @@
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import App from '~/app.vue'
+import { resetProjectCarouselState } from '~/composables/useProjectCarouselState'
 
 describe('Selected project presentation', () => {
+  afterEach(() => {
+    resetProjectCarouselState()
+  })
   it.each([
     [
       '/',
       'Projetos selecionados',
       'Projetos e soluções que desenvolvo.',
-      'Projeto pessoal',
+      'MOVUNE',
       'SaaS B2B',
       'Em prototipação',
-      'Produto e experiência',
-      'Escopo atual',
-      'Produto · Fluxos · Arquitetura de telas · UI/UX · Prototipação',
-      'Ver estudo de caso',
-      'Representação do protótipo · dados demonstrativos',
+      'Ver estudo de caso →',
       '/projetos/movune',
+      'RIGSET',
+      'Explorar planejamento →',
+      '/projetos/rigset',
+      'AUTOMAÇÃO DE HORAS EXTRAS',
+      'Explorar conceito →',
+      '/projetos/automacao-horas-extras',
     ],
     [
       '/en',
       'Selected projects',
       'Projects and solutions I develop.',
-      'Personal project',
+      'MOVUNE',
       'B2B SaaS',
       'In prototyping',
-      'Product and experience',
-      'Current scope',
-      'Product · Flows · Screen architecture · UI/UX · Prototyping',
-      'View case study',
-      'Prototype representation · demo data',
+      'View case study →',
       '/en/projects/movune',
+      'RIGSET',
+      'Explore the plan →',
+      '/en/projects/rigset',
+      'OVERTIME AUTOMATION',
+      'Explore the concept →',
+      '/en/projects/overtime-automation',
     ],
   ])(
-    'renders the approved movune presentation at %s',
+    'renders the approved project carousel at %s',
     async (
       route,
       label,
       headline,
-      type,
-      productType,
-      status,
-      classification,
-      scopeLabel,
-      scope,
-      cta,
-      representationNote,
-      caseRoute,
+      movuneName,
+      movuneCategory,
+      movuneStatus,
+      movuneCta,
+      movuneRoute,
+      rigsetName,
+      rigsetCta,
+      rigsetRoute,
+      overtimeName,
+      overtimeCta,
+      overtimeRoute,
     ) => {
       const wrapper = await mountSuspended(App, { route })
       const section = wrapper.get('section#projects')
-      const identifier = section.get('.selected-project__identifier')
 
       expect(section.get('.selected-projects__label').text()).toBe(label)
       expect(section.get('h2').text()).toBe(headline)
-      expect(identifier.text()).toContain('01')
-      expect(identifier.text()).toContain(type)
-      expect(identifier.text()).toContain(productType)
-      expect(section.text()).toContain(status)
-      expect(section.text()).toContain(classification)
-      expect(section.text()).toContain(scopeLabel)
-      expect(section.text()).toContain(scope)
-      expect(section.get('.project-preview__note').text()).toBe(
-        representationNote,
+      expect(section.text()).toContain(movuneName)
+      expect(section.text()).toContain(movuneCategory)
+      expect(section.text()).toContain(movuneStatus)
+      expect(section.get(`a.project-showcase__cta[href="${movuneRoute}"]`).text()).toBe(
+        movuneCta,
       )
-      expect(section.get(`a[href="${caseRoute}"]`).text()).toContain(cta)
-      expect(section.findAll('[data-project-id="movune"]')).toHaveLength(1)
+      expect(
+        section.find(`a.project-showcase__visual-link[href="${movuneRoute}"]`).exists(),
+      ).toBe(true)
+      expect(section.text()).toContain(rigsetName)
+      expect(section.get(`a.project-showcase__cta[href="${rigsetRoute}"]`).text()).toBe(
+        rigsetCta,
+      )
+      expect(
+        section.find(`a.project-showcase__visual-link[href="${rigsetRoute}"]`).exists(),
+      ).toBe(true)
+      expect(section.text()).toContain(overtimeName)
+      expect(
+        section.get(`a.project-showcase__cta[href="${overtimeRoute}"]`).text(),
+      ).toBe(overtimeCta)
+      expect(
+        section.find(`a.project-showcase__visual-link[href="${overtimeRoute}"]`).exists(),
+      ).toBe(true)
+      expect(section.findAll('[data-project-id]')).toHaveLength(3)
+      expect(section.findAll('.project-visual-slot')).toHaveLength(3)
+      expect(
+        section.get('[data-project-id="movune"] .project-visual-slot').attributes(
+          'data-visual-type',
+        ),
+      ).toBe('screenshot')
+      expect(
+        section.get('[data-project-id="rigset"] .project-visual-slot').attributes(
+          'data-visual-type',
+        ),
+      ).toBe('concept-image')
+      expect(
+        section
+          .get('[data-project-id="overtime-automation"] .project-visual-slot')
+          .attributes('data-visual-type'),
+      ).toBe('diagram')
     },
   )
 
-  it('keeps the demonstrative interface out of the accessibility tree', async () => {
+  it('keeps carousel controls semantic and disables previous on the first slide', async () => {
     const wrapper = await mountSuspended(App, { route: '/' })
     const section = wrapper.get('section#projects')
+    const previous = section.get('button[aria-label="Projeto anterior"]')
+    const next = section.get('button[aria-label="Próximo projeto"]')
 
-    expect(
-      section.get('.project-preview__interface').attributes('aria-hidden'),
-    ).toBe('true')
-    expect(section.text()).toContain('dados demonstrativos')
+    expect(previous.attributes('disabled')).toBeDefined()
+    expect(next.attributes('disabled')).toBeUndefined()
+    expect(section.text()).toContain('01 / 03')
   })
 })

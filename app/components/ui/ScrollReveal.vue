@@ -212,7 +212,8 @@ onBeforeUnmount(() => {
     class="scroll-reveal"
     :class="{
       'scroll-reveal--words': variant === 'words',
-      'scroll-reveal--css': variant === 'block',
+      'scroll-reveal--css': variant === 'block' && enableBlur,
+      'scroll-reveal--css-fade': variant === 'block' && !enableBlur,
     }"
     :data-scroll-reveal="variant"
   >
@@ -235,10 +236,16 @@ onBeforeUnmount(() => {
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .scroll-reveal--css {
+    .scroll-reveal--css,
+    .scroll-reveal--css-fade {
       animation: scroll-reveal-block linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 70%;
+    }
+
+    .scroll-reveal--css-fade {
+      animation-name: scroll-reveal-block-fade;
+      animation-range: entry 0% entry 40%;
     }
   }
 
@@ -256,9 +263,22 @@ onBeforeUnmount(() => {
     }
   }
 
+  @keyframes scroll-reveal-block-fade {
+    from {
+      opacity: 0.18;
+      transform: translate3d(0, 1.75rem, 0);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
   @media (width < 52rem) {
     @media (prefers-reduced-motion: no-preference) {
-      .scroll-reveal--css {
+      .scroll-reveal--css,
+      .scroll-reveal--css-fade {
         animation-range: entry 0% entry 55%;
       }
     }
@@ -273,6 +293,18 @@ onBeforeUnmount(() => {
       to {
         opacity: 1;
         filter: blur(0);
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @keyframes scroll-reveal-block-fade {
+      from {
+        opacity: 0.28;
+        transform: translate3d(0, 1.125rem, 0);
+      }
+
+      to {
+        opacity: 1;
         transform: translate3d(0, 0, 0);
       }
     }

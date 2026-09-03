@@ -17,6 +17,26 @@ describe('localized routes', () => {
       'en',
       'Organizing a complex product before implementation.',
     ],
+    [
+      '/projetos/rigset',
+      'pt-BR',
+      'Configure e gerencie sua workstation do seu jeito.',
+    ],
+    [
+      '/en/projects/rigset',
+      'en',
+      'Configure and manage your workstation, your way.',
+    ],
+    [
+      '/projetos/automacao-horas-extras',
+      'pt-BR',
+      'Responder rápido, sem aceitar o que não cabe na escala.',
+    ],
+    [
+      '/en/projects/overtime-automation',
+      'en',
+      'Reply fast, without accepting what does not fit the schedule.',
+    ],
   ])('renders %s in %s', async (route, locale, heading) => {
     const wrapper = await mountSuspended(App, { route })
 

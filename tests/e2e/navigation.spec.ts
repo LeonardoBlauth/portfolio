@@ -275,7 +275,7 @@ test.describe('localized and persisted controls', () => {
   }) => {
     await gotoHydrated(page, '/')
 
-    await page.getByRole('link', { name: 'Ver estudo de caso' }).click()
+    await page.getByRole('link', { name: 'Ver estudo de caso →' }).click()
     await expect(page).toHaveURL(/\/projetos\/movune$/)
     await expect(
       page.getByRole('heading', {
@@ -285,15 +285,15 @@ test.describe('localized and persisted controls', () => {
     ).toBeVisible()
     await expect(page.locator('article section')).toHaveCount(6)
 
-    const backToProjects = page.getByRole('button', {
+    const backToProjects = page.getByRole('link', {
       name: 'Voltar para projetos',
     })
     await expect(backToProjects).toHaveCount(2)
     await expect(
-      page.getByRole('link', { name: 'Voltar para projetos' }),
+      page.getByRole('button', { name: 'Voltar para projetos' }),
     ).toHaveCount(0)
     await backToProjects.first().click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/#projects$/)
     await headerOffsetIsClear(page, 'projects')
   })
 
@@ -308,9 +308,7 @@ test.describe('localized and persisted controls', () => {
         name: 'Organizing a complex product before implementation.',
       }),
     ).toBeVisible()
-    await expect(
-      page.getByText('Evolving personal project · in prototyping'),
-    ).toBeVisible()
+    await expect(page.getByText('In prototyping').first()).toBeVisible()
 
     await page
       .getByRole('link', { name: 'Switch language to português' })
@@ -970,7 +968,16 @@ test.describe('reduced motion navigation', () => {
 })
 
 test.describe('cross-cutting integration', () => {
-  const publicRoutes = ['/', '/en', '/projetos/movune', '/en/projects/movune']
+  const publicRoutes = [
+    '/',
+    '/en',
+    '/projetos/movune',
+    '/en/projects/movune',
+    '/projetos/rigset',
+    '/en/projects/rigset',
+    '/projetos/automacao-horas-extras',
+    '/en/projects/overtime-automation',
+  ]
 
   test('keeps every localized route axe-clean in both themes', async ({
     page,
@@ -1000,14 +1007,14 @@ test.describe('cross-cutting integration', () => {
         switchName: 'Mudar idioma para English',
         switchedPath: '/en/projects/movune',
         backName: 'Back to projects',
-        homePath: '/en',
+        homePath: '/en#projects',
       },
       {
         casePath: '/en/projects/movune',
         switchName: 'Switch language to português',
         switchedPath: '/projetos/movune',
         backName: 'Voltar para projetos',
-        homePath: '/',
+        homePath: '/#projects',
       },
     ]
 
@@ -1017,16 +1024,14 @@ test.describe('cross-cutting integration', () => {
       await expect(page).toHaveURL(new RegExp(`${journey.switchedPath}$`))
 
       for (const position of ['first', 'last'] as const) {
-        const returnButtons = page.getByRole('button', {
+        const returnLinks = page.getByRole('link', {
           name: journey.backName,
         })
-        await expect(returnButtons).toHaveCount(2)
+        await expect(returnLinks).toHaveCount(2)
         await expect(
-          page.getByRole('link', { name: journey.backName }),
+          page.getByRole('button', { name: journey.backName }),
         ).toHaveCount(0)
-        await (
-          position === 'first' ? returnButtons.first() : returnButtons.last()
-        ).click()
+        await (position === 'first' ? returnLinks.first() : returnLinks.last()).click()
         await expect(page).toHaveURL(
           new RegExp(`${journey.homePath.replace('#', '\\#')}$`),
         )
@@ -1192,7 +1197,7 @@ test.describe('cross-cutting integration', () => {
     })
     expect(contrast).toBeGreaterThanOrEqual(4.5)
 
-    for (const selector of ['.hero__name', '.selected-project h3']) {
+    for (const selector of ['.hero__name', '.project-showcase h3']) {
       const typography = await page.locator(selector).evaluate((element) => {
         const styles = getComputedStyle(element)
         const fontSize = Number.parseFloat(styles.fontSize)

@@ -13,7 +13,9 @@ describe('scroll reveal integration', () => {
       wrapper.get('#projects header[data-scroll-reveal="block"]'),
     ).toBeTruthy()
     expect(
-      wrapper.get('#projects article[data-scroll-reveal="block"]'),
+      wrapper.get(
+        '#projects .selected-projects__stage[data-scroll-reveal="block"]',
+      ),
     ).toBeTruthy()
     expect(
       wrapper.get('#experience header[data-scroll-reveal="block"]'),

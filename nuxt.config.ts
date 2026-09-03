@@ -34,7 +34,7 @@ export default defineNuxtConfig({
   },
   modules: ['@nuxt/eslint', '@nuxtjs/i18n'],
   build: {
-    transpile: ['gsap'],
+    transpile: ['gsap', 'motion-v'],
   },
   nitro: {
     prerender: {
@@ -62,6 +62,14 @@ export default defineNuxtConfig({
       'projects-movune': {
         'pt-BR': '/projetos/movune',
         en: '/projects/movune',
+      },
+      'projects-rigset': {
+        'pt-BR': '/projetos/rigset',
+        en: '/projects/rigset',
+      },
+      'projects-overtime-automation': {
+        'pt-BR': '/projetos/automacao-horas-extras',
+        en: '/projects/overtime-automation',
       },
     },
   },
