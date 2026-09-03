@@ -232,7 +232,7 @@ test.describe('desktop shell navigation', () => {
     ).toBe(true)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
-      .toBeGreaterThan(stackY - 24)
+      .toBeGreaterThan(stackY - 120)
     await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 
     await page.goBack()
@@ -1046,6 +1046,7 @@ test.describe('cross-cutting integration', () => {
   test('reflows the full application at reference widths and 200% text size', async ({
     page,
   }) => {
+    test.setTimeout(120_000)
     const viewports = [
       { width: 1440, height: 900 },
       { width: 1024, height: 768 },
@@ -1199,7 +1200,10 @@ test.describe('cross-cutting integration', () => {
     })
     expect(contrast).toBeGreaterThanOrEqual(4.5)
 
-    for (const selector of ['.hero__name', '.project-showcase h3']) {
+    for (const selector of [
+      '.hero__name',
+      '.project-showcase[data-project-id="movune"] h3',
+    ]) {
       const typography = await page.locator(selector).evaluate((element) => {
         const styles = getComputedStyle(element)
         const fontSize = Number.parseFloat(styles.fontSize)

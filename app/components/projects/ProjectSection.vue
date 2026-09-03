@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import ScrollReveal from '~/components/ui/ScrollReveal.vue'
-
 defineProps<{
   index: string
   title: string
@@ -9,12 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <ScrollReveal
-    as="section"
-    class="case-section"
-    :aria-labelledby="headingId"
-    :enable-blur="false"
-  >
+  <section class="case-section" :aria-labelledby="headingId">
     <div class="case-section__heading">
       <p class="case-section__index">{{ index }}</p>
       <h2 :id="headingId">{{ title }}</h2>
@@ -22,5 +15,5 @@ defineProps<{
     <div class="case-section__body">
       <slot />
     </div>
-  </ScrollReveal>
+  </section>
 </template>
