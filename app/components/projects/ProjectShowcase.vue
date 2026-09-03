@@ -33,10 +33,7 @@ const visualCaption = computed(() =>
     ? message(props.project.visual.captionKey ?? 'caption')
     : '',
 )
-const suppressVisualNavigation = inject(
-  'projectCarouselDragGuard',
-  ref(false),
-)
+const suppressVisualNavigation = inject('projectCarouselDragGuard', ref(false))
 const visualPointerOrigin = { x: 0, y: 0 }
 let hasVisualPointerOrigin = false
 const openCaseLabel = computed(() =>
@@ -70,10 +67,7 @@ const onVisualClick = (event: MouseEvent) => {
 <template>
   <article class="project-showcase" :data-project-id="project.slug">
     <div class="project-showcase__visual">
-      <div
-        class="project-visual-slot"
-        :data-visual-type="project.visual.type"
-      >
+      <div class="project-visual-slot" :data-visual-type="project.visual.type">
         <NuxtLink
           class="project-showcase__visual-link"
           :to="caseRoute"
@@ -134,7 +128,9 @@ const onVisualClick = (event: MouseEvent) => {
 
       <div class="project-showcase__title-row">
         <h3>{{ message('name') }}</h3>
-        <span class="project-showcase__status" :data-status="project.status">{{ statusLabel }}</span>
+        <span class="project-showcase__status" :data-status="project.status">{{
+          statusLabel
+        }}</span>
       </div>
 
       <p class="project-showcase__summary">{{ message('summary') }}</p>
@@ -213,17 +209,22 @@ const onVisualClick = (event: MouseEvent) => {
   margin: 0;
 }
 
-.project-visual-slot[data-visual-type='screenshot'] .project-showcase__visual-link,
-.project-visual-slot[data-visual-type='concept-image'] .project-showcase__visual-link,
+.project-visual-slot[data-visual-type='screenshot']
+  .project-showcase__visual-link,
+.project-visual-slot[data-visual-type='concept-image']
+  .project-showcase__visual-link,
 .project-visual-slot[data-visual-type='screenshot'] .project-showcase__figure,
-.project-visual-slot[data-visual-type='concept-image'] .project-showcase__figure {
+.project-visual-slot[data-visual-type='concept-image']
+  .project-showcase__figure {
   width: 100%;
 }
 
 .project-visual-slot[data-visual-type='screenshot'] :deep(.floating-card),
 .project-visual-slot[data-visual-type='concept-image'] :deep(.floating-card),
-.project-visual-slot[data-visual-type='screenshot'] :deep(.floating-card__surface),
-.project-visual-slot[data-visual-type='concept-image'] :deep(.floating-card__surface) {
+.project-visual-slot[data-visual-type='screenshot']
+  :deep(.floating-card__surface),
+.project-visual-slot[data-visual-type='concept-image']
+  :deep(.floating-card__surface) {
   width: fit-content;
   max-inline-size: 100%;
 }
@@ -347,7 +348,8 @@ const onVisualClick = (event: MouseEvent) => {
     block-size: clamp(23rem, 30vw, 27.5rem);
   }
 
-  .project-visual-slot[data-visual-type='diagram'] .project-showcase__visual-link,
+  .project-visual-slot[data-visual-type='diagram']
+    .project-showcase__visual-link,
   .project-visual-slot[data-visual-type='diagram'] .project-showcase__diagram {
     width: 100%;
     height: 100%;
@@ -355,15 +357,18 @@ const onVisualClick = (event: MouseEvent) => {
   }
 
   .project-visual-slot[data-visual-type='diagram'] :deep(.floating-card),
-  .project-visual-slot[data-visual-type='diagram'] :deep(.floating-card__surface),
-  .project-visual-slot[data-visual-type='diagram'] :deep(.overtime-home-diagram),
+  .project-visual-slot[data-visual-type='diagram']
+    :deep(.floating-card__surface),
+  .project-visual-slot[data-visual-type='diagram']
+    :deep(.overtime-home-diagram),
   .project-visual-slot[data-visual-type='diagram'] :deep(.project-flow) {
     width: 100%;
     height: 100%;
     min-block-size: 0;
   }
 
-  .project-visual-slot[data-visual-type='diagram'] :deep(.overtime-home-diagram) {
+  .project-visual-slot[data-visual-type='diagram']
+    :deep(.overtime-home-diagram) {
     align-content: space-evenly;
     padding-block: 0;
   }
@@ -373,7 +378,8 @@ const onVisualClick = (event: MouseEvent) => {
     gap: 0.5rem;
   }
 
-  .project-visual-slot[data-visual-type='diagram'] :deep(.project-flow__details li) {
+  .project-visual-slot[data-visual-type='diagram']
+    :deep(.project-flow__details li) {
     max-inline-size: none;
     white-space: nowrap;
   }
@@ -382,7 +388,8 @@ const onVisualClick = (event: MouseEvent) => {
     margin-block: 0;
   }
 
-  .project-visual-slot[data-visual-type='diagram'] :deep(.project-flow__details) {
+  .project-visual-slot[data-visual-type='diagram']
+    :deep(.project-flow__details) {
     margin-block-start: var(--space-2);
   }
 }
@@ -401,7 +408,8 @@ const onVisualClick = (event: MouseEvent) => {
     width: 100%;
   }
 
-  .project-visual-slot[data-visual-type='diagram'] .project-showcase__visual-link {
+  .project-visual-slot[data-visual-type='diagram']
+    .project-showcase__visual-link {
     width: 100%;
   }
 }

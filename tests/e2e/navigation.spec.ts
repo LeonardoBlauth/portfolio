@@ -1031,7 +1031,9 @@ test.describe('cross-cutting integration', () => {
         await expect(
           page.getByRole('button', { name: journey.backName }),
         ).toHaveCount(0)
-        await (position === 'first' ? returnLinks.first() : returnLinks.last()).click()
+        await (
+          position === 'first' ? returnLinks.first() : returnLinks.last()
+        ).click()
         await expect(page).toHaveURL(
           new RegExp(`${journey.homePath.replace('#', '\\#')}$`),
         )

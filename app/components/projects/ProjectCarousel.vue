@@ -155,8 +155,7 @@ const measure = () => {
   }
 
   const slides = Array.from(
-    viewportRef.value?.querySelectorAll<HTMLElement>('[data-project-id]') ??
-      [],
+    viewportRef.value?.querySelectorAll<HTMLElement>('[data-project-id]') ?? [],
   )
   const activeEl = slides[currentIndex.value]
   activeSlideHeight.value = activeEl
@@ -279,10 +278,7 @@ defineExpose({
           →
         </button>
       </div>
-      <div
-        class="project-carousel__mobile-progress"
-        aria-hidden="true"
-      >
+      <div class="project-carousel__mobile-progress" aria-hidden="true">
         <span
           v-for="i in count"
           :key="i"

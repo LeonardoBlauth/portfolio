@@ -88,11 +88,13 @@ describe('movune case study', () => {
     ).toBe(true)
     expect(article.findAll('[role="slider"]')).toHaveLength(1)
     expect(article.findAll('.zoomable-image__trigger')).toHaveLength(2)
-    expect(article.find('.theme-compare .zoomable-image__trigger').exists()).toBe(
-      false,
-    )
+    expect(
+      article.find('.theme-compare .zoomable-image__trigger').exists(),
+    ).toBe(false)
 
-    const statusSection = article.get('#status-heading').element.closest('section')
+    const statusSection = article
+      .get('#status-heading')
+      .element.closest('section')
     expect(statusSection?.querySelector('.case-status')?.textContent).toContain(
       'Em prototipação',
     )

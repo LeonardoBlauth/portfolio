@@ -201,9 +201,7 @@ const asFlowUnits = (value: string) => value.split(' → ')
       <p class="case-copy">{{ t('pages.overtime.limits.p2') }}</p>
       <div class="limits-composition">
         <div class="limit-columns editorial-distribution--2">
-          <div
-            class="limit-columns__col editorial-distribution__start"
-          >
+          <div class="limit-columns__col editorial-distribution__start">
             <section>
               <h4>{{ t('pages.overtime.limits.rulesLabel') }}</h4>
               <ul>

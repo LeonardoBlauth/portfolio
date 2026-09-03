@@ -67,37 +67,43 @@ describe('Selected project presentation', () => {
       expect(section.text()).toContain(movuneName)
       expect(section.text()).toContain(movuneCategory)
       expect(section.text()).toContain(movuneStatus)
-      expect(section.get(`a.project-showcase__cta[href="${movuneRoute}"]`).text()).toBe(
-        movuneCta,
-      )
       expect(
-        section.find(`a.project-showcase__visual-link[href="${movuneRoute}"]`).exists(),
+        section.get(`a.project-showcase__cta[href="${movuneRoute}"]`).text(),
+      ).toBe(movuneCta)
+      expect(
+        section
+          .find(`a.project-showcase__visual-link[href="${movuneRoute}"]`)
+          .exists(),
       ).toBe(true)
       expect(section.text()).toContain(rigsetName)
-      expect(section.get(`a.project-showcase__cta[href="${rigsetRoute}"]`).text()).toBe(
-        rigsetCta,
-      )
       expect(
-        section.find(`a.project-showcase__visual-link[href="${rigsetRoute}"]`).exists(),
+        section.get(`a.project-showcase__cta[href="${rigsetRoute}"]`).text(),
+      ).toBe(rigsetCta)
+      expect(
+        section
+          .find(`a.project-showcase__visual-link[href="${rigsetRoute}"]`)
+          .exists(),
       ).toBe(true)
       expect(section.text()).toContain(overtimeName)
       expect(
         section.get(`a.project-showcase__cta[href="${overtimeRoute}"]`).text(),
       ).toBe(overtimeCta)
       expect(
-        section.find(`a.project-showcase__visual-link[href="${overtimeRoute}"]`).exists(),
+        section
+          .find(`a.project-showcase__visual-link[href="${overtimeRoute}"]`)
+          .exists(),
       ).toBe(true)
       expect(section.findAll('[data-project-id]')).toHaveLength(3)
       expect(section.findAll('.project-visual-slot')).toHaveLength(3)
       expect(
-        section.get('[data-project-id="movune"] .project-visual-slot').attributes(
-          'data-visual-type',
-        ),
+        section
+          .get('[data-project-id="movune"] .project-visual-slot')
+          .attributes('data-visual-type'),
       ).toBe('screenshot')
       expect(
-        section.get('[data-project-id="rigset"] .project-visual-slot').attributes(
-          'data-visual-type',
-        ),
+        section
+          .get('[data-project-id="rigset"] .project-visual-slot')
+          .attributes('data-visual-type'),
       ).toBe('concept-image')
       expect(
         section

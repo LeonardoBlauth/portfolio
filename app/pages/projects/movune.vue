@@ -35,7 +35,9 @@ const nextSteps = computed(() => [
       <p class="case-hero__eyebrow">{{ t('pages.movune.eyebrow') }}</p>
       <p class="case-hero__meta">
         <span>{{ t('pages.movune.category') }}</span>
-        <span class="case-status" data-status="prototyping">{{ t('pages.movune.statusLabel') }}</span>
+        <span class="case-status" data-status="prototyping">{{
+          t('pages.movune.statusLabel')
+        }}</span>
       </p>
       <h1>{{ t('pages.movune.headline') }}</h1>
       <p class="case-hero__lead">{{ t('pages.movune.lead') }}</p>
@@ -138,7 +140,9 @@ const nextSteps = computed(() => [
       :title="t('pages.movune.status.title')"
       heading-id="status-heading"
     >
-      <p class="case-status" data-status="prototyping">{{ t('pages.movune.statusLabel') }}</p>
+      <p class="case-status" data-status="prototyping">
+        {{ t('pages.movune.statusLabel') }}
+      </p>
       <h3 class="status-headline">{{ t('pages.movune.status.headline') }}</h3>
       <p class="case-copy">{{ t('pages.movune.status.description') }}</p>
     </ProjectSection>

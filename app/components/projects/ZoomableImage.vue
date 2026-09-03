@@ -118,13 +118,7 @@ onBeforeUnmount(() => {
       :aria-label="expandLabel"
       @click="open"
     >
-      <img
-        :src="src"
-        alt=""
-        :width="width"
-        :height="height"
-        decoding="async"
-      />
+      <img :src="src" alt="" :width="width" :height="height" decoding="async" />
     </button>
     <figcaption v-if="caption">{{ caption }}</figcaption>
     <dialog
@@ -172,7 +166,8 @@ onBeforeUnmount(() => {
   width: 100%;
   height: auto;
   cursor: zoom-in;
-  transition: border-color var(--motion-duration-fast) var(--motion-ease-standard);
+  transition: border-color var(--motion-duration-fast)
+    var(--motion-ease-standard);
 }
 
 .zoomable-image__trigger:is(:hover, :focus-visible) img {

@@ -37,22 +37,26 @@ const mouseYSpring = useSpring(y, { damping: 18, stiffness: 320 })
 const scale = useSpring(scaleTarget, { damping: 22, stiffness: 260 })
 const z = useSpring(zTarget, { damping: 22, stiffness: 260 })
 
-const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [
-  `-${props.rotateDepth}deg`,
-  `${props.rotateDepth}deg`,
-])
-const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [
-  `${props.rotateDepth}deg`,
-  `-${props.rotateDepth}deg`,
-])
-const translateX = useTransform(mouseXSpring, [-0.5, 0.5], [
-  `-${props.translateDepth}px`,
-  `${props.translateDepth}px`,
-])
-const translateY = useTransform(mouseYSpring, [-0.5, 0.5], [
-  `${props.translateDepth}px`,
-  `-${props.translateDepth}px`,
-])
+const rotateX = useTransform(
+  mouseYSpring,
+  [-0.5, 0.5],
+  [`-${props.rotateDepth}deg`, `${props.rotateDepth}deg`],
+)
+const rotateY = useTransform(
+  mouseXSpring,
+  [-0.5, 0.5],
+  [`${props.rotateDepth}deg`, `-${props.rotateDepth}deg`],
+)
+const translateX = useTransform(
+  mouseXSpring,
+  [-0.5, 0.5],
+  [`-${props.translateDepth}px`, `${props.translateDepth}px`],
+)
+const translateY = useTransform(
+  mouseYSpring,
+  [-0.5, 0.5],
+  [`${props.translateDepth}px`, `-${props.translateDepth}px`],
+)
 const cardTransform = useMotionTemplate`translateX(${translateX}) translateY(${translateY}) translateZ(${z}px) rotateX(${rotateX}) rotateY(${rotateY}) scale(${scale})`
 
 const fineHover = ref(false)
