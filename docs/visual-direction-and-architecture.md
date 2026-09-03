@@ -2,8 +2,11 @@
 
 **Project:** Leonardo Blauth's professional portfolio  
 **Version:** 1.1  
-**Status:** approved; updated with the professional identity defined in document `04`  
+**Status:** approved; updated with the professional identity defined in document `04`; reconciled September 3, 2026 against the approved V1 implementation on `master`
+
 **Sources:** `01 — Portfolio Definition`, curated references, decisions approved in this Work, and `04 — Professional Identity`
+
+Where this document conflicts with later approved implementation on `master`, `master` prevails. The prototype and this direction remain references only for outcomes that have not been subsequently replaced. Confirmed supersessions include the Home multi-project carousel and the Hero decorative treatment (light rays rather than the earlier orbit/glow and portrait-led composition).
 
 ## 1. Purpose of this document
 
@@ -345,12 +348,13 @@ Three visual groups:
 
 ### 8.3 What to avoid
 
-- logo wall;
-- dominant colored logos;
+- logo wall as the sole presentation of skill;
+- dominant colored logos without textual names;
 - skill bars or percentages;
 - vague classifications as “advanced” without evidence;
-- continuous animation or infinite marquee;
 - mixing technologies under study with a professional stack.
+
+A restrained tech logo loop is part of the approved Skills implementation on `master` and coexists with the textual category groups; it must remain secondary to the named categories and respect reduced motion.
 
 ## 9. Featured Projects
 
@@ -358,31 +362,20 @@ Three visual groups:
 
 This will be the main visual and interactive area of ​​the Home. The composition must convey product quality and allow for in-depth analysis without looking like an agency showcase.
 
-### 9.2 Initial state: a project
+### 9.2 Current state: multiple published projects
 
-While only movune is published:
+The approved Home publishes `movune`, `rigset`, and overtime automation through a multi-project carousel:
 
-- a large preview occupies the main area;
-- there are no arrows, pagination, total numbering or empty spaces simulating other projects;
-- “Featured Project” label replaces carousel language;
-- name, category, summary, current status and available stack appear outside the image;
-- Main CTA leads to the case study;
-- GitHub and demo only appear if they exist;
-- the preview can expand smoothly when entering the viewport or receiving hover/focus, without changing the page height.
-
-### 9.3 Future state: multiple projects
-
-The hybrid gallery will naturally activate when there is enough content:
-
-- active project has large preview;
-- parts of the previous and next projects remain visible;
+- the active project has large preview prominence;
+- surrounding projects can remain partially visible according to the approved carousel treatment;
 - contextual information changes along with the active project;
-- subtle numbering indicates the current position;
-- arrows and indicator remain visible;
-- navigation works by click, keyboard, horizontal trackpad, drag and swipe;
-- scroll snap maintains predictable alignment;
+- navigation works by pointer, keyboard, and touch/drag where implemented;
 - there is no autoplay;
-- vertical scrolling is not necessarily intercepted or converted into horizontal navigation.
+- empty placeholder slides are not used.
+
+### 9.3 Earlier single-project guidance
+
+While only one project was published, the interface used a single featured presentation without inactive carousel chrome. That constraint is superseded by the multi-project state above and remains historical context only.
 
 ### 9.4 Hybrid movement
 

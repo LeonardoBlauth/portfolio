@@ -4,9 +4,11 @@
 
 **Document type:** Public technical definition
 
-**Status:** Approved for final implementation
+**Status:** Approved for final implementation; Stages 1–11 complete; Stage 12 not started
 
 **Consolidated:** August 27, 2026
+
+**Last reconciled:** September 3, 2026
 
 ## 1. Purpose
 
@@ -14,7 +16,7 @@ This document defines the technical architecture for the final portfolio impleme
 
 The architecture is deliberately compact. The portfolio has a small, stable route set, no authenticated area, no server-owned business data, and no V1 requirement for a backend or content management system. The selected approach prioritizes complete static output, maintainable localized content, accessibility, performance, and a low operational burden.
 
-The prototype establishes the expected experience, but its generated code is not production architecture. The final application should reproduce the approved result with appropriate semantics, component boundaries, test coverage, and delivery controls.
+The prototype established the expected experience at the close of prototyping, but its generated code is not production architecture. Where later approved implementation on `master` diverges, `master` prevails. The application should reproduce the currently approved result with appropriate semantics, component boundaries, test coverage, and delivery controls.
 
 ## 2. Architectural Principles
 
@@ -38,7 +40,7 @@ The implementation follows these principles:
 | Application framework | Nuxt 4 | Provides Vue-based routing, static generation, metadata support, and an established module ecosystem without requiring a custom application shell. |
 | UI framework | Vue 3 | Matches Leonardo's professional experience and supports a clear component and Composition API model. |
 | Language | TypeScript | Improves the reliability of content models, component contracts, and configuration. |
-| Package manager | pnpm | Provides deterministic installation with a single committed lockfile and efficient dependency storage. |
+| Package manager | pnpm (`package.json` / CI: 11.24.0; Node 24.x) | Provides deterministic installation with a single committed lockfile and efficient dependency storage. |
 | Rendering | Static site generation and prerendering | Produces complete HTML for the entire public route set, improving resilience, crawlability, performance, and hosting simplicity. |
 | Styling | Custom CSS, CSS custom properties, and component-scoped styles | Preserves the bespoke visual direction without adopting a utility or component framework that adds little value to this small design system. |
 | Internationalization | Nuxt i18n | Centralizes messages, locale routing, language metadata, and switching behavior. |
@@ -71,10 +73,10 @@ Client-side hydration remains available for language switching, theme selection,
 
 PT-BR is the default locale and uses URLs without a locale prefix. English uses the `/en` prefix.
 
-| Locale | Home | `movune` case study |
-| --- | --- | --- |
-| PT-BR | `/` | `/projetos/movune` |
-| English | `/en` | `/en/projects/movune` |
+| Locale | Home | `movune` | Rigset | Overtime automation |
+| --- | --- | --- | --- | --- |
+| PT-BR | `/` | `/projetos/movune` | `/projetos/rigset` | `/projetos/automacao-horas-extras` |
+| English | `/en` | `/en/projects/movune` | `/en/projects/rigset` | `/en/projects/overtime-automation` |
 
 The Nuxt i18n strategy is `prefix_except_default`. Route names and locale paths should be explicit enough to keep language switching deterministic between equivalent pages.
 
@@ -140,9 +142,9 @@ The content model preserves these approved facts:
 - `movune` is a lowercase personal-project identity;
 - `movune` is evolving and currently in prototyping;
 - prototype representations and their data are demonstrative;
-- no carousel is included in V1.
+- Home publishes multiple real projects through an approved carousel (`movune`, `rigset`, overtime automation) with honest maturity labels.
 
-The public documentation makes no claims about users, customers, revenue, commercial validation, production integrations, or a completed production architecture for `movune`.
+The public documentation makes no claims about users, customers, revenue, commercial validation, production integrations, or a completed production architecture for published projects beyond what each case documents.
 
 ## 7. Internationalization
 
@@ -240,19 +242,18 @@ The mobile menu must manage expanded state, focus containment, `Escape`, destina
 
 ## 11. Motion and Decorative Systems
 
-Motion uses CSS transitions, CSS animations, and native browser APIs. GSAP and other animation libraries are excluded initially because the approved experience requires restrained transitions and orbit movement rather than timeline-heavy choreography.
+Motion prefers CSS transitions, CSS animations, and native browser APIs. Targeted libraries are used only where approved interactions need them.
 
 Implementation requirements:
 
 - animations do not carry essential meaning;
-- the orbit and glow system does not block interaction or reading;
-- decorative layers are excluded from the accessibility tree;
+- decorative layers do not block interaction or reading and are excluded from the accessibility tree when redundant;
 - continuous animation is efficient and limited;
 - same-page scrolling remains native and interruptible;
 - `prefers-reduced-motion` removes or shortens nonessential movement;
 - no scroll hijacking, custom cursor, or cinematic transition system is introduced.
 
-A heavier animation dependency would require a concrete interaction that cannot be implemented maintainably with the selected platform capabilities.
+The approved implementation currently uses `gsap` (scroll reveal), `motion-v` (carousel/card motion), and `ogl` (Hero light-ray/Aurora effects) for those concrete needs. Additional heavy animation dependencies still require a demonstrated need.
 
 ## 12. Assets and Image Strategy
 
@@ -267,7 +268,7 @@ Raster project representations should use dimensions and formats appropriate to 
 - retain enough visual fidelity for interface details to remain legible;
 - identify demonstrative `movune` data as prototype content.
 
-The temporary representations may be replaced by approved real screenshots later without changing the surrounding architecture. V1 does not need a carousel or generalized media-gallery subsystem.
+Temporary or conceptual representations may be replaced by approved real screenshots later without changing the surrounding architecture. The Home multi-project carousel and case media treatment are part of the approved product surface; generalized speculative gallery subsystems beyond that remain unnecessary.
 
 ## 13. Accessibility Strategy
 
@@ -300,7 +301,7 @@ The target is an accessible implementation aligned with WCAG 2.2 AA principles w
 - the experience remains usable at 200% zoom;
 - content reflows without avoidable horizontal scrolling;
 - reduced motion provides an equivalent experience;
-- decorative orbit and glow layers never obscure focus, text, or controls.
+- decorative Hero layers never obscure focus, text, or controls.
 
 Automated axe checks are included in browser testing, but they do not replace keyboard navigation, zoom, contrast, screen-reader spot checks, or visual review.
 
@@ -309,7 +310,7 @@ Automated axe checks are included in browser testing, but they do not replace ke
 Nuxt route metadata is generated per locale and page. The implementation includes:
 
 - localized titles and descriptions;
-- canonical URLs based on the final production origin;
+- canonical URLs based on `https://leonardoblauth.dev`;
 - language alternates and `hreflang`;
 - Open Graph metadata and preview images;
 - Twitter/X cards when useful;
@@ -318,7 +319,7 @@ Nuxt route metadata is generated per locale and page. The implementation include
 - appropriate indexability for production and non-indexability for preview environments;
 - structured data only where the data is accurate and the schema adds clear value.
 
-The `movune` case metadata must describe a personal project in prototyping and must not imply a launched commercial product. Preview environments should not compete with the production site in search results.
+Case metadata must preserve each published project's documented maturity (`movune` in prototyping; `rigset` and overtime automation at planned/concept framing) and must not imply launched commercial products. Preview environments should not compete with the production site in search results.
 
 Metadata is tested from generated HTML, not only from client-side state.
 
@@ -379,7 +380,7 @@ Axe checks run against important route and state combinations. Manual checks rem
 
 Validation should confirm:
 
-- all four localized routes are generated;
+- all localized Home and case routes are generated;
 - required metadata is present in generated HTML;
 - canonical and alternate links are correct;
 - internal links resolve;
@@ -410,9 +411,9 @@ Cloudflare Pages hosts the generated static output.
 ### 18.1 Environments
 
 - review changes may receive isolated preview deployments;
-- the production branch publishes the canonical public site;
+- the production branch publishes the canonical public site at `https://leonardoblauth.dev`;
 - preview environments use non-production indexing rules;
-- production configuration supplies the canonical origin used by metadata and sitemap generation.
+- production configuration supplies `https://leonardoblauth.dev` as the canonical origin used by metadata and sitemap generation.
 
 ### 18.2 Build and delivery
 
@@ -470,17 +471,17 @@ The current state surface is small and cohesive. Composables and local state avo
 
 The approved interface has a distinct, limited visual language. Custom CSS expresses it directly without importing a larger design vocabulary or runtime.
 
-### 20.5 No heavy animation library
+### 20.5 Animation libraries only with concrete need
 
-CSS and native APIs cover the approved motion. A larger dependency is not justified by the current interaction model.
+CSS and native APIs remain the default. The approved implementation already uses `gsap`, `motion-v`, and `ogl` for specific interactions. Further animation libraries require a demonstrated need that those approaches cannot cover maintainably.
 
 ### 20.6 No analytics in V1
 
 No measurement objective, retention policy, or consent requirement has been approved. Excluding analytics avoids collecting visitor data without a defined purpose.
 
-### 20.7 No speculative project carousel
+### 20.7 No empty or speculative project carousel
 
-V1 has one real project. A carousel and generalized multi-project architecture should be considered only when multiple real projects create that need.
+Home publishes real projects through an approved multi-project carousel. Empty placeholder slides and speculative carousel infrastructure without real content remain excluded.
 
 ### 20.8 No reuse of prototype architecture by default
 
@@ -492,12 +493,12 @@ The architecture can evolve when evidence changes the constraints:
 
 - introduce a CMS when content operations require nontechnical editing or materially greater scale;
 - introduce global state when cross-route state ownership becomes genuinely complex;
-- introduce a richer media component when multiple real projects require it;
+- extend project media treatment when additional real projects require it;
 - introduce analytics only with a defined question, privacy approach, and minimal data strategy;
 - introduce a backend only for an approved server-owned capability;
-- introduce an animation library only for interactions that native capabilities cannot express maintainably.
+- introduce an additional animation library only for interactions that current approved approaches cannot express maintainably.
 
-These are decision triggers, not planned V1 work.
+These are decision triggers, not automatic next work.
 
 ## 22. Technical Acceptance Criteria
 
@@ -506,7 +507,7 @@ These are decision triggers, not planned V1 work.
 - [ ] Nuxt 4, Vue 3, and TypeScript form the application baseline.
 - [ ] pnpm is used with one committed lockfile.
 - [ ] The production build generates complete static HTML.
-- [ ] All four localized routes are generated and directly reachable.
+- [ ] All localized Home and case routes are generated and directly reachable.
 - [ ] No backend, database, authentication, CMS, or unapproved runtime service is introduced.
 - [ ] Components and composables have clear responsibilities without speculative abstraction.
 

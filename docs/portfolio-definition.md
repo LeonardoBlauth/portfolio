@@ -2,7 +2,7 @@
 
 **Project:** Leonardo Blauth's professional portfolio  
 **Version:** 1.0  
-**Status:** approved to guide the `02 — Visual Direction and Architecture` stage
+**Status:** approved to guide later documents; project scope reconciled September 3, 2026 against published cases on `master`
 
 ## 1. Context
 
@@ -166,17 +166,21 @@ Competencies can be described by capability — for example, frontend, backend, 
 
 ### 7.4 Projects and case studies
 
-The portfolio can be launched with just one main project. Quantity is not a quality criterion.
+The portfolio can launch with one main project or grow to several. Quantity is not a quality criterion.
 
-**movune** is the only initially confirmed case:
+**movune** was the initially confirmed case and remains published:
 
 - B2B SaaS for managing Physiotherapy and Pilates clinics in Brazil;
 - personal project;
 - currently in product definition and prototyping;
-- with visual material to be produced by the prototype;
 - publicly discussable only with information pertaining to the project itself.
 
-The case must honestly represent the existing phase. While there is no implementation, it should not suggest that production architecture, code, integrations or results already exist. The narrative may show the evolution between product definition, UX and prototyping and, in the future, architecture, development, testing and evolution.
+Additional published cases now on `master` (reconciled September 3, 2026):
+
+- **Rigset** — developer-tool / open-source workstation concept, documented as planned;
+- **Overtime automation** — automation concept around schedule-aware WhatsApp reply decisions, documented as concept.
+
+Each case must honestly represent its existing phase. While there is no implementation, it should not suggest that production architecture, code, integrations or results already exist beyond what that case documents.
 
 Each case study will only use blocks that add value, including:
 
@@ -222,9 +226,9 @@ The quantity and final order of the sections will be decided in document `02`. C
 
 ### 8.2 Featured Projects
 
-The structure must support a horizontal experience with individual prominence and growth for multiple projects. At launch, if only movune is published, the interface must not simulate a carousel with non-existent items or display controls that serve no purpose.
+The structure supports a horizontal multi-project experience with individual prominence. The approved implementation on `master` publishes multiple real projects through a carousel; empty placeholder slides remain excluded.
 
-The detailed behavior of the carousel, its alternative to a single project and its responsive adaptation will be defined in document `02`.
+Detailed carousel behavior and responsive adaptation are recorded in the visual-direction document and the current handoff.
 
 ### 8.3 Case study page
 

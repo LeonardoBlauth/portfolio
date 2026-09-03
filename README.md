@@ -4,19 +4,25 @@ Personal portfolio of Leonardo Blauth, focused on professional experience, selec
 
 ## About
 
-This portfolio is designed to present my professional experience, technical capabilities, projects, and approach to building web products. It reflects my positioning as a product-oriented Full Stack Developer who connects product needs with clear technical decisions and end-to-end execution.
+This portfolio presents professional experience, technical capabilities, selected projects, and an approach to building web products. It reflects positioning as a product-oriented Full Stack Developer who connects product needs with clear technical decisions and end-to-end execution.
 
 The primary audience is recruiters and technical leadership, with deeper project context available for developers and other technical readers.
 
 ## Current status
 
-**Implementation Ready**
+**Implementation in progress**
 
-Definition → Visual Direction → Prototyping → **Implementation**
+Definition → Visual Direction → Prototyping → Implementation handoff → Technical definition → Implementation plan → **Stages 1–11 complete**
 
-Product definition, visual direction, information architecture, professional identity, prototyping, the final implementation handoff, the technical definition, and the incremental V1 implementation plan are complete. Final implementation is ready to begin.
+Confirmed on `master` (reconciled September 3, 2026):
 
-Final implementation has not started, so there is no runnable application or deployment yet. The repository currently contains the project documentation and approved identity assets, reflecting an implementation-ready project rather than an abandoned one.
+- V1 is the first production version. Current scope includes three published projects and the Home carousel.
+- Stages 1–11 of the [implementation plan](docs/implementation-plan.md) are complete. Later approved expansions are recorded there in a non-numbered section after Stage 11.
+- Stage 12 (SEO, performance, and security hardening) has **not** been started as an implementation stage.
+- Stages 13–14 (final QA and production release) remain pending.
+- Canonical production origin: `https://leonardoblauth.dev`, to be served from Cloudflare Pages.
+
+Local development uses `pnpm` with the Node/pnpm ranges declared in `package.json`.
 
 ## Documentation
 
@@ -27,7 +33,7 @@ The detailed documents remain the source of truth for the project:
 - [Professional identity](docs/professional-identity.md) — the Open Loop LB identity system, visual hierarchy, approved assets, and usage rules.
 - [Final implementation handoff](docs/final-implementation-handoff.md) — approved product, visual, behavioral, responsive, and accessibility requirements for the final implementation.
 - [Final implementation technical definition](docs/final-implementation-technical-definition.md) — approved stack, architecture, rendering, styling, testing, SEO, performance, CI/CD, and deployment decisions.
-- [Implementation plan](docs/implementation-plan.md) — incremental V1 implementation sequence, dependencies, validation strategy, and acceptance criteria.
+- [Implementation plan](docs/implementation-plan.md) — incremental implementation sequence, dependencies, validation strategy, and acceptance criteria.
 
 ## Design principles
 
@@ -39,9 +45,7 @@ The detailed documents remain the source of truth for the project:
 
 ## Repository evolution
 
-This repository follows the project's real progression from definition and visual decisions through prototyping, implementation handoff, technical definition, implementation planning, and final implementation. Its history intentionally begins with documentation and design assets so that future code reflects decisions that were established and validated first. Final implementation is the next stage.
-
-The README will continue to evolve when a runnable implementation, local development workflow, production deployment, and representative final previews exist.
+This repository progressed from definition and visual decisions through prototyping, implementation handoff, technical definition, implementation planning, and application implementation. Stages 1–11 are integrated on `master`. Remaining numbered work starts at Stage 12.
 
 ## Author
 
