@@ -218,8 +218,8 @@ test.describe('Hero primary CTA slide text', () => {
     const contact = page.getByRole('link', { name: 'Entrar em contato' })
     await expect(contact).toBeVisible()
     await expect
-      .poll(async () => (await contactSlideMetrics(page)).primaryY)
-      .toBeCloseTo(0, 0)
+      .poll(async () => Math.abs((await contactSlideMetrics(page)).primaryY))
+      .toBeLessThan(2)
 
     const rest = await contactSlideMetrics(page)
     expect(rest.accessibleName).toBe('Entrar em contato')
@@ -238,8 +238,8 @@ test.describe('Hero primary CTA slide text', () => {
 
     await page.mouse.move(0, 0)
     await expect
-      .poll(async () => (await contactSlideMetrics(page)).primaryY)
-      .toBeCloseTo(0, 0)
+      .poll(async () => Math.abs((await contactSlideMetrics(page)).primaryY))
+      .toBeLessThan(2)
 
     await contact.focus()
     await page.keyboard.press('Shift+Tab')

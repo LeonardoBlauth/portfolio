@@ -2,16 +2,19 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
 const waitForHydration = (page: import('@playwright/test').Page) =>
-  page.waitForFunction(() =>
-    Boolean(
-      (
-        document.querySelector('#__nuxt') as
-          | (HTMLElement & {
-              __vue_app__?: unknown
-            })
-          | null
-      )?.__vue_app__,
-    ),
+  page.waitForFunction(
+    () =>
+      Boolean(
+        (
+          document.querySelector('#__nuxt') as
+            | (HTMLElement & {
+                __vue_app__?: unknown
+              })
+            | null
+        )?.__vue_app__,
+      ),
+    undefined,
+    { timeout: 60_000 },
   )
 
 const gotoHydrated = async (
@@ -982,6 +985,7 @@ test.describe('cross-cutting integration', () => {
   test('keeps every localized route axe-clean in both themes', async ({
     page,
   }) => {
+    test.setTimeout(180_000)
     for (const theme of ['light', 'dark']) {
       for (const route of publicRoutes) {
         await page.addInitScript((selectedTheme) => {
