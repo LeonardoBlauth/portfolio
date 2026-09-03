@@ -165,10 +165,16 @@ const handleSectionControlNavigation = (id: string) => {
   if (target) scrollToSection(target)
 }
 const handleDesktopSectionNavigation = (event: MouseEvent, id: string) => {
-  if (!isHomeRoute.value) return
   event.preventDefault()
-  activeSectionId.value = id
-  handleSectionControlNavigation(id)
+  if (isHomeRoute.value) {
+    activeSectionId.value = id
+    handleSectionControlNavigation(id)
+    return
+  }
+  void navigateTo({
+    path: homePath.value,
+    hash: `#${id}`,
+  })
 }
 const setupSectionObserver = () => {
   sectionObserver?.disconnect()

@@ -1,15 +1,18 @@
 import { describe, expect, it } from 'vitest'
 
-import { selectedProject } from '~/data/projects'
+import { selectedProjects } from '~/data/projects'
 
 describe('selected project data', () => {
-  it('contains only the stable approved movune facts', () => {
-    expect(selectedProject).toEqual({
-      id: 'movune',
-      order: '01',
-      type: 'b2b-saas',
-      route: 'movune',
-      messageKey: 'selectedProjects.movune',
-    })
+  it('lists the three approved projects in order', () => {
+    expect(selectedProjects.map((project) => project.slug)).toEqual([
+      'movune',
+      'rigset',
+      'overtime-automation',
+    ])
+    expect(selectedProjects.map((project) => project.status)).toEqual([
+      'prototyping',
+      'planned',
+      'concept',
+    ])
   })
 })

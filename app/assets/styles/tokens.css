@@ -73,6 +73,27 @@
   --color-selection: rgb(37 99 235 / 35%);
   --shadow-subtle: 0 1px 2px rgb(0 0 0 / 28%);
   --shadow-elevated: 0 18px 48px rgb(0 0 0 / 32%);
+
+  /* Status semantic colors — dark theme */
+  --status-concept-dot: #a78bfa;
+  --status-concept-border: rgb(167 139 250 / 22%);
+  --status-concept-bg: rgb(167 139 250 / 6%);
+
+  --status-planned-dot: #f59e0b;
+  --status-planned-border: rgb(245 158 11 / 20%);
+  --status-planned-bg: rgb(245 158 11 / 5%);
+
+  --status-prototyping-dot: #60a5fa;
+  --status-prototyping-border: rgb(96 165 250 / 22%);
+  --status-prototyping-bg: rgb(96 165 250 / 6%);
+
+  --status-development-dot: #2dd4bf;
+  --status-development-border: rgb(45 212 191 / 20%);
+  --status-development-bg: rgb(45 212 191 / 5%);
+
+  --status-available-dot: #4ade80;
+  --status-available-border: rgb(74 222 128 / 20%);
+  --status-available-bg: rgb(74 222 128 / 5%);
 }
 
 :root[data-theme='light'] {
@@ -96,6 +117,27 @@
   --color-selection: rgb(37 99 235 / 22%);
   --shadow-subtle: 0 1px 2px rgb(23 25 29 / 8%);
   --shadow-elevated: 0 18px 48px rgb(23 25 29 / 12%);
+
+  /* Status semantic colors — light theme */
+  --status-concept-dot: #7c3aed;
+  --status-concept-border: rgb(124 58 237 / 18%);
+  --status-concept-bg: rgb(124 58 237 / 5%);
+
+  --status-planned-dot: #d97706;
+  --status-planned-border: rgb(217 119 6 / 16%);
+  --status-planned-bg: rgb(217 119 6 / 4%);
+
+  --status-prototyping-dot: #2563eb;
+  --status-prototyping-border: rgb(37 99 235 / 18%);
+  --status-prototyping-bg: rgb(37 99 235 / 5%);
+
+  --status-development-dot: #0d9488;
+  --status-development-border: rgb(13 148 136 / 16%);
+  --status-development-bg: rgb(13 148 136 / 4%);
+
+  --status-available-dot: #16a34a;
+  --status-available-border: rgb(22 163 74 / 16%);
+  --status-available-bg: rgb(22 163 74 / 4%);
 }
 
 @media (prefers-reduced-motion: reduce) {

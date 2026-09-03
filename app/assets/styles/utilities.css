@@ -23,3 +23,81 @@
   white-space: nowrap;
   border: 0;
 }
+
+.editorial-distribution--2,
+.editorial-distribution--3 {
+  display: grid;
+  width: 100%;
+  align-items: start;
+}
+
+.editorial-distribution--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.editorial-distribution--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.editorial-distribution__start {
+  justify-self: start;
+  justify-items: start;
+  text-align: start;
+}
+
+.editorial-distribution__center {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.editorial-distribution__end {
+  justify-self: end;
+  justify-items: end;
+  text-align: end;
+}
+
+.editorial-distribution__summary {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+/* Status pill semantic variants — applied via data-status attribute */
+[data-status='concept'] {
+  --_status-dot: var(--status-concept-dot);
+  --_status-border: var(--status-concept-border);
+  --_status-bg: var(--status-concept-bg);
+}
+
+[data-status='planned'] {
+  --_status-dot: var(--status-planned-dot);
+  --_status-border: var(--status-planned-border);
+  --_status-bg: var(--status-planned-bg);
+}
+
+[data-status='prototyping'] {
+  --_status-dot: var(--status-prototyping-dot);
+  --_status-border: var(--status-prototyping-border);
+  --_status-bg: var(--status-prototyping-bg);
+}
+
+[data-status='development'] {
+  --_status-dot: var(--status-development-dot);
+  --_status-border: var(--status-development-border);
+  --_status-bg: var(--status-development-bg);
+}
+
+[data-status='available'] {
+  --_status-dot: var(--status-available-dot);
+  --_status-border: var(--status-available-border);
+  --_status-bg: var(--status-available-bg);
+}
+
+.editorial-distribution__summary ul {
+  width: max-content;
+  max-inline-size: min(24rem, 100%);
+  margin-inline: auto;
+  text-align: start;
+}

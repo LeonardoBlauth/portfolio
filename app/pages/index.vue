@@ -22,10 +22,19 @@ const scrollToPendingSection = () => {
   pendingHomeSection.value = null
   pendingSectionFrame = window.requestAnimationFrame(() => {
     pendingSectionFrame = window.requestAnimationFrame(() => {
-      document.getElementById(sectionId)?.scrollIntoView({
-        block: 'start',
-        behavior: 'instant',
-      })
+      const target = document.getElementById(sectionId)
+      if (!target) {
+        pendingSectionFrame = null
+        return
+      }
+
+      const scrollPadding =
+        Number.parseFloat(
+          getComputedStyle(document.documentElement).scrollPaddingBlockStart,
+        ) || 0
+      const top =
+        window.scrollY + target.getBoundingClientRect().top - scrollPadding
+      window.scrollTo({ top: Math.max(0, top), behavior: 'instant' })
       pendingSectionFrame = null
     })
   })

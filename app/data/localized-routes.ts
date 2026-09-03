@@ -15,4 +15,18 @@ export const localizedRoutes = {
       en: '/en/projects/movune',
     },
   },
+  rigset: {
+    name: 'rigset',
+    paths: {
+      'pt-BR': '/projetos/rigset',
+      en: '/en/projects/rigset',
+    },
+  },
+  overtimeAutomation: {
+    name: 'overtimeAutomation',
+    paths: {
+      'pt-BR': '/projetos/automacao-horas-extras',
+      en: '/en/projects/overtime-automation',
+    },
+  },
 } as const satisfies Record<string, LocalizedRouteDefinition>

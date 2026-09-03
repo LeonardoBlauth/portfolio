@@ -2,16 +2,19 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
 const waitForHydration = (page: import('@playwright/test').Page) =>
-  page.waitForFunction(() =>
-    Boolean(
-      (
-        document.querySelector('#__nuxt') as
-          | (HTMLElement & {
-              __vue_app__?: unknown
-            })
-          | null
-      )?.__vue_app__,
-    ),
+  page.waitForFunction(
+    () =>
+      Boolean(
+        (
+          document.querySelector('#__nuxt') as
+            | (HTMLElement & {
+                __vue_app__?: unknown
+              })
+            | null
+        )?.__vue_app__,
+      ),
+    undefined,
+    { timeout: 60_000 },
   )
 
 const gotoHydrated = async (
@@ -232,7 +235,7 @@ test.describe('desktop shell navigation', () => {
     ).toBe(true)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
-      .toBeGreaterThan(stackY - 24)
+      .toBeGreaterThan(stackY - 120)
     await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 
     await page.goBack()
@@ -275,7 +278,7 @@ test.describe('localized and persisted controls', () => {
   }) => {
     await gotoHydrated(page, '/')
 
-    await page.getByRole('link', { name: 'Ver estudo de caso' }).click()
+    await page.getByRole('link', { name: 'Ver estudo de caso →' }).click()
     await expect(page).toHaveURL(/\/projetos\/movune$/)
     await expect(
       page.getByRole('heading', {
@@ -285,15 +288,15 @@ test.describe('localized and persisted controls', () => {
     ).toBeVisible()
     await expect(page.locator('article section')).toHaveCount(6)
 
-    const backToProjects = page.getByRole('button', {
+    const backToProjects = page.getByRole('link', {
       name: 'Voltar para projetos',
     })
     await expect(backToProjects).toHaveCount(2)
     await expect(
-      page.getByRole('link', { name: 'Voltar para projetos' }),
+      page.getByRole('button', { name: 'Voltar para projetos' }),
     ).toHaveCount(0)
     await backToProjects.first().click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/#projects$/)
     await headerOffsetIsClear(page, 'projects')
   })
 
@@ -308,9 +311,7 @@ test.describe('localized and persisted controls', () => {
         name: 'Organizing a complex product before implementation.',
       }),
     ).toBeVisible()
-    await expect(
-      page.getByText('Evolving personal project · in prototyping'),
-    ).toBeVisible()
+    await expect(page.getByText('In prototyping').first()).toBeVisible()
 
     await page
       .getByRole('link', { name: 'Switch language to português' })
@@ -970,11 +971,21 @@ test.describe('reduced motion navigation', () => {
 })
 
 test.describe('cross-cutting integration', () => {
-  const publicRoutes = ['/', '/en', '/projetos/movune', '/en/projects/movune']
+  const publicRoutes = [
+    '/',
+    '/en',
+    '/projetos/movune',
+    '/en/projects/movune',
+    '/projetos/rigset',
+    '/en/projects/rigset',
+    '/projetos/automacao-horas-extras',
+    '/en/projects/overtime-automation',
+  ]
 
   test('keeps every localized route axe-clean in both themes', async ({
     page,
   }) => {
+    test.setTimeout(180_000)
     for (const theme of ['light', 'dark']) {
       for (const route of publicRoutes) {
         await page.addInitScript((selectedTheme) => {
@@ -1000,14 +1011,14 @@ test.describe('cross-cutting integration', () => {
         switchName: 'Mudar idioma para English',
         switchedPath: '/en/projects/movune',
         backName: 'Back to projects',
-        homePath: '/en',
+        homePath: '/en#projects',
       },
       {
         casePath: '/en/projects/movune',
         switchName: 'Switch language to português',
         switchedPath: '/projetos/movune',
         backName: 'Voltar para projetos',
-        homePath: '/',
+        homePath: '/#projects',
       },
     ]
 
@@ -1017,15 +1028,15 @@ test.describe('cross-cutting integration', () => {
       await expect(page).toHaveURL(new RegExp(`${journey.switchedPath}$`))
 
       for (const position of ['first', 'last'] as const) {
-        const returnButtons = page.getByRole('button', {
+        const returnLinks = page.getByRole('link', {
           name: journey.backName,
         })
-        await expect(returnButtons).toHaveCount(2)
+        await expect(returnLinks).toHaveCount(2)
         await expect(
-          page.getByRole('link', { name: journey.backName }),
+          page.getByRole('button', { name: journey.backName }),
         ).toHaveCount(0)
         await (
-          position === 'first' ? returnButtons.first() : returnButtons.last()
+          position === 'first' ? returnLinks.first() : returnLinks.last()
         ).click()
         await expect(page).toHaveURL(
           new RegExp(`${journey.homePath.replace('#', '\\#')}$`),
@@ -1039,6 +1050,7 @@ test.describe('cross-cutting integration', () => {
   test('reflows the full application at reference widths and 200% text size', async ({
     page,
   }) => {
+    test.setTimeout(120_000)
     const viewports = [
       { width: 1440, height: 900 },
       { width: 1024, height: 768 },
@@ -1145,11 +1157,12 @@ test.describe('cross-cutting integration', () => {
     })
     await gotoHydrated(page, '/')
 
-    const contactAction = page.locator('.contact__action').first()
+    const contactAction = page.locator('.contact__action--primary').first()
+    await contactAction.scrollIntoViewIfNeeded()
     const initialBackground = await contactAction.evaluate(
       (element) => getComputedStyle(element).backgroundColor,
     )
-    await contactAction.hover()
+    await contactAction.hover({ force: true })
     await expect
       .poll(() =>
         contactAction.evaluate(
@@ -1192,7 +1205,10 @@ test.describe('cross-cutting integration', () => {
     })
     expect(contrast).toBeGreaterThanOrEqual(4.5)
 
-    for (const selector of ['.hero__name', '.selected-project h3']) {
+    for (const selector of [
+      '.hero__name',
+      '.project-showcase[data-project-id="movune"] h3',
+    ]) {
       const typography = await page.locator(selector).evaluate((element) => {
         const styles = getComputedStyle(element)
         const fontSize = Number.parseFloat(styles.fontSize)

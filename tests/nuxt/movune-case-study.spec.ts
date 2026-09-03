@@ -10,7 +10,6 @@ describe('movune case study', () => {
       backLabel: 'Voltar para projetos',
       headline: 'Organizando um produto complexo antes de implementar.',
       role: 'Definição de produto, fluxos, arquitetura de telas, direção de UI/UX e prototipação.',
-      evidenceLabel: 'Ver representações da interface',
       sections: [
         'Visão geral',
         'Processo',
@@ -23,9 +22,8 @@ describe('movune case study', () => {
         'agendas, pacientes, atendimentos, turmas, pacotes, finanças, documentos e comunicação',
         'Agendas individuais e em grupo',
         'Duas camadas de status',
-        'A arquitetura de produção e a implementação completa ainda não foram definidas.',
-        'dados demonstrativos',
-        'não são capturas finais do produto',
+        'A direção do produto está definida. A implementação vem depois.',
+        'Claro e escuro como parte do mesmo sistema',
       ],
     },
     {
@@ -33,7 +31,6 @@ describe('movune case study', () => {
       backLabel: 'Back to projects',
       headline: 'Organizing a complex product before implementation.',
       role: 'Product definition, flows, screen architecture, UI/UX direction, and prototyping.',
-      evidenceLabel: 'View interface representations',
       sections: [
         'Overview',
         'Process',
@@ -46,43 +43,25 @@ describe('movune case study', () => {
         'schedules, patients, appointments, classes, packages, finance, documents, and communication',
         'Individual and group schedules',
         'Two status layers',
-        'Production architecture and complete implementation have not been defined yet.',
-        'demo data',
-        'not final product screenshots',
+        'The product direction is defined. Implementation comes later.',
+        'Light and dark as part of the same system',
       ],
     },
   ])(
     'renders the approved localized case at $route',
-    async ({
-      route,
-      backLabel,
-      headline,
-      role,
-      evidenceLabel,
-      sections,
-      facts,
-    }) => {
+    async ({ route, backLabel, headline, role, sections, facts }) => {
       const wrapper = await mountSuspended(App, { route })
       const article = wrapper.get('article[data-project-id="movune"]')
 
       expect(article.get('h1').text()).toBe(headline)
       expect(article.get('[data-case-role]').text()).toBe(role)
-      const evidence = article.get('button[data-case-evidence]')
-      expect(evidence.attributes('type')).toBe('button')
-      expect(evidence.attributes('href')).toBeUndefined()
-      expect(evidence.text()).toBe(evidenceLabel)
-      expect(article.findAll('a[data-case-evidence]')).toHaveLength(0)
-      const backControls = article.findAll(
-        'button.case-hero__back, button.case-next__back',
-      )
+      expect(article.find('[data-case-evidence]').exists()).toBe(false)
+      const backControls = article.findAll('a.case-back')
       expect(backControls).toHaveLength(2)
       expect(backControls.map((control) => control.text())).toEqual([
         backLabel,
         backLabel,
       ])
-      expect(
-        article.findAll('a.case-hero__back, a.case-next__back'),
-      ).toHaveLength(0)
       expect(article.findAll('section')).toHaveLength(6)
       expect(
         article.findAll('section h2').map((heading) => heading.text()),
@@ -92,15 +71,32 @@ describe('movune case study', () => {
     },
   )
 
-  it('keeps illustrative interfaces out of the accessibility tree and labels their purpose', async () => {
+  it('uses real interface assets and a single light/dark compare', async () => {
     const wrapper = await mountSuspended(App, { route: '/projetos/movune' })
     const article = wrapper.get('article[data-project-id="movune"]')
 
-    expect(article.findAll('[data-demo-interface]')).toHaveLength(2)
-    for (const representation of article.findAll('[data-demo-interface]')) {
-      expect(representation.attributes('aria-hidden')).toBe('true')
-    }
+    expect(article.findAll('[data-demo-interface]')).toHaveLength(0)
+    expect(
+      article
+        .find('img[src="/images/projects/movune/schedule-light.png"]')
+        .exists(),
+    ).toBe(true)
+    expect(
+      article
+        .find('img[src="/images/projects/movune/register-mobile-light.png"]')
+        .exists(),
+    ).toBe(true)
+    expect(article.findAll('[role="slider"]')).toHaveLength(1)
+    expect(article.findAll('.zoomable-image__trigger')).toHaveLength(2)
+    expect(
+      article.find('.theme-compare .zoomable-image__trigger').exists(),
+    ).toBe(false)
 
-    expect(article.findAll('[data-representation-note]')).toHaveLength(2)
+    const statusSection = article
+      .get('#status-heading')
+      .element.closest('section')
+    expect(statusSection?.querySelector('.case-status')?.textContent).toContain(
+      'Em prototipação',
+    )
   })
 })

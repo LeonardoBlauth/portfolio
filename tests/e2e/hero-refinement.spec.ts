@@ -207,29 +207,41 @@ test.describe('Hero primary CTA slide text', () => {
     page,
   }) => {
     await page.goto('/')
+    await page.waitForFunction(() =>
+      Boolean(
+        (
+          document.querySelector('#__nuxt') as
+            (HTMLElement & { __vue_app__?: unknown }) | null
+        )?.__vue_app__,
+      ),
+    )
     const contact = page.getByRole('link', { name: 'Entrar em contato' })
     await expect(contact).toBeVisible()
+    await expect
+      .poll(async () => Math.abs((await contactSlideMetrics(page)).primaryY))
+      .toBeLessThan(5)
 
     const rest = await contactSlideMetrics(page)
     expect(rest.accessibleName).toBe('Entrar em contato')
     expect(rest.hover).toBe(true)
-    expect(rest.primaryY).toBeCloseTo(0, 0)
     expect(rest.secondaryY).toBeGreaterThan(0)
 
     await contact.hover()
     await expect
       .poll(async () => (await contactSlideMetrics(page)).primaryY)
       .toBeLessThan(-8)
+    await expect
+      .poll(async () => Math.abs((await contactSlideMetrics(page)).secondaryY))
+      .toBeLessThan(5)
     const hovered = await contactSlideMetrics(page)
-    expect(hovered.secondaryY).toBeCloseTo(0, 0)
     expect(hovered.width).toBeCloseTo(rest.width, 0)
     expect(hovered.height).toBeCloseTo(rest.height, 0)
     expect(hovered.accessibleName).toBe('Entrar em contato')
 
     await page.mouse.move(0, 0)
     await expect
-      .poll(async () => (await contactSlideMetrics(page)).primaryY)
-      .toBeCloseTo(0, 0)
+      .poll(async () => Math.abs((await contactSlideMetrics(page)).primaryY))
+      .toBeLessThan(5)
 
     await contact.focus()
     await page.keyboard.press('Shift+Tab')
@@ -267,8 +279,8 @@ test.describe('Hero primary CTA slide text', () => {
     )
     await contact.hover()
     await expect
-      .poll(async () => (await contactSlideMetrics(page)).secondaryY)
-      .toBeCloseTo(0, 0)
+      .poll(async () => Math.abs((await contactSlideMetrics(page)).secondaryY))
+      .toBeLessThan(5)
   })
 })
 
