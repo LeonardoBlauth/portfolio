@@ -38,7 +38,7 @@ describe('ZoomableImage', () => {
     expect(trigger.attributes('aria-label')).toContain('Concept overview')
     expect(trigger.classes()).toContain('zoomable-image__trigger')
     expect(close.text()).toBe('×')
-    expect(close.attributes('aria-label')).toBe('Fechar imagem')
+    expect(close.attributes('aria-label')).toBe('Close image')
 
     await trigger.trigger('click')
     expect((dialog.element as HTMLDialogElement).open).toBe(true)

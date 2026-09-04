@@ -29,7 +29,7 @@ describe('manual locale preference', () => {
       throw new Error('storage unavailable')
     })
 
-    expect(() => writeLocalePreference('pt-BR')).not.toThrow()
+    expect(() => writeLocalePreference('pt')).not.toThrow()
     expect(readLocalePreference()).toBeNull()
   })
 })

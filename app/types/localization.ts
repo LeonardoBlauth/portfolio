@@ -1,4 +1,4 @@
-export type SupportedLocale = 'pt-BR' | 'en'
+export type SupportedLocale = 'en' | 'pt'
 
 export interface LocalizedRouteDefinition {
   name: 'home' | 'movune' | 'rigset' | 'overtimeAutomation'

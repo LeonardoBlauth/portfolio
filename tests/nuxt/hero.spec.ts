@@ -6,7 +6,7 @@ import App from '~/app.vue'
 describe('Home Hero', () => {
   it.each([
     [
-      '/',
+      '/pt',
       'Disponível para oportunidades',
       'Desenvolvo soluções web de ponta a ponta, conectando necessidades de produto a decisões técnicas claras.',
       'Entrar em contato',
@@ -16,7 +16,7 @@ describe('Home Hero', () => {
       'Desenvolvimento web desde 2021',
     ],
     [
-      '/en',
+      '/',
       'Open to opportunities',
       'I build end-to-end web solutions, connecting product needs with clear technical decisions.',
       'Get in touch',

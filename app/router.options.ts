@@ -1,6 +1,6 @@
 import type { RouterConfig } from '@nuxt/schema'
 
-const localePrefix = /^\/en(?=\/|$)/
+const localePrefix = /^\/pt(?=\/|$)/
 
 const withoutLocalePrefix = (path: string) => {
   const stripped = path.replace(localePrefix, '')

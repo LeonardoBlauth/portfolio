@@ -6,7 +6,7 @@ import App from '~/app.vue'
 describe('movune case study', () => {
   it.each([
     {
-      route: '/projetos/movune',
+      route: '/pt/projetos/movune',
       backLabel: 'Voltar para projetos',
       headline: 'Organizando um produto complexo antes de implementar.',
       role: 'Definição de produto, fluxos, arquitetura de telas, direção de UI/UX e prototipação.',
@@ -27,7 +27,7 @@ describe('movune case study', () => {
       ],
     },
     {
-      route: '/en/projects/movune',
+      route: '/projects/movune',
       backLabel: 'Back to projects',
       headline: 'Organizing a complex product before implementation.',
       role: 'Product definition, flows, screen architecture, UI/UX direction, and prototyping.',
@@ -64,7 +64,7 @@ describe('movune case study', () => {
       ])
       for (const control of backControls) {
         expect(control.attributes('href')).toBe(
-          route.startsWith('/en') ? '/en' : '/',
+          route.startsWith('/pt') ? '/pt' : '/',
         )
       }
       expect(article.findAll('section')).toHaveLength(6)
@@ -77,7 +77,7 @@ describe('movune case study', () => {
   )
 
   it('uses real interface assets and a single light/dark compare', async () => {
-    const wrapper = await mountSuspended(App, { route: '/projetos/movune' })
+    const wrapper = await mountSuspended(App, { route: '/pt/projetos/movune' })
     const article = wrapper.get('article[data-project-id="movune"]')
 
     expect(article.findAll('[data-demo-interface]')).toHaveLength(0)

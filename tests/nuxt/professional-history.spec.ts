@@ -6,7 +6,7 @@ import App from '~/app.vue'
 describe('professional history', () => {
   it.each([
     {
-      route: '/',
+      route: '/pt',
       label: 'Experiência profissional',
       headline: 'Minha experiência como desenvolvedor.',
       period: '2021 — atual',
@@ -22,7 +22,7 @@ describe('professional history', () => {
       cta: 'Ver trajetória completa no LinkedIn',
     },
     {
-      route: '/en',
+      route: '/',
       label: 'Professional experience',
       headline: 'My experience as a developer.',
       period: '2021 — present',

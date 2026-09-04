@@ -10,36 +10,36 @@ describe('Selected project presentation', () => {
   })
   it.each([
     [
-      '/',
+      '/pt',
       'Projetos selecionados',
       'Projetos e soluções que desenvolvo.',
       'MOVUNE',
       'SaaS B2B',
       'Em prototipação',
       'Ver estudo de caso →',
-      '/projetos/movune',
+      '/pt/projetos/movune',
       'RIGSET',
       'Explorar planejamento →',
-      '/projetos/rigset',
+      '/pt/projetos/rigset',
       'AUTOMAÇÃO DE HORAS EXTRAS',
       'Explorar conceito →',
-      '/projetos/automacao-horas-extras',
+      '/pt/projetos/automacao-horas-extras',
     ],
     [
-      '/en',
+      '/',
       'Selected projects',
       'Projects and solutions I develop.',
       'MOVUNE',
       'B2B SaaS',
       'In prototyping',
       'View case study →',
-      '/en/projects/movune',
+      '/projects/movune',
       'RIGSET',
       'Explore the plan →',
-      '/en/projects/rigset',
+      '/projects/rigset',
       'OVERTIME AUTOMATION',
       'Explore the concept →',
-      '/en/projects/overtime-automation',
+      '/projects/overtime-automation',
     ],
   ])(
     'renders the approved project carousel at %s',
@@ -114,7 +114,7 @@ describe('Selected project presentation', () => {
   )
 
   it('keeps carousel controls semantic and disables previous on the first slide', async () => {
-    const wrapper = await mountSuspended(App, { route: '/' })
+    const wrapper = await mountSuspended(App, { route: '/pt' })
     const section = wrapper.get('section#projects')
     const previous = section.get('button[aria-label="Projeto anterior"]')
     const next = section.get('button[aria-label="Próximo projeto"]')

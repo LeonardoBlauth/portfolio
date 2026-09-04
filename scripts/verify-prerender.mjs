@@ -2,56 +2,56 @@ import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
 const generatedRoutes = [
-  { file: 'index.html', lang: 'pt-BR', heading: 'Leonardo Blauth' },
-  { file: 'en/index.html', lang: 'en', heading: 'Leonardo Blauth' },
+  { file: 'index.html', lang: 'en', heading: 'Leonardo Blauth' },
+  { file: 'pt/index.html', lang: 'pt-BR', heading: 'Leonardo Blauth' },
   {
-    file: 'projetos/movune/index.html',
-    lang: 'pt-BR',
-    heading: 'Organizando um produto complexo antes de implementar.',
-  },
-  {
-    file: 'en/projects/movune/index.html',
+    file: 'projects/movune/index.html',
     lang: 'en',
     heading: 'Organizing a complex product before implementation.',
   },
   {
-    file: 'projetos/rigset/index.html',
+    file: 'pt/projetos/movune/index.html',
     lang: 'pt-BR',
-    heading: 'Configure e gerencie sua workstation do seu jeito.',
+    heading: 'Organizando um produto complexo antes de implementar.',
   },
   {
-    file: 'en/projects/rigset/index.html',
+    file: 'projects/rigset/index.html',
     lang: 'en',
     heading: 'Configure and manage your workstation, your way.',
   },
   {
-    file: 'projetos/automacao-horas-extras/index.html',
+    file: 'pt/projetos/rigset/index.html',
     lang: 'pt-BR',
-    heading: 'Responder rápido, sem aceitar o que não cabe na escala.',
+    heading: 'Configure e gerencie sua workstation do seu jeito.',
   },
   {
-    file: 'en/projects/overtime-automation/index.html',
+    file: 'projects/overtime-automation/index.html',
     lang: 'en',
     heading: 'Reply fast, without accepting what does not fit the schedule.',
+  },
+  {
+    file: 'pt/projetos/automacao-horas-extras/index.html',
+    lang: 'pt-BR',
+    heading: 'Responder rápido, sem aceitar o que não cabe na escala.',
   },
 ]
 
 const caseSections = {
-  'projetos/movune/index.html': [
-    'Visão geral',
-    'Processo',
-    'Interface',
-    'Decisões principais',
-    'Estado atual',
-    'Próximos passos',
-  ],
-  'en/projects/movune/index.html': [
+  'projects/movune/index.html': [
     'Overview',
     'Process',
     'Interface',
     'Key decisions',
     'Current status',
     'Next steps',
+  ],
+  'pt/projetos/movune/index.html': [
+    'Visão geral',
+    'Processo',
+    'Interface',
+    'Decisões principais',
+    'Estado atual',
+    'Próximos passos',
   ],
 }
 

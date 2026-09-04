@@ -6,7 +6,7 @@ import App from '~/app.vue'
 describe('contact and footer', () => {
   it.each([
     {
-      route: '/',
+      route: '/pt',
       label: 'Contato',
       headline: 'Vamos conversar sobre a próxima oportunidade?',
       description:
@@ -16,7 +16,7 @@ describe('contact and footer', () => {
       linkedinLabel: 'LinkedIn (abre em uma nova aba)',
     },
     {
-      route: '/en',
+      route: '/',
       label: 'Contact',
       headline: 'Let’s talk about the next opportunity.',
       description:

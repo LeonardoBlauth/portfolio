@@ -5,35 +5,35 @@ import App from '~/app.vue'
 
 describe('localized routes', () => {
   it.each([
-    ['/', 'pt-BR', 'Leonardo Blauth'],
-    ['/en', 'en', 'Leonardo Blauth'],
+    ['/pt', 'pt', 'Leonardo Blauth'],
+    ['/', 'en', 'Leonardo Blauth'],
     [
-      '/projetos/movune',
-      'pt-BR',
+      '/pt/projetos/movune',
+      'pt',
       'Organizando um produto complexo antes de implementar.',
     ],
     [
-      '/en/projects/movune',
+      '/projects/movune',
       'en',
       'Organizing a complex product before implementation.',
     ],
     [
-      '/projetos/rigset',
-      'pt-BR',
+      '/pt/projetos/rigset',
+      'pt',
       'Configure e gerencie sua workstation do seu jeito.',
     ],
     [
-      '/en/projects/rigset',
+      '/projects/rigset',
       'en',
       'Configure and manage your workstation, your way.',
     ],
     [
-      '/projetos/automacao-horas-extras',
-      'pt-BR',
+      '/pt/projetos/automacao-horas-extras',
+      'pt',
       'Responder rápido, sem aceitar o que não cabe na escala.',
     ],
     [
-      '/en/projects/overtime-automation',
+      '/projects/overtime-automation',
       'en',
       'Reply fast, without accepting what does not fit the schedule.',
     ],

@@ -64,7 +64,7 @@ test.describe('desktop shell navigation', () => {
   test('keeps the navbar inactive while the Hero is in view', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const indicator = page.locator('[data-morphing-indicator]')
     const nav = page.getByRole('navigation', { name: 'Navegação principal' })
 
@@ -89,7 +89,7 @@ test.describe('desktop shell navigation', () => {
   test('activates each nav section while scrolling the homepage', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const indicator = page.locator('[data-morphing-indicator]')
     const activeId = () =>
       page.evaluate(() => {
@@ -123,7 +123,7 @@ test.describe('desktop shell navigation', () => {
         clientErrors.push(message.text())
       }
     })
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     await expect(
       page.getByRole('navigation', { name: 'Navegação principal' }),
@@ -170,7 +170,7 @@ test.describe('desktop shell navigation', () => {
   test('does not create a history entry when a section is selected', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const initialHistoryState = await page.evaluate(() => history.state)
 
     await page
@@ -188,7 +188,7 @@ test.describe('desktop shell navigation', () => {
   test('reveals a floating return control after leaving the Hero', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const returnToHero = page.getByRole('button', {
       name: 'Voltar ao início',
     })
@@ -216,7 +216,7 @@ test.describe('desktop shell navigation', () => {
     await page.addInitScript(() => {
       localStorage.setItem('portfolio-theme', 'light')
     })
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
     await page
@@ -239,7 +239,7 @@ test.describe('desktop shell navigation', () => {
   test('hides the floating return control before it can cover the footer', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const returnToHero = page.getByRole('button', {
       name: 'Voltar ao início',
     })
@@ -264,7 +264,7 @@ test.describe('desktop shell navigation', () => {
   test('keeps the selected section URL-free across locale navigation', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
@@ -278,7 +278,7 @@ test.describe('desktop shell navigation', () => {
     })
     const stackY = await page.evaluate(() => window.scrollY)
     await page.getByRole('link', { name: 'Mudar idioma para English' }).click()
-    await expect(page).toHaveURL(/\/en$/)
+    await expect(page).toHaveURL(/\/$/)
     expect(
       await page.evaluate(
         () =>
@@ -295,13 +295,13 @@ test.describe('desktop shell navigation', () => {
     await expect(page).toHaveURL(/\/$/)
 
     await page.goForward()
-    await expect(page).toHaveURL(/\/en$/)
+    await expect(page).toHaveURL(/\/$/)
   })
 
   test('treats a localized trailing slash as the same page', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/en/')
+    await gotoHydrated(page, '/pt')
     await page.evaluate(() => {
       ;(
         window as typeof window & { __sameDocumentSentinel?: boolean }
@@ -313,7 +313,7 @@ test.describe('desktop shell navigation', () => {
       .getByRole('link', { name: 'Projects' })
       .click()
 
-    await expect(page).toHaveURL(/\/en\/$/)
+    await expect(page).toHaveURL(/\/$/)
     expect(
       await page.evaluate(
         () =>
@@ -329,10 +329,10 @@ test.describe('localized and persisted controls', () => {
   test('navigates from Home to the complete case and back to Projects', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     await page.getByRole('link', { name: 'Ver estudo de caso →' }).click()
-    await expect(page).toHaveURL(/\/projetos\/movune$/)
+    await expect(page).toHaveURL(/\/pt\/projetos\/movune$/)
     await expect(
       page.getByRole('heading', {
         level: 1,
@@ -349,7 +349,7 @@ test.describe('localized and persisted controls', () => {
       page.getByRole('button', { name: 'Voltar para projetos' }),
     ).toHaveCount(0)
     await backToProjects.first().click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect(page).not.toHaveURL(/#/)
     await headerOffsetIsClear(page, 'projects')
     await expect
@@ -372,34 +372,34 @@ test.describe('localized and persisted controls', () => {
   }) => {
     const journeys = [
       {
-        from: '/projetos/movune',
+        from: '/pt/projetos/movune',
         link: 'Projetos',
         section: 'projects',
-        home: /\/$/,
+        home: /\/pt\/?$/,
       },
       {
-        from: '/projetos/movune',
+        from: '/pt/projetos/movune',
         link: 'Experiência',
         section: 'experience',
-        home: /\/$/,
+        home: /\/pt\/?$/,
       },
       {
-        from: '/projetos/rigset',
+        from: '/pt/projetos/rigset',
         link: 'Stack',
         section: 'stack',
-        home: /\/$/,
+        home: /\/pt\/?$/,
       },
       {
-        from: '/projetos/automacao-horas-extras',
+        from: '/pt/projetos/automacao-horas-extras',
         link: 'Contato',
         section: 'contact',
-        home: /\/$/,
+        home: /\/pt\/?$/,
       },
       {
-        from: '/en/projects/movune',
+        from: '/projects/movune',
         link: 'Experience',
         section: 'experience',
-        home: /\/en\/?$/,
+        home: /\/$/,
       },
     ] as const
 
@@ -409,7 +409,7 @@ test.describe('localized and persisted controls', () => {
         page.waitForURL(journey.home),
         page
           .getByRole('navigation', {
-            name: journey.from.startsWith('/en')
+            name: journey.from.startsWith('/')
               ? 'Primary navigation'
               : 'Navegação principal',
           })
@@ -439,9 +439,9 @@ test.describe('localized and persisted controls', () => {
   test('keeps scroll spy alive after returning to Hero via the brand mark', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/projetos/movune')
+    await gotoHydrated(page, '/pt/projetos/movune')
     await page.getByRole('link', { name: 'Ir para o início' }).click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect(page).not.toHaveURL(/#/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
@@ -499,7 +499,7 @@ test.describe('localized and persisted controls', () => {
   test('restores navbar Projects active after returning from Rigset', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     await page
       .getByRole('navigation', { name: 'Navegação principal' })
       .getByRole('link', { name: 'Projetos' })
@@ -549,9 +549,9 @@ test.describe('localized and persisted controls', () => {
   test('activates Projects after opening a case from a direct URL and returning', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/en/projects/movune')
+    await gotoHydrated(page, '/projects/movune')
     await Promise.all([
-      page.waitForURL((url) => /\/en\/?$/.test(url.pathname)),
+      page.waitForURL((url) => /\/$/.test(url.pathname)),
       page
         .locator('#top')
         .getByRole('link', { name: 'Back to projects' })
@@ -573,7 +573,7 @@ test.describe('localized and persisted controls', () => {
   test('loads the English case directly and switches to its Portuguese equivalent', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/en/projects/movune')
+    await gotoHydrated(page, '/projects/movune')
 
     await expect(
       page.getByRole('heading', {
@@ -593,37 +593,37 @@ test.describe('localized and persisted controls', () => {
   test('switches equivalent routes and persists only manual locale choices', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/en#stack')
+    await gotoHydrated(page, '/#stack')
     const localeControl = page.getByRole('link', {
       name: 'Switch language to português',
     })
-    await expect(localeControl).toHaveAttribute('href', '/#stack')
+    await expect(localeControl).toHaveAttribute('href', '/pt#stack')
     await expect(localeControl.locator('span')).toHaveAttribute('lang', 'pt-BR')
     await page
       .getByRole('link', { name: 'Switch language to português' })
       .click()
-    await expect(page).toHaveURL(/\/#stack$/)
+    await expect(page).toHaveURL(/\/pt(?:\/)?#stack$/)
     await expect
       .poll(() => page.evaluate(() => localStorage.getItem('portfolio-locale')))
-      .toBe('pt-BR')
+      .toBe('pt')
 
-    await gotoHydrated(page, '/en/projects/movune')
+    await gotoHydrated(page, '/projects/movune')
     await page
       .getByRole('link', { name: 'Switch language to português' })
       .click()
-    await expect(page).toHaveURL(/\/projetos\/movune$/)
+    await expect(page).toHaveURL(/\/pt\/projetos\/movune$/)
     await expect
       .poll(() => page.evaluate(() => localStorage.getItem('portfolio-locale')))
-      .toBe('pt-BR')
+      .toBe('pt')
 
     await page.evaluate(() => localStorage.setItem('portfolio-locale', 'en'))
     await gotoHydrated(page, '/')
     await expect(page).toHaveURL(/\/$/)
-    await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR')
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   })
 
   test('updates and persists an explicit theme choice', async ({ page }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const initialTheme = await page.locator('html').getAttribute('data-theme')
     const targetTheme = initialTheme === 'dark' ? 'light' : 'dark'
     const initialAction =
@@ -652,7 +652,7 @@ test.describe('mobile navigation', () => {
   test('condenses the long homepage without hiding core stack content', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     await page.locator('#stack').scrollIntoViewIfNeeded()
 
@@ -701,7 +701,7 @@ test.describe('mobile navigation', () => {
     page,
   }) => {
     await page.setViewportSize({ width: 320, height: 700 })
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     await expect(page.getByRole('button', { name: 'Abrir menu' })).toBeVisible()
     await expect(
@@ -727,7 +727,7 @@ test.describe('mobile navigation', () => {
   test('supports keyboard dismissal, focus restoration, and selection close', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const trigger = page.getByRole('button', { name: 'Abrir menu' })
 
     await expect(trigger).toBeVisible()
@@ -755,7 +755,7 @@ test.describe('mobile navigation', () => {
   test('hides the floating return control before it can cover the footer', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const returnToHero = page.getByRole('button', {
       name: 'Voltar ao início',
     })
@@ -802,7 +802,7 @@ test.describe('mobile navigation', () => {
   test('closes the mobile menu when the Header transitions to desktop', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const trigger = page.getByRole('button', { name: 'Abrir menu' })
     await trigger.click()
 
@@ -822,7 +822,7 @@ test.describe('mobile navigation', () => {
   test('has no automatically detectable accessibility violations in either theme or the open menu', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     const shellScan = await new AxeBuilder({ page })
       .disableRules(['document-title'])
@@ -849,7 +849,7 @@ test.describe('mobile navigation', () => {
   test('keeps the movune case usable without horizontal overflow', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/projetos/movune')
+    await gotoHydrated(page, '/pt/projetos/movune')
 
     await expect(page.locator('article section')).toHaveCount(6)
     expect(
@@ -870,7 +870,7 @@ test.describe('contact and footer', () => {
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     const [contactLayoutBox, footerLayoutBox] = await Promise.all([
       page.locator('.contact__layout').boundingBox(),
@@ -887,7 +887,7 @@ test.describe('contact and footer', () => {
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     const contactLayout = page.locator('.contact__layout')
     const footer = page.locator('footer')
@@ -913,7 +913,7 @@ test.describe('contact and footer', () => {
   test('exposes the approved destinations in logical keyboard order', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/en')
+    await gotoHydrated(page, '/pt')
 
     const contact = page.getByRole('navigation', { name: 'Contact options' })
     const email = contact.getByRole('link', { name: 'Email' })
@@ -970,7 +970,7 @@ test.describe('contact and footer', () => {
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     const actions = page.locator('.contact__action')
     await expect(actions).toHaveCount(3)
@@ -998,7 +998,7 @@ test.describe('reduced motion navigation', () => {
   test('moves immediately to a hash with reduced motion enabled', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     expect(
       await page.evaluate(
         () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -1141,7 +1141,7 @@ test.describe('reduced motion navigation', () => {
     ]
 
     for (const destination of destinations) {
-      await gotoHydrated(page, '/')
+      await gotoHydrated(page, '/pt')
       const metrics = await page.evaluate((id) => {
         const target = document.getElementById(id)
         if (!target) throw new Error(`Missing ${id} destination`)
@@ -1188,7 +1188,7 @@ test.describe('reduced motion navigation', () => {
   test('cancels an in-flight animation when another section is selected', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const navigation = page.getByRole('navigation', {
       name: 'Navegação principal',
     })
@@ -1211,7 +1211,7 @@ test.describe('reduced motion navigation', () => {
   test('allows user input to interrupt an in-flight animation', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
     const expectedFinalY = await page.evaluate(() => {
       const target = document.querySelector<HTMLElement>('#contact')
       const scrollPadding = Number.parseFloat(
@@ -1246,13 +1246,13 @@ test.describe('reduced motion navigation', () => {
 test.describe('cross-cutting integration', () => {
   const publicRoutes = [
     '/',
-    '/en',
-    '/projetos/movune',
-    '/en/projects/movune',
-    '/projetos/rigset',
-    '/en/projects/rigset',
-    '/projetos/automacao-horas-extras',
-    '/en/projects/overtime-automation',
+    '/',
+    '/pt/projetos/movune',
+    '/projects/movune',
+    '/pt/projetos/rigset',
+    '/projects/rigset',
+    '/pt/projetos/automacao-horas-extras',
+    '/projects/overtime-automation',
   ]
 
   test('keeps every localized route axe-clean in both themes', async ({
@@ -1280,18 +1280,18 @@ test.describe('cross-cutting integration', () => {
   }) => {
     const journeys = [
       {
-        casePath: '/projetos/movune',
+        casePath: '/pt/projetos/movune',
         switchName: 'Mudar idioma para English',
-        switchedPath: '/en/projects/movune',
+        switchedPath: '/projects/movune',
         backName: 'Back to projects',
-        homePath: '/en',
+        homePath: '/',
       },
       {
-        casePath: '/en/projects/movune',
+        casePath: '/projects/movune',
         switchName: 'Switch language to português',
-        switchedPath: '/projetos/movune',
+        switchedPath: '/pt/projetos/movune',
         backName: 'Voltar para projetos',
-        homePath: '/',
+        homePath: '/pt',
       },
     ]
 
@@ -1357,7 +1357,7 @@ test.describe('cross-cutting integration', () => {
       screenHeight: 768,
     })
 
-    for (const route of ['/', '/en']) {
+    for (const route of ['/', '/pt']) {
       await gotoHydrated(page, route)
       expect(
         await page.evaluate(() => ({
@@ -1429,7 +1429,7 @@ test.describe('cross-cutting integration', () => {
     await page.addInitScript(() => {
       localStorage.setItem('portfolio-theme', 'dark')
     })
-    await gotoHydrated(page, '/')
+    await gotoHydrated(page, '/pt')
 
     const contactAction = page.locator('.contact__action--primary').first()
     await contactAction.scrollIntoViewIfNeeded()
