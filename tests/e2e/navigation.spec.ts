@@ -1093,9 +1093,9 @@ test.describe('reduced motion navigation', () => {
 
     const homeControl = page.getByRole('button', { name: 'Go to the top' })
     await expect(homeControl).toHaveCount(1)
-    await expect(
-      page.getByRole('link', { name: 'Go to the top' }),
-    ).toHaveCount(0)
+    await expect(page.getByRole('link', { name: 'Go to the top' })).toHaveCount(
+      0,
+    )
     await homeControl.click()
     await expect(page).toHaveURL(/\/$/)
     await expect
