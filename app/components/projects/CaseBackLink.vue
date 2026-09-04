@@ -5,14 +5,14 @@ const props = defineProps<{
   placement?: 'hero' | 'footer'
 }>()
 
-const { projectsTarget, prepareReturn } = useReturnToProjects()
+const { homeRoute, prepareReturn } = useReturnToProjects()
 </script>
 
 <template>
   <NuxtLink
     class="case-back"
     :class="{ 'case-back--footer': placement === 'footer' }"
-    :to="projectsTarget"
+    :to="homeRoute"
     @click="prepareReturn(props.projectSlug)"
   >
     <svg viewBox="0 0 20 20" aria-hidden="true">

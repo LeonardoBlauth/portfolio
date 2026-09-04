@@ -32,8 +32,6 @@ export type ProjectSummary = {
   status: ProjectStatus
   visual: ProjectVisual
   categoryKeys: string[]
-  technologies?: string[]
-  highlights?: string[]
   hasMaturityNote?: boolean
   messageKey: string
 }

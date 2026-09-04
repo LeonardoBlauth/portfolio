@@ -139,12 +139,6 @@ const onVisualClick = (event: MouseEvent) => {
         {{ message('maturityNote') }}
       </p>
 
-      <ul v-if="project.technologies?.length" class="project-showcase__tech">
-        <li v-for="technology in project.technologies" :key="technology">
-          {{ technology }}
-        </li>
-      </ul>
-
       <NuxtLink
         class="project-showcase__cta"
         :to="caseRoute"
