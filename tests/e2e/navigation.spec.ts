@@ -68,7 +68,7 @@ test.describe('desktop shell navigation', () => {
     const indicator = page.locator('[data-morphing-indicator]')
     const nav = page.getByRole('navigation', { name: 'Navegação principal' })
 
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(0, 0)
@@ -79,7 +79,7 @@ test.describe('desktop shell navigation', () => {
     await expect(indicator).toHaveClass(/morphing-tabs__indicator--visible/)
 
     await page.getByRole('button', { name: 'Ir para o início' }).click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(0, 0)
@@ -136,14 +136,14 @@ test.describe('desktop shell navigation', () => {
     })
 
     await navigation.getByRole('link', { name: 'Projetos' }).click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(0)
     await headerOffsetIsClear(page, 'projects')
 
     await navigation.getByRole('link', { name: 'Stack' }).click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await headerOffsetIsClear(page, 'stack')
     expect(await page.evaluate(() => history.state)).toEqual(
       initialHistoryState,
@@ -179,7 +179,7 @@ test.describe('desktop shell navigation', () => {
       .click()
 
     await headerOffsetIsClear(page, 'projects')
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     expect(await page.evaluate(() => history.state)).toEqual(
       initialHistoryState,
     )
@@ -203,7 +203,7 @@ test.describe('desktop shell navigation', () => {
     await expect(returnToHero).toBeVisible()
     await expect(returnToHero).toHaveCSS('position', 'fixed')
     await returnToHero.click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(0, 0)
@@ -292,7 +292,7 @@ test.describe('desktop shell navigation', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'en')
 
     await page.goBack()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
 
     await page.goForward()
     await expect(page).toHaveURL(/\/$/)
@@ -301,7 +301,7 @@ test.describe('desktop shell navigation', () => {
   test('treats a localized trailing slash as the same page', async ({
     page,
   }) => {
-    await gotoHydrated(page, '/pt')
+    await gotoHydrated(page, '/pt/')
     await page.evaluate(() => {
       ;(
         window as typeof window & { __sameDocumentSentinel?: boolean }
@@ -309,11 +309,11 @@ test.describe('desktop shell navigation', () => {
     })
 
     await page
-      .getByRole('navigation', { name: 'Primary navigation' })
-      .getByRole('link', { name: 'Projects' })
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link', { name: 'Projetos' })
       .click()
 
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     expect(
       await page.evaluate(
         () =>
@@ -409,9 +409,9 @@ test.describe('localized and persisted controls', () => {
         page.waitForURL(journey.home),
         page
           .getByRole('navigation', {
-            name: journey.from.startsWith('/')
-              ? 'Primary navigation'
-              : 'Navegação principal',
+            name: journey.from.startsWith('/pt')
+              ? 'Navegação principal'
+              : 'Primary navigation',
           })
           .getByRole('link', { name: journey.link })
           .click(),
@@ -510,13 +510,13 @@ test.describe('localized and persisted controls', () => {
       .getByRole('link', { name: /Rigset/i })
       .first()
       .click()
-    await expect(page).toHaveURL(/\/projetos\/rigset$/)
+    await expect(page).toHaveURL(/\/pt\/projetos\/rigset$/)
 
     await page
       .getByRole('link', { name: 'Voltar para projetos' })
       .first()
       .click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await headerOffsetIsClear(page, 'projects')
     await expect
       .poll(() =>
@@ -586,7 +586,7 @@ test.describe('localized and persisted controls', () => {
     await page
       .getByRole('link', { name: 'Switch language to português' })
       .click()
-    await expect(page).toHaveURL(/\/projetos\/movune$/)
+    await expect(page).toHaveURL(/\/pt\/projetos\/movune$/)
     await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR')
   })
 
@@ -748,7 +748,7 @@ test.describe('mobile navigation', () => {
     await trigger.click()
     await dialog.getByRole('button', { name: 'Projetos' }).click()
     await expect(dialog).toBeHidden()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await headerOffsetIsClear(page, 'projects')
   })
 
@@ -1034,7 +1034,7 @@ test.describe('reduced motion navigation', () => {
       .getByRole('navigation', { name: 'Navegação principal' })
       .getByRole('link', { name: 'Contato' })
       .click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(scrollMetrics.expectedFinalY, 0)
@@ -1194,12 +1194,12 @@ test.describe('reduced motion navigation', () => {
     })
 
     await navigation.getByRole('link', { name: 'Projetos' }).click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await headerOffsetIsClear(page, 'projects')
 
     const projectsY = await page.evaluate(() => window.scrollY)
     await navigation.getByRole('link', { name: 'Stack' }).click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(projectsY + 10)
@@ -1230,7 +1230,7 @@ test.describe('reduced motion navigation', () => {
       .getByRole('navigation', { name: 'Navegação principal' })
       .getByRole('link', { name: 'Contato' })
       .click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(/\/pt\/?$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeGreaterThan(10)
