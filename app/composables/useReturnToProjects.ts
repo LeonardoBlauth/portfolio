@@ -17,10 +17,9 @@ export const useReturnToProjects = () => {
     () => localizedRoutes.home.paths[currentLocale.value],
   )
 
-  const projectsTarget = computed(() => ({
-    path: homeRoute.value,
-    hash: '#projects',
-  }))
+  // Clean Home path only — scroll to Projects is handled via pendingHomeSection
+  // on Home mount, without persisting a hash in the address bar.
+  const projectsTarget = computed(() => homeRoute.value)
 
   const prepareReturn = (projectSlug: string) => {
     setActiveProjectSlug(projectSlug)

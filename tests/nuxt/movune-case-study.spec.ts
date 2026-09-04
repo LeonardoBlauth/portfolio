@@ -62,6 +62,11 @@ describe('movune case study', () => {
         backLabel,
         backLabel,
       ])
+      for (const control of backControls) {
+        expect(control.attributes('href')).toBe(
+          route.startsWith('/en') ? '/en' : '/',
+        )
+      }
       expect(article.findAll('section')).toHaveLength(6)
       expect(
         article.findAll('section h2').map((heading) => heading.text()),

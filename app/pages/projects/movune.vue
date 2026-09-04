@@ -154,7 +154,9 @@ const nextSteps = computed(() => [
     >
       <h3 class="status-headline">{{ t('pages.movune.next.headline') }}</h3>
       <p class="case-copy">{{ t('pages.movune.next.description') }}</p>
-      <ProjectFlow :items="nextSteps" />
+      <div class="next-steps-flow">
+        <ProjectFlow :items="nextSteps" />
+      </div>
       <CaseBackLink
         :label="t('pages.movune.back')"
         project-slug="movune"
@@ -186,6 +188,31 @@ const nextSteps = computed(() => [
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.next-steps-flow {
+  display: grid;
+  justify-items: center;
+}
+
+.next-steps-flow :deep(.project-flow) {
+  justify-items: center;
+  width: fit-content;
+  max-inline-size: 100%;
+  margin-inline: auto;
+  padding: 0;
+  text-align: center;
+}
+
+.next-steps-flow :deep(.project-flow__item) {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+}
+
+.next-steps-flow :deep(.project-flow__label),
+.next-steps-flow :deep(.project-flow__arrow) {
+  text-align: center;
 }
 
 .process-list {

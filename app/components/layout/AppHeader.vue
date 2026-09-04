@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { localizedRoutes } from '~/data/localized-routes'
+import BackToTopButton from '~/components/ui/BackToTopButton.vue'
 import LiquidGlass from '~/components/ui/LiquidGlass.vue'
 import MorphingTabs from '~/components/ui/MorphingTabs.vue'
 import UnderlineText from '~/components/ui/UnderlineText.vue'
@@ -17,20 +18,19 @@ const menuClose = useTemplateRef<HTMLButtonElement>('menuClose')
 const menuOpen = ref(false)
 const mounted = ref(false)
 const currentHash = ref(route.hash)
-const showReturnToHero = ref(false)
-const footerObscuresReturn = ref(false)
 const activeSectionId = ref('')
 
 let desktopMediaQuery: MediaQueryList | null = null
 let restoreFocusAfterClose = true
 let scrollAnimationFrame: number | null = null
 let routeAlignmentFrame: number | null = null
-let returnToHeroFrame: number | null = null
+let heroActiveStateFrame: number | null = null
 let sectionObserver: IntersectionObserver | null = null
-let footerOverlapObserver: IntersectionObserver | null = null
-let footerObserverRetries = 0
+let sectionObserverSetupRetries = 0
 
 const SECTION_SCROLL_DURATION_MS = 360
+const SECTION_OBSERVER_MAX_RETRIES = 60
+const homeScrollSpyRevision = useState('home-scroll-spy-revision', () => 0)
 
 const currentLocale = computed<SupportedLocale>(() =>
   locale.value === 'en' ? 'en' : 'pt-BR',
@@ -64,9 +64,56 @@ const navigationItems = computed(() => [
   { id: 'contact', label: t('navigation.contact') },
 ])
 
-const sectionHref = (id: string) => `${homePath.value}#${id}`
+const sectionHref = (id: string) =>
+  isHomeRoute.value ? `${homePath.value}#${id}` : homePath.value
 const handleLocaleSwitch = () => writeLocalePreference(targetLocale.value)
 const toggleTheme = () => setTheme(targetTheme.value)
+const { navigateToHomeSection } = useNavigateToHomeSection()
+const sectionIntersectionRatios = new Map<string, number>()
+const clearActiveSection = () => {
+  activeSectionId.value = ''
+}
+// Anchor inside the existing scroll-spy band (-18% / -52% → ~18%–48% viewport).
+const READING_ANCHOR_RATIO = 0.3
+const isHeroRegion = () => {
+  const projects = document.getElementById('projects')
+  if (!projects) return true
+  // Hero owns the reading region until Projects reaches the spy anchor.
+  return (
+    projects.getBoundingClientRect().top >
+    window.innerHeight * READING_ANCHOR_RATIO
+  )
+}
+const hasIntersectingNavSection = () => {
+  for (const { id } of navigationItems.value) {
+    if ((sectionIntersectionRatios.get(id) ?? 0) > 0) return true
+  }
+  return false
+}
+const syncActiveSectionFromViewport = () => {
+  if (!isHomeRoute.value) {
+    clearActiveSection()
+    return
+  }
+
+  let bestId = ''
+  let bestRatio = 0
+  for (const { id } of navigationItems.value) {
+    const ratio = sectionIntersectionRatios.get(id) ?? 0
+    if (ratio > bestRatio) {
+      bestRatio = ratio
+      bestId = id
+    }
+  }
+
+  if (bestRatio > 0) {
+    activeSectionId.value = bestId
+    return
+  }
+
+  // Preserve sticky section selection between IO updates; only clear on Hero.
+  if (isHeroRegion()) clearActiveSection()
+}
 const cancelScrollAnimation = () => {
   if (scrollAnimationFrame === null) return
 
@@ -164,6 +211,20 @@ const handleSectionControlNavigation = (id: string) => {
   const target = document.getElementById(id)
   if (target) scrollToSection(target)
 }
+const handleBrandNavigation = (event?: Event) => {
+  event?.preventDefault()
+  clearActiveSection()
+
+  if (isHomeRoute.value) {
+    if (route.hash) {
+      void navigateTo({ path: homePath.value }, { replace: true })
+    }
+    handleSectionControlNavigation('top')
+    return
+  }
+
+  void navigateTo(homePath.value)
+}
 const handleDesktopSectionNavigation = (event: MouseEvent, id: string) => {
   event.preventDefault()
   if (isHomeRoute.value) {
@@ -171,28 +232,50 @@ const handleDesktopSectionNavigation = (event: MouseEvent, id: string) => {
     handleSectionControlNavigation(id)
     return
   }
-  void navigateTo({
-    path: homePath.value,
-    hash: `#${id}`,
-  })
+  void navigateToHomeSection(id)
 }
 const setupSectionObserver = () => {
   sectionObserver?.disconnect()
-  if (!isHomeRoute.value) return
+  sectionObserver = null
+  sectionIntersectionRatios.clear()
+  if (!isHomeRoute.value) {
+    sectionObserverSetupRetries = 0
+    clearActiveSection()
+    return
+  }
+
+  const sectionElements = navigationItems.value.map(({ id }) => ({
+    id,
+    element: document.getElementById(id),
+  }))
+
+  // AppHeader outlives NuxtPage — wait until Home sections exist before binding.
+  if (sectionElements.some(({ element }) => !element)) {
+    if (sectionObserverSetupRetries < SECTION_OBSERVER_MAX_RETRIES) {
+      sectionObserverSetupRetries += 1
+      window.requestAnimationFrame(() => setupSectionObserver())
+    }
+    return
+  }
+
+  sectionObserverSetupRetries = 0
   sectionObserver = new IntersectionObserver(
     (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-      if (visible) activeSectionId.value = visible.target.id
+      for (const entry of entries) {
+        sectionIntersectionRatios.set(
+          entry.target.id,
+          entry.isIntersecting ? entry.intersectionRatio : 0,
+        )
+      }
+      syncActiveSectionFromViewport()
     },
     { rootMargin: '-18% 0px -52% 0px', threshold: [0.05, 0.25, 0.5] },
   )
-  navigationItems.value.forEach(
-    ({ id }) =>
-      document.getElementById(id) &&
-      sectionObserver?.observe(document.getElementById(id)!),
-  )
+  sectionElements.forEach(({ id, element }) => {
+    sectionIntersectionRatios.set(id, 0)
+    sectionObserver?.observe(element!)
+  })
+  syncActiveSectionFromViewport()
 }
 
 const openMenu = async () => {
@@ -227,98 +310,32 @@ const handleMobileSectionNavigation = (id: string) => {
   handleSectionControlNavigation(id)
   closeMenu()
 }
-
-const cancelReturnToHeroFrame = () => {
-  if (returnToHeroFrame === null) return
-
-  window.cancelAnimationFrame(returnToHeroFrame)
-  returnToHeroFrame = null
+const handleMobileCrossRouteSectionNavigation = (id: string) => {
+  closeMenu({ restoreFocus: false })
+  void navigateToHomeSection(id)
 }
-const updateReturnToHeroVisibility = () => {
-  if (!isHomeRoute.value) {
-    showReturnToHero.value = false
-    return
-  }
 
-  const hero = document.getElementById('top')
-  if (!hero) {
-    showReturnToHero.value = false
-    return
-  }
+const cancelHeroActiveStateFrame = () => {
+  if (heroActiveStateFrame === null) return
 
-  const scrollPadding = Number.parseFloat(
-    getComputedStyle(document.documentElement).scrollPaddingBlockStart,
-  )
-  const heroHasLeftView = hero.getBoundingClientRect().bottom <= scrollPadding
-  showReturnToHero.value = heroHasLeftView && !footerObscuresReturn.value
+  window.cancelAnimationFrame(heroActiveStateFrame)
+  heroActiveStateFrame = null
 }
-const disconnectFooterOverlapObserver = () => {
-  footerOverlapObserver?.disconnect()
-  footerOverlapObserver = null
-  footerObserverRetries = 0
-  footerObscuresReturn.value = false
-}
-const setupFooterOverlapObserver = () => {
-  footerOverlapObserver?.disconnect()
-  footerOverlapObserver = null
-  if (!isHomeRoute.value) {
-    footerObserverRetries = 0
-    footerObscuresReturn.value = false
-    return
+const handleBackToTopActivate = () => {
+  clearActiveSection()
+  if (route.hash) {
+    void navigateTo({ path: homePath.value }, { replace: true })
   }
-
-  const footer = document.querySelector('.site-footer')
-  if (!footer) {
-    if (footerObserverRetries >= 12) return
-    footerObserverRetries += 1
-    window.requestAnimationFrame(setupFooterOverlapObserver)
-    return
-  }
-
-  footerObserverRetries = 0
-
-  const returnButton = document.querySelector<HTMLElement>('.return-to-hero')
-  const inset = (() => {
-    if (returnButton) {
-      const styles = getComputedStyle(returnButton)
-      if (styles.insetBlockEnd && styles.insetBlockEnd !== 'auto') {
-        return styles.insetBlockEnd
-      }
-
-      const token = styles.getPropertyValue('--return-to-hero-inset').trim()
-      if (token) return token
-    }
-
-    return (
-      getComputedStyle(document.documentElement)
-        .getPropertyValue('--space-6')
-        .trim() || '1.5rem'
-    )
-  })()
-
-  footerOverlapObserver = new IntersectionObserver(
-    (entries) => {
-      footerObscuresReturn.value = Boolean(entries[0]?.isIntersecting)
-      updateReturnToHeroVisibility()
-    },
-    {
-      root: null,
-      threshold: 0,
-      rootMargin: `0px 0px -${inset} 0px`,
-    },
-  )
-  footerOverlapObserver.observe(footer)
-}
-const syncReturnToHeroVisibility = async () => {
-  await nextTick()
-  updateReturnToHeroVisibility()
 }
 const handleViewportScroll = () => {
-  if (returnToHeroFrame !== null) return
+  if (heroActiveStateFrame !== null) return
 
-  returnToHeroFrame = window.requestAnimationFrame(() => {
-    returnToHeroFrame = null
-    updateReturnToHeroVisibility()
+  heroActiveStateFrame = window.requestAnimationFrame(() => {
+    heroActiveStateFrame = null
+    // Clear active state only when returning to Hero with no nav section in band.
+    if (isHomeRoute.value && !hasIntersectingNavSection() && isHeroRegion()) {
+      clearActiveSection()
+    }
   })
 }
 
@@ -334,16 +351,15 @@ watch(
     const currentPath = fullPath.split('#', 1)[0]
     const previousPath = previousFullPath?.split('#', 1)[0]
     if (route.hash && currentPath !== previousPath) void alignRouteHash()
-    if (mounted.value) {
-      setupFooterOverlapObserver()
-      void syncReturnToHeroVisibility()
-    }
   },
 )
 watch(isHomeRoute, async () => {
   await nextTick()
   setupSectionObserver()
-  setupFooterOverlapObserver()
+})
+watch(homeScrollSpyRevision, () => {
+  if (!isHomeRoute.value) return
+  setupSectionObserver()
 })
 
 const getDialogFocusableElements = () =>
@@ -394,8 +410,6 @@ onMounted(() => {
   if (desktopMediaQuery.matches) closeMenu({ restoreFocus: false })
   void nextTick(() => {
     setupSectionObserver()
-    setupFooterOverlapObserver()
-    void syncReturnToHeroVisibility()
   })
 })
 
@@ -408,8 +422,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleViewportScroll)
   desktopMediaQuery?.removeEventListener('change', handleDesktopTransition)
   sectionObserver?.disconnect()
-  disconnectFooterOverlapObserver()
-  cancelReturnToHeroFrame()
+  cancelHeroActiveStateFrame()
   cancelRouteAlignment()
   cancelScrollAnimation()
   if (dialog.value?.open) dialog.value.close()
@@ -436,7 +449,7 @@ onBeforeUnmount(() => {
             type="button"
             aria-controls="top"
             :aria-label="t('navigation.home')"
-            @click="handleSectionControlNavigation('top')"
+            @click="handleBrandNavigation"
           >
             <span class="site-header__mark" aria-hidden="true">
               <img
@@ -458,8 +471,9 @@ onBeforeUnmount(() => {
           <NuxtLink
             v-else
             class="site-header__brand"
-            :to="`${homePath}#top`"
+            :to="homePath"
             :aria-label="t('navigation.home')"
+            @click="handleBrandNavigation"
           >
             <span class="site-header__mark" aria-hidden="true">
               <img
@@ -606,7 +620,8 @@ onBeforeUnmount(() => {
           <NuxtLink
             v-for="item in navigationItems"
             :key="item.id"
-            :to="sectionHref(item.id)"
+            :to="homePath"
+            @click.prevent="handleMobileCrossRouteSectionNavigation(item.id)"
           >
             {{ item.label }}
           </NuxtLink>
@@ -614,21 +629,7 @@ onBeforeUnmount(() => {
       </nav>
     </dialog>
 
-    <button
-      v-if="isHomeRoute"
-      class="return-to-hero"
-      :class="{ 'return-to-hero--visible': showReturnToHero }"
-      type="button"
-      data-return-to-hero
-      :aria-hidden="!showReturnToHero"
-      :tabindex="showReturnToHero ? 0 : -1"
-      :aria-label="t('controls.backToTop')"
-      @click="handleSectionControlNavigation('top')"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 19V5m0 0-5 5m5-5 5 5" />
-      </svg>
-    </button>
+    <BackToTopButton v-if="isHomeRoute" @activate="handleBackToTopActivate" />
   </header>
 </template>
 
@@ -785,67 +786,6 @@ onBeforeUnmount(() => {
   font-weight: var(--font-weight-semibold);
 }
 
-.return-to-hero {
-  --return-to-hero-inset: var(--space-6);
-
-  position: fixed;
-  z-index: 101;
-  inset-block-end: var(--return-to-hero-inset);
-  inset-inline-end: var(--layout-gutter);
-  display: grid;
-  width: 3rem;
-  height: 3rem;
-  padding: 0;
-  place-items: center;
-  color: var(--color-text-primary);
-  visibility: hidden;
-  pointer-events: none;
-  cursor: pointer;
-  opacity: 0;
-  background: var(--color-surface-elevated);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-elevated);
-  translate: 0 var(--space-3);
-  transition:
-    opacity var(--motion-duration-fast) var(--motion-ease-standard),
-    translate var(--motion-duration-fast) var(--motion-ease-standard),
-    visibility 0s linear var(--motion-duration-fast);
-}
-
-.return-to-hero--visible {
-  visibility: visible;
-  pointer-events: auto;
-  opacity: 1;
-  translate: 0;
-  transition-delay: 0s;
-}
-
-.return-to-hero:hover {
-  color: var(--color-accent-interactive);
-  background: var(--color-surface);
-}
-
-:global(:root[data-theme='light'] .return-to-hero) {
-  color: var(--color-accent);
-  background: var(--color-surface);
-  border-color: color-mix(
-    in srgb,
-    var(--color-accent) 32%,
-    var(--color-border)
-  );
-}
-
-.return-to-hero svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.8;
-}
-
 .mobile-navigation {
   position: fixed;
   inset: var(--space-4) var(--space-4) auto auto;
@@ -908,12 +848,6 @@ onBeforeUnmount(() => {
   }
   .site-header__menu-trigger {
     display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .return-to-hero {
-    transition: none;
   }
 }
 </style>
