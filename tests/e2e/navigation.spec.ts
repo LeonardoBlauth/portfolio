@@ -72,9 +72,7 @@ test.describe('desktop shell navigation', () => {
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(0, 0)
-    await expect(indicator).not.toHaveClass(
-      /morphing-tabs__indicator--visible/,
-    )
+    await expect(indicator).not.toHaveClass(/morphing-tabs__indicator--visible/)
 
     await nav.getByRole('link', { name: 'Projetos' }).click()
     await headerOffsetIsClear(page, 'projects')
@@ -85,9 +83,7 @@ test.describe('desktop shell navigation', () => {
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(0, 0)
-    await expect(indicator).not.toHaveClass(
-      /morphing-tabs__indicator--visible/,
-    )
+    await expect(indicator).not.toHaveClass(/morphing-tabs__indicator--visible/)
   })
 
   test('activates each nav section while scrolling the homepage', async ({
@@ -101,9 +97,7 @@ test.describe('desktop shell navigation', () => {
         return active?.getAttribute('data-tab-id') ?? null
       })
 
-    await expect(indicator).not.toHaveClass(
-      /morphing-tabs__indicator--visible/,
-    )
+    await expect(indicator).not.toHaveClass(/morphing-tabs__indicator--visible/)
     await expect.poll(activeId).toBeNull()
 
     for (const id of ['projects', 'experience', 'stack', 'contact'] as const) {
@@ -117,9 +111,7 @@ test.describe('desktop shell navigation', () => {
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(0, 0)
     await expect.poll(activeId).toBeNull()
-    await expect(indicator).not.toHaveClass(
-      /morphing-tabs__indicator--visible/,
-    )
+    await expect(indicator).not.toHaveClass(/morphing-tabs__indicator--visible/)
   })
 
   test('scrolls to sections without changing the homepage URL', async ({
@@ -417,10 +409,9 @@ test.describe('localized and persisted controls', () => {
         page.waitForURL(journey.home),
         page
           .getByRole('navigation', {
-            name:
-              journey.from.startsWith('/en')
-                ? 'Primary navigation'
-                : 'Navegação principal',
+            name: journey.from.startsWith('/en')
+              ? 'Primary navigation'
+              : 'Navegação principal',
           })
           .getByRole('link', { name: journey.link })
           .click(),
@@ -429,20 +420,17 @@ test.describe('localized and persisted controls', () => {
       await headerOffsetIsClear(page, journey.section, false)
       await expect
         .poll(() =>
-          page.evaluate(
-            (sectionId) => {
-              const section = document.getElementById(sectionId)
-              const active =
-                document
-                  .querySelector('.underline-text--active')
-                  ?.getAttribute('data-tab-id') ?? null
-              return {
-                active,
-                sectionTop: section?.getBoundingClientRect().top ?? null,
-              }
-            },
-            journey.section,
-          ),
+          page.evaluate((sectionId) => {
+            const section = document.getElementById(sectionId)
+            const active =
+              document
+                .querySelector('.underline-text--active')
+                ?.getAttribute('data-tab-id') ?? null
+            return {
+              active,
+              sectionTop: section?.getBoundingClientRect().top ?? null,
+            }
+          }, journey.section),
         )
         .toMatchObject({ active: journey.section })
     }
@@ -518,7 +506,10 @@ test.describe('localized and persisted controls', () => {
       .click()
     await headerOffsetIsClear(page, 'projects')
 
-    await page.getByRole('link', { name: /Rigset/i }).first().click()
+    await page
+      .getByRole('link', { name: /Rigset/i })
+      .first()
+      .click()
     await expect(page).toHaveURL(/\/projetos\/rigset$/)
 
     await page
@@ -1136,9 +1127,9 @@ test.describe('reduced motion navigation', () => {
     expect(heroTitle!.y).toBeGreaterThanOrEqual(header!.y + header!.height)
 
     await expect(page).toHaveURL(/\/$/)
-    await expect(
-      page.locator('[data-morphing-indicator]'),
-    ).not.toHaveClass(/morphing-tabs__indicator--visible/)
+    await expect(page.locator('[data-morphing-indicator]')).not.toHaveClass(
+      /morphing-tabs__indicator--visible/,
+    )
   })
 
   test('makes both native Hero hash links immediate with reduced motion enabled', async ({

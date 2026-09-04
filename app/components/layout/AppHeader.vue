@@ -79,7 +79,10 @@ const isHeroRegion = () => {
   const projects = document.getElementById('projects')
   if (!projects) return true
   // Hero owns the reading region until Projects reaches the spy anchor.
-  return projects.getBoundingClientRect().top > window.innerHeight * READING_ANCHOR_RATIO
+  return (
+    projects.getBoundingClientRect().top >
+    window.innerHeight * READING_ANCHOR_RATIO
+  )
 }
 const hasIntersectingNavSection = () => {
   for (const { id } of navigationItems.value) {
@@ -626,10 +629,7 @@ onBeforeUnmount(() => {
       </nav>
     </dialog>
 
-    <BackToTopButton
-      v-if="isHomeRoute"
-      @activate="handleBackToTopActivate"
-    />
+    <BackToTopButton v-if="isHomeRoute" @activate="handleBackToTopActivate" />
   </header>
 </template>
 

@@ -69,9 +69,9 @@ describe('application shell', () => {
 
     expect(wrapper.find('a[href="/en"]').exists()).toBe(true)
     expect(wrapper.find('a[href="/en#projects"]').exists()).toBe(false)
-    expect(wrapper.get('a[aria-label="Go to the top"]').attributes('href')).toBe(
-      '/en',
-    )
+    expect(
+      wrapper.get('a[aria-label="Go to the top"]').attributes('href'),
+    ).toBe('/en')
     expect(wrapper.find('a[href="/en#top"]').exists()).toBe(false)
     const localeControl = wrapper.get(
       'a[aria-label="Switch language to português"]',
