@@ -8,7 +8,7 @@
 
 **Consolidated:** August 27, 2026
 
-**Last reconciled:** September 3, 2026
+**Last reconciled:** September 4, 2026
 
 ## 1. Purpose
 
@@ -61,8 +61,8 @@ This implementation plan converts those approved decisions into an incremental e
 V1 is the first production version. Current approved scope includes:
 
 - a statically generated Nuxt 4 application using Vue 3 and TypeScript;
-- PT-BR Home at `/` and English Home at `/en`;
-- localized case studies for `movune`, `rigset`, and overtime automation (`/projetos/movune`, `/projetos/rigset`, `/projetos/automacao-horas-extras`, and English equivalents under `/en/projects/...`);
+- English Home at `/` (default, unprefixed) and Portuguese Home at `/pt`;
+- localized case studies for `movune`, `rigset`, and overtime automation (`/projects/movune`, `/projects/rigset`, `/projects/overtime-automation`, and Portuguese equivalents under `/pt/projetos/...`);
 - Home Selected Projects presented through an approved multi-project carousel of those three real projects;
 - the Header, Hero, Projects, Experience and Education, Skills and Tech Stack, Work Approach, Contact, and Footer, including later approved interaction and visual refinements already merged to `master`;
 - light and dark themes with persisted explicit preference and system fallback;
@@ -840,13 +840,17 @@ This section is **not a numbered stage**. It records product work implemented an
 
 PR #23 (`577bb45` … merge `d4e3574`) superseded the original V1 constraint of a single Home project without a carousel. V1 now publishes three real projects through an approved Home carousel and localized case routes:
 
-| Project | Status | PT-BR route | English route | Home visual |
+| Project | Status | English route | PT-BR route | Home visual |
 | --- | --- | --- | --- | --- |
-| `movune` | prototyping | `/projetos/movune` | `/en/projects/movune` | prototype screenshots, labeled as demonstrative |
-| Rigset | planned | `/projetos/rigset` | `/en/projects/rigset` | conceptual image, labeled as not the final interface |
-| Overtime automation | concept | `/projetos/automacao-horas-extras` | `/en/projects/overtime-automation` | editorial diagram |
+| `movune` | prototyping | `/projects/movune` | `/pt/projetos/movune` | prototype screenshots, labeled as demonstrative |
+| Rigset | planned | `/projects/rigset` | `/pt/projetos/rigset` | conceptual image, labeled as not the final interface |
+| Overtime automation | concept | `/projects/overtime-automation` | `/pt/projetos/automacao-horas-extras` | editorial diagram |
 
 Empty placeholder slides and fictional completed products remain excluded. Localized editorial copy remains in `i18n/locales`; typed facts remain in `app/data/projects.ts`.
+
+### Default locale URL strategy
+
+PR #26 (`d5060a9` … merge `5b2da3b`) inverted the earlier Stage 1 default: English is the unprefixed default locale; Portuguese uses the `/pt` prefix (`prefix_except_default`, `detectBrowserLanguage: false`). Historical Stage 1 acceptance criteria below still describe the original PT-unprefixed setup; current V1 routing is this English-default matrix.
 
 ### Visual and interaction refinements
 
@@ -872,7 +876,7 @@ Incidental precursors from earlier stages exist and must not be mistaken for Sta
 - Instrument Sans font preload;
 - prerendered localized HTML with document `lang` and visible content verified by `scripts/verify-prerender.mjs`.
 
-Still missing relative to this stage's acceptance criteria: localized titles/descriptions, self-referencing canonical URLs based on `https://leonardoblauth.dev`, `hreflang` / `x-default`, Open Graph / social-preview metadata, sitemap, production/preview robots behavior, Core Web Vitals evaluation on a production build, and a static security-header policy derived from the final resource set. Route coverage is the current V1 set: Home plus the three case studies in both locales (eight prerendered routes).
+Still missing relative to this stage's acceptance criteria: localized titles/descriptions, self-referencing canonical URLs based on `https://leonardoblauth.dev`, `hreflang` / `x-default`, Open Graph / social-preview metadata, sitemap, production/preview robots behavior, Core Web Vitals evaluation on a production build, and a static security-header policy derived from the final resource set. Route coverage is the current V1 set: Home plus the three case studies in both locales (eight prerendered routes; English unprefixed, Portuguese under `/pt`).
 
 ### Scope
 

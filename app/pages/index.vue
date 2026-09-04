@@ -8,10 +8,7 @@ import WorkApproach from '~/components/home/WorkApproach.vue'
 import Aurora from '~/components/ui/Aurora.vue'
 
 const { resolvedTheme } = useTheme()
-const pendingHomeSection = useState<string | null>(
-  'pending-home-section',
-  () => null,
-)
+const { pendingHomeSection } = useNavigateToHomeSection()
 const homeScrollSpyRevision = useState('home-scroll-spy-revision', () => 0)
 
 let pendingSectionFrame: number | null = null
