@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BackToTopButton from '~/components/ui/BackToTopButton.vue'
 import CaseBackLink from '~/components/projects/CaseBackLink.vue'
 
 const props = defineProps<{
@@ -28,6 +29,7 @@ watch(
     <div class="case-content layout-container">
       <slot />
     </div>
+    <BackToTopButton />
   </article>
 </template>
 

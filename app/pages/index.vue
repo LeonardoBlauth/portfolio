@@ -12,6 +12,7 @@ const pendingHomeSection = useState<string | null>(
   'pending-home-section',
   () => null,
 )
+const homeScrollSpyRevision = useState('home-scroll-spy-revision', () => 0)
 
 let pendingSectionFrame: number | null = null
 
@@ -36,13 +37,31 @@ const scrollToPendingSection = () => {
         window.scrollY + target.getBoundingClientRect().top - scrollPadding
       window.scrollTo({ top: Math.max(0, top), behavior: 'instant' })
       pendingSectionFrame = null
+      // AppHeader persists across routes — rebind/resync spy after alignment.
+      homeScrollSpyRevision.value += 1
+    })
+  })
+}
+
+const scheduleHomeScrollSpySync = () => {
+  // Same settle timing as pending-section scroll so the spy binds to live nodes
+  // after Home section trees finish mounting (e.g. detail → LB → Hero).
+  pendingSectionFrame = window.requestAnimationFrame(() => {
+    pendingSectionFrame = window.requestAnimationFrame(() => {
+      pendingSectionFrame = null
+      homeScrollSpyRevision.value += 1
     })
   })
 }
 
 onMounted(async () => {
   await nextTick()
-  scrollToPendingSection()
+  if (pendingHomeSection.value) {
+    scrollToPendingSection()
+    return
+  }
+
+  scheduleHomeScrollSpySync()
 })
 
 onBeforeUnmount(() => {

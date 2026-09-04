@@ -61,6 +61,67 @@ const headerOffsetIsClear = async (
 test.describe('desktop shell navigation', () => {
   test.use({ viewport: { width: 1440, height: 900 } })
 
+  test('keeps the navbar inactive while the Hero is in view', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const indicator = page.locator('[data-morphing-indicator]')
+    const nav = page.getByRole('navigation', { name: 'Navegação principal' })
+
+    await expect(page).toHaveURL(/\/$/)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeCloseTo(0, 0)
+    await expect(indicator).not.toHaveClass(
+      /morphing-tabs__indicator--visible/,
+    )
+
+    await nav.getByRole('link', { name: 'Projetos' }).click()
+    await headerOffsetIsClear(page, 'projects')
+    await expect(indicator).toHaveClass(/morphing-tabs__indicator--visible/)
+
+    await page.getByRole('button', { name: 'Ir para o início' }).click()
+    await expect(page).toHaveURL(/\/$/)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeCloseTo(0, 0)
+    await expect(indicator).not.toHaveClass(
+      /morphing-tabs__indicator--visible/,
+    )
+  })
+
+  test('activates each nav section while scrolling the homepage', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    const indicator = page.locator('[data-morphing-indicator]')
+    const activeId = () =>
+      page.evaluate(() => {
+        const active = document.querySelector('.underline-text--active')
+        return active?.getAttribute('data-tab-id') ?? null
+      })
+
+    await expect(indicator).not.toHaveClass(
+      /morphing-tabs__indicator--visible/,
+    )
+    await expect.poll(activeId).toBeNull()
+
+    for (const id of ['projects', 'experience', 'stack', 'contact'] as const) {
+      await page.locator(`#${id}`).scrollIntoViewIfNeeded()
+      await expect.poll(activeId).toBe(id)
+      await expect(indicator).toHaveClass(/morphing-tabs__indicator--visible/)
+    }
+
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeCloseTo(0, 0)
+    await expect.poll(activeId).toBeNull()
+    await expect(indicator).not.toHaveClass(
+      /morphing-tabs__indicator--visible/,
+    )
+  })
+
   test('scrolls to sections without changing the homepage URL', async ({
     page,
   }) => {
@@ -296,8 +357,226 @@ test.describe('localized and persisted controls', () => {
       page.getByRole('button', { name: 'Voltar para projetos' }),
     ).toHaveCount(0)
     await backToProjects.first().click()
-    await expect(page).toHaveURL(/\/#projects$/)
+    await expect(page).toHaveURL(/\/$/)
+    await expect(page).not.toHaveURL(/#/)
     await headerOffsetIsClear(page, 'projects')
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document
+              .querySelector('.underline-text--active')
+              ?.getAttribute('data-tab-id') ?? null,
+        ),
+      )
+      .toBe('projects')
+    await expect(page.locator('[data-morphing-indicator]')).toHaveClass(
+      /morphing-tabs__indicator--visible/,
+    )
+  })
+
+  test('activates navbar sections when navigating from a case study', async ({
+    page,
+  }) => {
+    const journeys = [
+      {
+        from: '/projetos/movune',
+        link: 'Projetos',
+        section: 'projects',
+        home: /\/$/,
+      },
+      {
+        from: '/projetos/movune',
+        link: 'Experiência',
+        section: 'experience',
+        home: /\/$/,
+      },
+      {
+        from: '/projetos/rigset',
+        link: 'Stack',
+        section: 'stack',
+        home: /\/$/,
+      },
+      {
+        from: '/projetos/automacao-horas-extras',
+        link: 'Contato',
+        section: 'contact',
+        home: /\/$/,
+      },
+      {
+        from: '/en/projects/movune',
+        link: 'Experience',
+        section: 'experience',
+        home: /\/en\/?$/,
+      },
+    ] as const
+
+    for (const journey of journeys) {
+      await gotoHydrated(page, journey.from)
+      await Promise.all([
+        page.waitForURL(journey.home),
+        page
+          .getByRole('navigation', {
+            name:
+              journey.from.startsWith('/en')
+                ? 'Primary navigation'
+                : 'Navegação principal',
+          })
+          .getByRole('link', { name: journey.link })
+          .click(),
+      ])
+      await expect(page).not.toHaveURL(/#/)
+      await headerOffsetIsClear(page, journey.section, false)
+      await expect
+        .poll(() =>
+          page.evaluate(
+            (sectionId) => {
+              const section = document.getElementById(sectionId)
+              const active =
+                document
+                  .querySelector('.underline-text--active')
+                  ?.getAttribute('data-tab-id') ?? null
+              return {
+                active,
+                sectionTop: section?.getBoundingClientRect().top ?? null,
+              }
+            },
+            journey.section,
+          ),
+        )
+        .toMatchObject({ active: journey.section })
+    }
+  })
+
+  test('keeps scroll spy alive after returning to Hero via the brand mark', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/projetos/movune')
+    await page.getByRole('link', { name: 'Ir para o início' }).click()
+    await expect(page).toHaveURL(/\/$/)
+    await expect(page).not.toHaveURL(/#/)
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBeCloseTo(0, 0)
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document
+              .querySelector('.underline-text--active')
+              ?.getAttribute('data-tab-id') ?? null,
+        ),
+      )
+      .toBeNull()
+
+    for (const id of ['projects', 'experience', 'stack', 'contact'] as const) {
+      await page.locator(`#${id}`).scrollIntoViewIfNeeded()
+      await expect
+        .poll(() =>
+          page.evaluate(
+            () =>
+              document
+                .querySelector('.underline-text--active')
+                ?.getAttribute('data-tab-id') ?? null,
+          ),
+        )
+        .toBe(id)
+    }
+
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document
+              .querySelector('.underline-text--active')
+              ?.getAttribute('data-tab-id') ?? null,
+        ),
+      )
+      .toBeNull()
+
+    await page.locator('#projects').scrollIntoViewIfNeeded()
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document
+              .querySelector('.underline-text--active')
+              ?.getAttribute('data-tab-id') ?? null,
+        ),
+      )
+      .toBe('projects')
+  })
+
+  test('restores navbar Projects active after returning from Rigset', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/')
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link', { name: 'Projetos' })
+      .click()
+    await headerOffsetIsClear(page, 'projects')
+
+    await page.getByRole('link', { name: /Rigset/i }).first().click()
+    await expect(page).toHaveURL(/\/projetos\/rigset$/)
+
+    await page
+      .getByRole('link', { name: 'Voltar para projetos' })
+      .first()
+      .click()
+    await expect(page).toHaveURL(/\/$/)
+    await headerOffsetIsClear(page, 'projects')
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document
+              .querySelector('.underline-text--active')
+              ?.getAttribute('data-tab-id') ?? null,
+        ),
+      )
+      .toBe('projects')
+
+    await page
+      .getByRole('navigation', { name: 'Navegação principal' })
+      .getByRole('link', { name: 'Experiência' })
+      .click()
+    await headerOffsetIsClear(page, 'experience')
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document
+              .querySelector('.underline-text--active')
+              ?.getAttribute('data-tab-id') ?? null,
+        ),
+      )
+      .toBe('experience')
+  })
+
+  test('activates Projects after opening a case from a direct URL and returning', async ({
+    page,
+  }) => {
+    await gotoHydrated(page, '/en/projects/movune')
+    await Promise.all([
+      page.waitForURL((url) => /\/en\/?$/.test(url.pathname)),
+      page
+        .locator('#top')
+        .getByRole('link', { name: 'Back to projects' })
+        .click(),
+    ])
+    await headerOffsetIsClear(page, 'projects')
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document
+              .querySelector('.underline-text--active')
+              ?.getAttribute('data-tab-id') ?? null,
+        ),
+      )
+      .toBe('projects')
   })
 
   test('loads the English case directly and switches to its Portuguese equivalent', async ({
@@ -827,7 +1106,7 @@ test.describe('reduced motion navigation', () => {
       page.getByRole('link', { name: 'Ir para o início' }),
     ).toHaveCount(0)
     await homeControl.click()
-    await expect(page).toHaveURL(/\/#contact$/)
+    await expect(page).toHaveURL(/\/$/)
     await expect
       .poll(() => page.evaluate(() => window.scrollY))
       .toBeCloseTo(scrollMetrics.expectedFinalY, 0)
@@ -856,7 +1135,10 @@ test.describe('reduced motion navigation', () => {
     expect(heroTitle).not.toBeNull()
     expect(heroTitle!.y).toBeGreaterThanOrEqual(header!.y + header!.height)
 
-    await expect(page).toHaveURL(/\/#contact$/)
+    await expect(page).toHaveURL(/\/$/)
+    await expect(
+      page.locator('[data-morphing-indicator]'),
+    ).not.toHaveClass(/morphing-tabs__indicator--visible/)
   })
 
   test('makes both native Hero hash links immediate with reduced motion enabled', async ({
@@ -1011,14 +1293,14 @@ test.describe('cross-cutting integration', () => {
         switchName: 'Mudar idioma para English',
         switchedPath: '/en/projects/movune',
         backName: 'Back to projects',
-        homePath: '/en#projects',
+        homePath: '/en',
       },
       {
         casePath: '/en/projects/movune',
         switchName: 'Switch language to português',
         switchedPath: '/projetos/movune',
         backName: 'Voltar para projetos',
-        homePath: '/#projects',
+        homePath: '/',
       },
     ]
 
@@ -1039,8 +1321,9 @@ test.describe('cross-cutting integration', () => {
           position === 'first' ? returnLinks.first() : returnLinks.last()
         ).click()
         await expect(page).toHaveURL(
-          new RegExp(`${journey.homePath.replace('#', '\\#')}$`),
+          journey.homePath === '/' ? /\/$/ : new RegExp(`${journey.homePath}$`),
         )
+        await expect(page).not.toHaveURL(/#/)
         await headerOffsetIsClear(page, 'projects')
         await gotoHydrated(page, journey.switchedPath)
       }

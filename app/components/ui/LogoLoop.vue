@@ -53,6 +53,7 @@ let lastTimestamp: number | null = null
 let offset = 0
 let velocity = 0
 let sequenceWidth = 0
+let measureFrame: number | null = null
 let resizeObserver: ResizeObserver | null = null
 let intersectionObserver: IntersectionObserver | null = null
 let motionQuery: MediaQueryList | null = null
@@ -68,6 +69,18 @@ const renderOffset = () => {
   if (!trackRef.value || sequenceWidth <= 0) return
 
   trackRef.value.style.transform = `translate3d(${-offset}px, 0, 0)`
+}
+
+const measureSequenceWidth = (sequence: HTMLUListElement) => {
+  const items = sequence.querySelectorAll<HTMLElement>(':scope > li')
+  if (items.length === 0) return 0
+
+  const first = items[0]?.getBoundingClientRect()
+  const last = items[items.length - 1]?.getBoundingClientRect()
+  if (!first || !last) return 0
+
+  // One logical cycle: first logo → last logo + the trailing gap before the next copy.
+  return last.right - first.left + props.gap
 }
 
 const startAnimation = () => {
@@ -103,24 +116,69 @@ const startAnimation = () => {
   animationFrame = window.requestAnimationFrame(animate)
 }
 
+const scheduleLayoutMeasure = () => {
+  if (measureFrame !== null) return
+
+  measureFrame = window.requestAnimationFrame(() => {
+    measureFrame = window.requestAnimationFrame(() => {
+      measureFrame = null
+      void updateDimensions()
+    })
+  })
+}
+
+const observeResizeTargets = () => {
+  if (!resizeObserver) return
+
+  if (rootRef.value) resizeObserver.observe(rootRef.value)
+  if (sequenceRef.value) resizeObserver.observe(sequenceRef.value)
+}
+
 const updateDimensions = async () => {
   await nextTick()
 
-  const containerWidth = rootRef.value?.clientWidth ?? 0
-  const measuredWidth = sequenceRef.value?.getBoundingClientRect().width ?? 0
+  const root = rootRef.value
+  const sequence = sequenceRef.value
+  if (!root || !sequence) return
 
+  // Prefer clientWidth; fall back when layout is mid-settle after route remount.
+  const containerWidth =
+    root.clientWidth || Math.round(root.getBoundingClientRect().width)
+  const measuredWidth = measureSequenceWidth(sequence)
   if (measuredWidth <= 0) return
 
-  sequenceWidth = Math.ceil(measuredWidth)
+  // Width 0 yields copyCount=2 and can stick if ResizeObserver never saw a
+  // later size change (common after detail → Home remount off-screen).
+  // Skip commit; mount rAF + IntersectionObserver/ResizeObserver will retry.
+  if (containerWidth <= 0) return
+
+  sequenceWidth = measuredWidth
+  // Enough copies so the viewport stays covered plus a spare sequence ahead.
   copyCount.value = Math.max(2, Math.ceil(containerWidth / sequenceWidth) + 2)
   offset %= sequenceWidth
   renderOffset()
   startAnimation()
 }
 
+const handleImageLoad = () => {
+  scheduleLayoutMeasure()
+}
+
 const setSequenceRef = (element: unknown, copyIndex: number) => {
-  if (copyIndex === 1) {
-    sequenceRef.value = element instanceof HTMLUListElement ? element : null
+  if (copyIndex !== 1) return
+
+  const next = element instanceof HTMLUListElement ? element : null
+  if (sequenceRef.value === next) return
+
+  if (sequenceRef.value && resizeObserver) {
+    resizeObserver.unobserve(sequenceRef.value)
+  }
+
+  sequenceRef.value = next
+
+  if (next && resizeObserver) {
+    resizeObserver.observe(next)
+    scheduleLayoutMeasure()
   }
 }
 
@@ -143,21 +201,29 @@ onMounted(async () => {
   motionQuery.addEventListener('change', syncMotionPreference)
   syncMotionPreference()
 
+  document.addEventListener('visibilitychange', syncDocumentVisibility)
+
+  // Reveal copies first so sequence refs exist before measure/observe.
+  isReady.value = true
+  await nextTick()
+
   resizeObserver = new ResizeObserver(() => void updateDimensions())
-  if (rootRef.value) resizeObserver.observe(rootRef.value)
+  observeResizeTargets()
 
   intersectionObserver = new IntersectionObserver(
     ([entry]) => {
-      isVisible.value = entry?.isIntersecting ?? false
+      const visible = entry?.isIntersecting ?? false
+      isVisible.value = visible
+      // Remeasure when entering view after route remount (layout may have been 0).
+      if (visible) void updateDimensions()
       startAnimation()
     },
     { threshold: 0.01 },
   )
   if (rootRef.value) intersectionObserver.observe(rootRef.value)
 
-  document.addEventListener('visibilitychange', syncDocumentVisibility)
-  isReady.value = true
   await updateDimensions()
+  scheduleLayoutMeasure()
 })
 
 watch(
@@ -173,6 +239,7 @@ watch(
 
 onBeforeUnmount(() => {
   stopAnimation()
+  if (measureFrame !== null) window.cancelAnimationFrame(measureFrame)
   resizeObserver?.disconnect()
   intersectionObserver?.disconnect()
   motionQuery?.removeEventListener('change', syncMotionPreference)
@@ -212,9 +279,10 @@ onBeforeUnmount(() => {
             :alt="copyIndex === 1 ? logo.name : ''"
             :width="logoHeight"
             :height="logoHeight"
-            loading="lazy"
+            loading="eager"
             decoding="async"
             draggable="false"
+            @load="handleImageLoad"
           />
         </li>
       </ul>
@@ -237,6 +305,7 @@ onBeforeUnmount(() => {
 
 .logo-loop__track {
   width: max-content;
+  gap: 0;
   user-select: none;
   will-change: transform;
 }
@@ -244,8 +313,10 @@ onBeforeUnmount(() => {
 .logo-loop__sequence {
   flex: none;
   gap: var(--logo-loop-gap);
-  padding-inline-end: var(--logo-loop-gap);
   margin: 0;
+  padding: 0;
+  /* Trailing gap equals inter-logo gap so copy boundaries stay seamless. */
+  padding-inline-end: var(--logo-loop-gap);
   list-style: none;
 }
 
