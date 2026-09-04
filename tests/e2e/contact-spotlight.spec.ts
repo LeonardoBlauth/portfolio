@@ -30,15 +30,15 @@ test.describe('contact spotlight card', () => {
     await expect(card).toHaveClass(/contact__card/)
     await expect(spotlight).toHaveAttribute('aria-hidden', 'true')
     await expect(spotlight).toHaveCSS('pointer-events', 'none')
-    await expect(contact.getByText('Contato', { exact: true })).toBeVisible()
+    await expect(contact.getByText('Contact', { exact: true })).toBeVisible()
     await expect(
       contact.getByRole('heading', {
-        name: 'Vamos conversar sobre a próxima oportunidade?',
+        name: 'Let’s talk about the next opportunity.',
       }),
     ).toBeVisible()
     await expect(
       contact.getByText(
-        'Projetos, desafios ou ideias para tirar do papel — quero conhecer o que você tem em mente.',
+        'Projects, challenges, or ideas worth bringing to life — I’d like to hear what you have in mind.',
       ),
     ).toBeVisible()
 

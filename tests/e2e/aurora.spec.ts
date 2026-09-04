@@ -26,7 +26,7 @@ test.describe('Post-hero Aurora', () => {
     ] as const) {
       if (theme === 'light') {
         await page
-          .getByRole('button', { name: 'Ativar tema claro', exact: true })
+          .getByRole('button', { name: 'Activate light theme', exact: true })
           .click()
       }
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme)

@@ -915,13 +915,13 @@ test.describe('contact and footer', () => {
   }) => {
     await gotoHydrated(page, '/pt')
 
-    const contact = page.getByRole('navigation', { name: 'Contact options' })
+    const contact = page.getByRole('navigation', { name: 'Formas de contato' })
     const email = contact.getByRole('link', { name: 'Email' })
     const github = contact.getByRole('link', {
-      name: 'GitHub (opens in a new tab)',
+      name: 'GitHub (abre em uma nova aba)',
     })
     const linkedin = contact.getByRole('link', {
-      name: 'LinkedIn (opens in a new tab)',
+      name: 'LinkedIn (abre em uma nova aba)',
     })
 
     await expect(email).toHaveAttribute(
@@ -1091,10 +1091,10 @@ test.describe('reduced motion navigation', () => {
       }
     })
 
-    const homeControl = page.getByRole('button', { name: 'Ir para o início' })
+    const homeControl = page.getByRole('button', { name: 'Go to the top' })
     await expect(homeControl).toHaveCount(1)
     await expect(
-      page.getByRole('link', { name: 'Ir para o início' }),
+      page.getByRole('link', { name: 'Go to the top' }),
     ).toHaveCount(0)
     await homeControl.click()
     await expect(page).toHaveURL(/\/$/)
