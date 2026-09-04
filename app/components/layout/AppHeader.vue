@@ -5,7 +5,7 @@ import LiquidGlass from '~/components/ui/LiquidGlass.vue'
 import MorphingTabs from '~/components/ui/MorphingTabs.vue'
 import UnderlineText from '~/components/ui/UnderlineText.vue'
 import type { SupportedLocale } from '~/utils/locale'
-import { writeLocalePreference } from '~/utils/locale'
+import { toSupportedLocale, writeLocalePreference } from '~/utils/locale'
 
 const { locale, t } = useI18n()
 const route = useRoute()
@@ -33,10 +33,10 @@ const SECTION_OBSERVER_MAX_RETRIES = 60
 const homeScrollSpyRevision = useState('home-scroll-spy-revision', () => 0)
 
 const currentLocale = computed<SupportedLocale>(() =>
-  locale.value === 'en' ? 'en' : 'pt-BR',
+  toSupportedLocale(locale.value),
 )
 const targetLocale = computed<SupportedLocale>(() =>
-  currentLocale.value === 'pt-BR' ? 'en' : 'pt-BR',
+  currentLocale.value === 'pt' ? 'en' : 'pt',
 )
 const normalizePathname = (pathname: string) =>
   pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
@@ -46,6 +46,9 @@ const isHomeRoute = computed(
 )
 const targetLocalePath = computed(
   () => switchLocalePath(targetLocale.value).split('#', 1)[0] || '/',
+)
+const targetLocaleLanguage = computed(() =>
+  targetLocale.value === 'en' ? 'en' : 'pt-BR',
 )
 const targetLocaleTo = computed(() => {
   const path = targetLocalePath.value
@@ -516,7 +519,7 @@ onBeforeUnmount(() => {
             <NuxtLink
               class="site-header__control site-header__locale"
               :to="targetLocaleTo"
-              :hreflang="targetLocale"
+              :hreflang="targetLocaleLanguage"
               :aria-label="
                 t('controls.locale', {
                   locale: targetLocale === 'en' ? 'English' : 'português',
@@ -524,7 +527,7 @@ onBeforeUnmount(() => {
               "
               @click="handleLocaleSwitch"
             >
-              <span :lang="targetLocale">{{
+              <span :lang="targetLocaleLanguage">{{
                 targetLocale === 'en' ? 'EN' : 'PT'
               }}</span>
             </NuxtLink>

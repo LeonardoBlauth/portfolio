@@ -5,7 +5,7 @@ test.describe('Hero refinement', () => {
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
-    await page.goto('/')
+    await page.goto('/pt')
 
     const layout = await page.evaluate(() => {
       const identity = document.querySelector<HTMLElement>('.hero__identity')
@@ -32,7 +32,7 @@ test.describe('Hero refinement', () => {
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
-    await page.goto('/')
+    await page.goto('/pt')
 
     const metadata = await page.evaluate(() => {
       const context = document.querySelector<HTMLElement>(
@@ -64,7 +64,7 @@ test.describe('Hero refinement', () => {
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto('/')
+    await page.goto('/pt')
 
     const layout = await page.evaluate(() => {
       const header = document.querySelector<HTMLElement>(
@@ -98,7 +98,7 @@ test.describe('Hero refinement', () => {
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto('/')
+    await page.goto('/pt')
 
     const layout = await page.evaluate(() => {
       const identity = document.querySelector<HTMLElement>('.hero__identity')
@@ -122,7 +122,7 @@ test.describe('Hero refinement', () => {
     page,
   }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
-    await page.goto('/')
+    await page.goto('/pt')
     await page.waitForTimeout(20)
 
     const visibility = await page.evaluate(() =>
@@ -147,7 +147,7 @@ test.describe('Hero refinement', () => {
   test('starts professional details only after availability has finished appearing', async ({
     page,
   }) => {
-    await page.goto('/')
+    await page.goto('/pt')
 
     const schedule = await page.evaluate(() => {
       const availability = document.querySelector('.hero__availability')
@@ -206,7 +206,7 @@ test.describe('Hero primary CTA slide text', () => {
   test('slides the contact label as a unit without resizing the button', async ({
     page,
   }) => {
-    await page.goto('/')
+    await page.goto('/pt')
     await page.waitForFunction(() =>
       Boolean(
         (
@@ -258,7 +258,7 @@ test.describe('Hero primary CTA slide text', () => {
     page,
   }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
-    await page.goto('/')
+    await page.goto('/pt')
     const contact = page.getByRole('link', { name: 'Entrar em contato' })
     await contact.hover()
     const hovered = await contactSlideMetrics(page)
@@ -269,9 +269,9 @@ test.describe('Hero primary CTA slide text', () => {
   test('updates both slide labels after a client-side locale switch', async ({
     page,
   }) => {
-    await page.goto('/')
+    await page.goto('/pt')
     await page.getByRole('link', { name: 'Mudar idioma para English' }).click()
-    await expect(page).toHaveURL(/\/en$/)
+    await expect(page).toHaveURL(/\/$/)
     const contact = page.getByRole('link', { name: 'Get in touch' })
     await expect(contact).toBeVisible()
     await expect(page.locator('.hero__cta-slide__layer--secondary')).toHaveText(
@@ -294,7 +294,7 @@ test.describe('Hero primary CTA on a touch device', () => {
   test('keeps the primary label and navigates on the first tap', async ({
     page,
   }) => {
-    await page.goto('/')
+    await page.goto('/pt')
     const rest = await contactSlideMetrics(page)
     expect(rest.hover).toBe(false)
     expect(rest.accessibleName).toBe('Entrar em contato')

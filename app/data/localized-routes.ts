@@ -4,29 +4,29 @@ export const localizedRoutes = {
   home: {
     name: 'home',
     paths: {
-      'pt-BR': '/',
-      en: '/en',
+      en: '/',
+      pt: '/pt',
     },
   },
   movune: {
     name: 'movune',
     paths: {
-      'pt-BR': '/projetos/movune',
-      en: '/en/projects/movune',
+      en: '/projects/movune',
+      pt: '/pt/projetos/movune',
     },
   },
   rigset: {
     name: 'rigset',
     paths: {
-      'pt-BR': '/projetos/rigset',
-      en: '/en/projects/rigset',
+      en: '/projects/rigset',
+      pt: '/pt/projetos/rigset',
     },
   },
   overtimeAutomation: {
     name: 'overtimeAutomation',
     paths: {
-      'pt-BR': '/projetos/automacao-horas-extras',
-      en: '/en/projects/overtime-automation',
+      en: '/projects/overtime-automation',
+      pt: '/pt/projetos/automacao-horas-extras',
     },
   },
 } as const satisfies Record<string, LocalizedRouteDefinition>

@@ -48,11 +48,11 @@ describe('project carousel state', () => {
   })
 
   it('keeps the visited project selected after returning home', async () => {
-    const casePage = await mountSuspended(App, { route: '/projetos/rigset' })
+    const casePage = await mountSuspended(App, { route: '/pt/projetos/rigset' })
     casePage.get('[data-project-id="rigset"]')
     casePage.unmount()
 
-    const home = await mountSuspended(App, { route: '/' })
+    const home = await mountSuspended(App, { route: '/pt' })
     const section = home.get('section#projects')
     const previous = section.get('button[aria-label="Projeto anterior"]')
 

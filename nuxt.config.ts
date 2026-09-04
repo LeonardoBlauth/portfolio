@@ -45,31 +45,32 @@ export default defineNuxtConfig({
   },
   i18n: {
     locales: [
+      { code: 'en', language: 'en', file: 'en.json', name: 'English' },
       {
-        code: 'pt-BR',
+        // URL prefix is `/pt`; BCP-47 language stays `pt-BR` for html[lang].
+        code: 'pt',
         language: 'pt-BR',
         file: 'pt-BR.json',
         name: 'Português',
       },
-      { code: 'en', language: 'en', file: 'en.json', name: 'English' },
     ],
-    defaultLocale: 'pt-BR',
+    defaultLocale: 'en',
     strategy: 'prefix_except_default',
     detectBrowserLanguage: false,
     langDir: 'locales',
     customRoutes: 'config',
     pages: {
       'projects-movune': {
-        'pt-BR': '/projetos/movune',
         en: '/projects/movune',
+        pt: '/projetos/movune',
       },
       'projects-rigset': {
-        'pt-BR': '/projetos/rigset',
         en: '/projects/rigset',
+        pt: '/projetos/rigset',
       },
       'projects-overtime-automation': {
-        'pt-BR': '/projetos/automacao-horas-extras',
         en: '/projects/overtime-automation',
+        pt: '/projetos/automacao-horas-extras',
       },
     },
   },

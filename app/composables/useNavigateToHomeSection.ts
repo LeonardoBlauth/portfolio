@@ -1,5 +1,6 @@
 import { localizedRoutes } from '~/data/localized-routes'
 import type { SupportedLocale } from '~/utils/locale'
+import { toSupportedLocale } from '~/utils/locale'
 
 /** Cross-route Home section navigation via pending-home-section (no URL hash). */
 export const useNavigateToHomeSection = () => {
@@ -10,7 +11,7 @@ export const useNavigateToHomeSection = () => {
   )
 
   const currentLocale = computed<SupportedLocale>(() =>
-    locale.value === 'en' ? 'en' : 'pt-BR',
+    toSupportedLocale(locale.value),
   )
   const homeRoute = computed(
     () => localizedRoutes.home.paths[currentLocale.value],

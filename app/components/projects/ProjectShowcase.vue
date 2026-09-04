@@ -2,6 +2,7 @@
 import type { ProjectSummary } from '~/types/project'
 import { localizedRoutes } from '~/data/localized-routes'
 import type { SupportedLocale } from '~/utils/locale'
+import { toSupportedLocale } from '~/utils/locale'
 import OvertimeHomeDiagram from '~/components/projects/OvertimeHomeDiagram.vue'
 import FloatingCard from '~/components/ui/floating-card/FloatingCard.vue'
 
@@ -13,7 +14,7 @@ const { locale, t } = useI18n()
 const { setActiveProjectSlug } = useProjectCarouselState()
 
 const currentLocale = computed<SupportedLocale>(() =>
-  locale.value === 'en' ? 'en' : 'pt-BR',
+  toSupportedLocale(locale.value),
 )
 const message = (key: string) => t(`${props.project.messageKey}.${key}`)
 const caseRoute = computed(

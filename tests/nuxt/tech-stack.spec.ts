@@ -6,7 +6,7 @@ import App from '~/app.vue'
 describe('skills and tech stack', () => {
   it.each([
     {
-      route: '/',
+      route: '/pt',
       label: 'Competências e Tech Stack',
       headline: 'O que uso no dia a dia. O que estou explorando.',
       logoLoop: {
@@ -51,7 +51,7 @@ describe('skills and tech stack', () => {
       ],
     },
     {
-      route: '/en',
+      route: '/',
       label: 'Skills and Tech Stack',
       headline: 'What I use day to day. What I’m exploring.',
       logoLoop: {

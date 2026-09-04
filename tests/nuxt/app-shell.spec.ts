@@ -38,7 +38,7 @@ describe('application shell', () => {
     })
 
     expect(wrapper.get('header')).toBeTruthy()
-    expect(wrapper.get('nav[aria-label="Navegação principal"]')).toBeTruthy()
+    expect(wrapper.get('nav[aria-label="Primary navigation"]')).toBeTruthy()
     expect(wrapper.get('[data-liquid-glass]')).toBeTruthy()
     expect(wrapper.get('[data-morphing-tabs]')).toBeTruthy()
     const morphingIndicator = wrapper.get('[data-morphing-indicator]')
@@ -46,11 +46,9 @@ describe('application shell', () => {
       'underline',
     )
     expect(wrapper.get('main#main-content')).toBeTruthy()
-    const homeControl = wrapper.get('button[aria-label="Ir para o início"]')
+    const homeControl = wrapper.get('button[aria-label="Go to the top"]')
     expect(homeControl.attributes('aria-controls')).toBe('top')
-    expect(wrapper.find('a[aria-label="Ir para o início"]').exists()).toBe(
-      false,
-    )
+    expect(wrapper.find('a[aria-label="Go to the top"]').exists()).toBe(false)
 
     const destinations = ['projects', 'experience', 'stack', 'contact']
     for (const destination of destinations) {
@@ -63,23 +61,23 @@ describe('application shell', () => {
 
   it('maps section and locale links to equivalent English routes', async () => {
     const wrapper = await mountSuspended(App, {
-      route: '/en/projects/movune',
+      route: '/projects/movune',
       attachTo: document.body,
     })
 
-    expect(wrapper.find('a[href="/en"]').exists()).toBe(true)
-    expect(wrapper.find('a[href="/en#projects"]').exists()).toBe(false)
+    expect(wrapper.find('a[href="/"]').exists()).toBe(true)
+    expect(wrapper.find('a[href="/#projects"]').exists()).toBe(false)
     expect(
       wrapper.get('a[aria-label="Go to the top"]').attributes('href'),
-    ).toBe('/en')
-    expect(wrapper.find('a[href="/en#top"]').exists()).toBe(false)
+    ).toBe('/')
+    expect(wrapper.find('a[href="/#top"]').exists()).toBe(false)
     const localeControl = wrapper.get(
       'a[aria-label="Switch language to português"]',
     )
-    expect(localeControl.attributes('href')).toBe('/projetos/movune')
+    expect(localeControl.attributes('href')).toBe('/pt/projetos/movune')
 
     await localeControl.trigger('click')
-    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe('pt-BR')
+    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe('pt')
     wrapper.unmount()
   })
 

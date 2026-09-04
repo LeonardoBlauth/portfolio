@@ -2,7 +2,7 @@
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import { THEME_ATTRIBUTE } from '~/utils/theme'
 
-const { locale, t } = useI18n()
+const { locale, localeProperties, t } = useI18n()
 const getRouteBaseName = useRouteBaseName()
 const { initializeTheme, resolvedTheme } = useTheme()
 
@@ -13,9 +13,11 @@ const pageKey = (pageRoute: RouteLocationNormalizedLoaded) => {
   return typeof baseName === 'string' ? baseName : pageRoute.path
 }
 
+const htmlLang = computed(() => localeProperties.value.language || locale.value)
+
 useHead(() => ({
   htmlAttrs: {
-    lang: locale.value,
+    lang: htmlLang.value,
     [THEME_ATTRIBUTE]: resolvedTheme.value,
   },
 }))

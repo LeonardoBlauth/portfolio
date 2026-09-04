@@ -6,7 +6,7 @@ import App from '~/app.vue'
 describe('work approach', () => {
   it.each([
     {
-      route: '/',
+      route: '/pt',
       label: 'Como trabalho',
       headline: 'Contexto antes de código. Decisões que consigo explicar.',
       paragraphs: [
@@ -20,7 +20,7 @@ describe('work approach', () => {
       ],
     },
     {
-      route: '/en',
+      route: '/',
       label: 'How I work',
       headline: 'Context before code. Decisions I can explain.',
       paragraphs: [

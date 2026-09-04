@@ -1,5 +1,6 @@
 import { localizedRoutes } from '~/data/localized-routes'
 import type { SupportedLocale } from '~/utils/locale'
+import { toSupportedLocale } from '~/utils/locale'
 
 export const useReturnToProjects = () => {
   const { locale } = useI18n()
@@ -10,7 +11,7 @@ export const useReturnToProjects = () => {
   )
 
   const currentLocale = computed<SupportedLocale>(() =>
-    locale.value === 'en' ? 'en' : 'pt-BR',
+    toSupportedLocale(locale.value),
   )
 
   const homeRoute = computed(
