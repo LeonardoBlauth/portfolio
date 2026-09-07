@@ -56,6 +56,46 @@ test.describe('Tech Stack logo loop', () => {
     })
   })
 
+  test('centers the complete static logo set when reduced motion is enabled', async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/')
+
+    const loop = page.locator('[data-logo-loop]')
+    await expect(loop).toBeVisible()
+
+    const state = await loop.evaluate((element) => {
+      const sequence = element.querySelector(
+        '[data-logo-loop-copy]:not([aria-hidden="true"])',
+      ) as HTMLElement
+      const logos = [...sequence.querySelectorAll('img')]
+      const firstLogo = logos[0]
+      const lastLogo = logos.at(-1)
+      const loopBounds = element.getBoundingClientRect()
+      const sequenceBounds = sequence.getBoundingClientRect()
+      const firstBounds = firstLogo?.getBoundingClientRect()
+      const lastBounds = lastLogo?.getBoundingClientRect()
+
+      if (!firstBounds || !lastBounds) throw new Error('Expected visible logos')
+
+      return {
+        loopWidth: loopBounds.width,
+        sequenceWidth: sequenceBounds.width,
+        loopCenter: loopBounds.left + loopBounds.width / 2,
+        logosCenter: (firstBounds.left + lastBounds.right) / 2,
+      }
+    })
+
+    expect(Math.abs(state.sequenceWidth - state.loopWidth)).toBeLessThanOrEqual(
+      1,
+    )
+    expect(Math.abs(state.logosCenter - state.loopCenter)).toBeLessThanOrEqual(
+      1,
+    )
+  })
+
   test('keeps a seamless junction gap and continuous coverage while looping', async ({
     page,
   }) => {

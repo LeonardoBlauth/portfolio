@@ -375,8 +375,10 @@ onBeforeUnmount(() => {
   }
 
   .logo-loop__sequence {
+    width: 100%;
     flex-wrap: wrap;
     justify-content: center;
+    padding-inline-end: 0;
   }
 
   .logo-loop--scale-on-hover .logo-loop__sequence img {
