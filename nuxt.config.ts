@@ -1,5 +1,7 @@
 import { localizedRoutes } from './app/data/localized-routes'
 import { createThemeInitializationScript } from './app/utils/theme'
+import { rm } from 'node:fs/promises'
+import { resolve } from 'node:path'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-08-19',
@@ -44,6 +46,19 @@ export default defineNuxtConfig({
         ),
         '/robots.txt',
       ],
+    },
+    hooks: {
+      async compiled(nitro) {
+        if (nitro.options.preset !== 'cloudflare-pages-static') {
+          return
+        }
+
+        // Nitro emits a `404` fallback unsupported by Cloudflare Pages.
+        // Static prerendered routes do not require a catch-all redirect.
+        await rm(resolve(nitro.options.output.dir, '_redirects'), {
+          force: true,
+        })
+      },
     },
   },
   runtimeConfig: {

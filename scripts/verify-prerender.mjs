@@ -1,6 +1,11 @@
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
+const outputDirectory =
+  process.env.NITRO_PRESET === 'cloudflare-pages-static'
+    ? 'dist'
+    : '.output/public'
+
 const generatedRoutes = [
   {
     file: 'index.html',
@@ -136,7 +141,7 @@ const alternateLocaleGroups = [
 ]
 
 for (const route of generatedRoutes) {
-  const outputPath = resolve('.output/public', route.file)
+  const outputPath = resolve(outputDirectory, route.file)
   const html = await readFile(outputPath, 'utf8')
 
   const languagePattern = new RegExp(
@@ -202,7 +207,7 @@ for (const route of generatedRoutes) {
   }
 
   const socialImage = await readFile(
-    resolve('.output/public', route.socialImage.slice(1)),
+    resolve(outputDirectory, route.socialImage.slice(1)),
   )
   if (
     socialImage.readUInt32BE(16) !== 1200 ||
@@ -232,7 +237,7 @@ for (const route of generatedRoutes) {
   }
 }
 
-const robots = await readFile(resolve('.output/public', 'robots.txt'), 'utf8')
+const robots = await readFile(resolve(outputDirectory, 'robots.txt'), 'utf8')
 const expectedRobots =
   process.env.NUXT_PUBLIC_SITE_ENVIRONMENT === 'production'
     ? 'User-agent: *\nAllow: /\nSitemap: https://leonardoblauth.dev/sitemap.xml\n'
@@ -241,14 +246,14 @@ if (robots !== expectedRobots) {
   throw new Error('robots.txt does not match the requested build environment')
 }
 
-const sitemap = await readFile(resolve('.output/public', 'sitemap.xml'), 'utf8')
+const sitemap = await readFile(resolve(outputDirectory, 'sitemap.xml'), 'utf8')
 for (const route of generatedRoutes) {
   if (!sitemap.includes(`<loc>${route.canonical}</loc>`)) {
     throw new Error(`sitemap.xml is missing ${route.canonical}`)
   }
 }
 
-const headers = await readFile(resolve('.output/public', '_headers'), 'utf8')
+const headers = await readFile(resolve(outputDirectory, '_headers'), 'utf8')
 for (const header of [
   'X-Content-Type-Options: nosniff',
   'X-Frame-Options: DENY',
@@ -256,6 +261,24 @@ for (const header of [
 ]) {
   if (!headers.includes(header)) {
     throw new Error(`_headers is missing ${header}`)
+  }
+}
+
+if (process.env.NITRO_PRESET === 'cloudflare-pages-static') {
+  try {
+    const redirects = await readFile(
+      resolve(outputDirectory, '_redirects'),
+      'utf8',
+    )
+    if (redirects.trim()) {
+      throw new Error(
+        '_redirects must not contain a static fallback on Cloudflare Pages',
+      )
+    }
+  } catch (error) {
+    if (error?.code !== 'ENOENT') {
+      throw error
+    }
   }
 }
 
