@@ -1246,7 +1246,7 @@ test.describe('reduced motion navigation', () => {
 test.describe('cross-cutting integration', () => {
   const publicRoutes = [
     '/',
-    '/',
+    '/pt',
     '/pt/projetos/movune',
     '/projects/movune',
     '/pt/projetos/rigset',

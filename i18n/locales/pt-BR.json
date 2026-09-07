@@ -74,7 +74,7 @@
       "decisionSupportSystem": "Sistema de suporte à decisão"
     },
     "movune": {
-      "name": "MOVUNE",
+      "name": "movune",
       "summary": "O Movune é um projeto pessoal em evolução: um SaaS B2B para apoiar a gestão de clínicas de fisioterapia e Pilates no Brasil. O case acompanha as decisões e o processo de desenvolvimento do produto.",
       "cta": "Ver estudo de caso →",
       "visualAlt": "Dashboard do Movune em tema claro."
@@ -206,7 +206,7 @@
     },
     "movune": {
       "back": "Voltar para projetos",
-      "eyebrow": "MOVUNE",
+      "eyebrow": "movune",
       "category": "SaaS B2B",
       "statusLabel": "Em prototipação",
       "headline": "Organizando um produto complexo antes de implementar.",

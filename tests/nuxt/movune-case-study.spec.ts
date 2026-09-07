@@ -54,6 +54,7 @@ describe('movune case study', () => {
       const article = wrapper.get('article[data-project-id="movune"]')
 
       expect(article.get('h1').text()).toBe(headline)
+      expect(article.get('.case-hero__eyebrow').text()).toBe('movune')
       expect(article.get('[data-case-role]').text()).toBe(role)
       expect(article.find('[data-case-evidence]').exists()).toBe(false)
       const backControls = article.findAll('a.case-back')
