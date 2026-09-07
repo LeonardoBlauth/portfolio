@@ -80,9 +80,9 @@
 }
 
 [data-status='technical-validation'] {
-  --_status-dot: var(--status-prototyping-dot);
-  --_status-border: var(--status-prototyping-border);
-  --_status-bg: var(--status-prototyping-bg);
+  --_status-dot: var(--status-technical-validation-dot);
+  --_status-border: var(--status-technical-validation-border);
+  --_status-bg: var(--status-technical-validation-bg);
 }
 
 [data-status='development'] {
