@@ -12,13 +12,13 @@ The primary audience is recruiters and technical leadership, with deeper project
 
 **Implementation in progress**
 
-Definition → Visual Direction → Prototyping → Implementation handoff → Technical definition → Implementation plan → **Stages 1–11 complete**
+Definition → Visual Direction → Prototyping → Implementation handoff → Technical definition → Implementation plan → **Stages 1–11 complete; Stage 12 implementation in progress**
 
 Confirmed on `master` (reconciled September 3, 2026):
 
 - V1 is the first production version. Current scope includes three published projects and the Home carousel.
 - Stages 1–11 of the [implementation plan](docs/implementation-plan.md) are complete. Later approved expansions are recorded there in a non-numbered section after Stage 11.
-- Stage 12 (SEO, performance, and security hardening) has **not** been started as an implementation stage.
+- Stage 12 adds localized static metadata, canonical and alternate links, sitemap, environment-aware robots output, static security headers, build-output validation, and localized social-preview assets. A representative production Core Web Vitals measurement remains release-time work.
 - Stages 13–14 (final QA and production release) remain pending.
 - Canonical production origin: `https://leonardoblauth.dev`, to be served from Cloudflare Pages.
 

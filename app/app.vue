@@ -6,6 +6,8 @@ const { locale, localeProperties, t } = useI18n()
 const getRouteBaseName = useRouteBaseName()
 const { initializeTheme, resolvedTheme } = useTheme()
 
+usePageSeo()
+
 initializeTheme()
 
 const pageKey = (pageRoute: RouteLocationNormalizedLoaded) => {

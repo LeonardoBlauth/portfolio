@@ -38,9 +38,18 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: Object.values(localizedRoutes).flatMap((route) =>
-        Object.values(route.paths),
-      ),
+      routes: [
+        ...Object.values(localizedRoutes).flatMap((route) =>
+          Object.values(route.paths),
+        ),
+        '/robots.txt',
+      ],
+    },
+  },
+  runtimeConfig: {
+    public: {
+      // Static previews default to noindex. Production must set this at build time.
+      siteEnvironment: process.env.NUXT_PUBLIC_SITE_ENVIRONMENT ?? 'preview',
     },
   },
   i18n: {
@@ -68,9 +77,9 @@ export default defineNuxtConfig({
         en: '/projects/rigset',
         pt: '/projetos/rigset',
       },
-      'projects-overtime-automation': {
-        en: '/projects/overtime-automation',
-        pt: '/projetos/automacao-horas-extras',
+      'projects-eligent': {
+        en: '/projects/eligent',
+        pt: '/projetos/eligent',
       },
     },
   },
