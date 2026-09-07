@@ -1,8 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n()
 
-const visualText = (key: string) =>
-  t(`selectedProjects.eligent.visual.${key}`)
+const visualText = (key: string) => t(`selectedProjects.eligent.visual.${key}`)
 </script>
 
 <template>
@@ -89,8 +88,16 @@ const visualText = (key: string) =>
   width: min(48%, 13.5rem);
   gap: 0;
   padding-block: var(--space-4);
-  background: color-mix(in srgb, var(--color-surface) 94%, var(--color-text-muted));
-  border-color: color-mix(in srgb, var(--color-text-muted) 34%, var(--color-border));
+  background: color-mix(
+    in srgb,
+    var(--color-surface) 94%,
+    var(--color-text-muted)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--color-text-muted) 34%,
+    var(--color-border)
+  );
   rotate: 3deg;
 }
 

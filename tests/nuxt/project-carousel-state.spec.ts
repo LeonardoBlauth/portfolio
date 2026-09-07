@@ -23,8 +23,7 @@ describe('project carousel state', () => {
           unknown: indexFromSlug('missing'),
         }
       },
-      template:
-        '<p>{{ movune }} {{ rigset }} {{ eligent }} {{ unknown }}</p>',
+      template: '<p>{{ movune }} {{ rigset }} {{ eligent }} {{ unknown }}</p>',
     })
 
     expect(wrapper.text()).toBe('0 1 2 0')

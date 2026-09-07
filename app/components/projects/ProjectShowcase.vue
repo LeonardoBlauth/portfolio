@@ -362,16 +362,14 @@ const onVisualClick = (event: MouseEvent) => {
   .project-visual-slot[data-visual-type='diagram'] :deep(.floating-card),
   .project-visual-slot[data-visual-type='diagram']
     :deep(.floating-card__surface),
-  .project-visual-slot[data-visual-type='diagram']
-    :deep(.eligent-home-signal),
+  .project-visual-slot[data-visual-type='diagram'] :deep(.eligent-home-signal),
   .project-visual-slot[data-visual-type='diagram'] :deep(.project-flow) {
     width: 100%;
     height: 100%;
     min-block-size: 0;
   }
 
-  .project-visual-slot[data-visual-type='diagram']
-    :deep(.eligent-home-signal) {
+  .project-visual-slot[data-visual-type='diagram'] :deep(.eligent-home-signal) {
     align-content: space-evenly;
     padding-block: 0;
   }

@@ -135,24 +135,27 @@ describe('Selected project presentation', () => {
       'Validação técnica',
       'Suporte à decisão para oportunidades sensíveis ao tempo, com base na disponibilidade e nas regras do usuário.',
     ],
-  ])(
-    'keeps the Eligent card compact at %s',
-    async (route, status, summary) => {
-      const wrapper = await mountSuspended(App, { route })
-      const card = wrapper.get('[data-project-id="eligent"]')
+  ])('keeps the Eligent card compact at %s', async (route, status, summary) => {
+    const wrapper = await mountSuspended(App, { route })
+    const card = wrapper.get('[data-project-id="eligent"]')
 
-      expect(card.get('h3').text()).toBe('Eligent')
-      expect(card.text()).toContain(status)
-      expect(card.text()).toContain(summary)
-      expect(card.text()).not.toContain('Android')
-      expect(card.text()).not.toContain('selectedProjects.status.')
-    },
-  )
+    expect(card.get('h3').text()).toBe('Eligent')
+    expect(card.text()).toContain(status)
+    expect(card.text()).toContain(summary)
+    expect(card.text()).not.toContain('Android')
+    expect(card.text()).not.toContain('selectedProjects.status.')
+  })
 
   it.each([
     [
       '/pt',
-      ['HE · PAINEL', 'HOJE · 19H–23H', 'DISPONIBILIDADE', 'REGRAS', 'COMPATÍVEL'],
+      [
+        'HE · PAINEL',
+        'HOJE · 19H–23H',
+        'DISPONIBILIDADE',
+        'REGRAS',
+        'COMPATÍVEL',
+      ],
     ],
     [
       '/',
@@ -164,12 +167,15 @@ describe('Selected project presentation', () => {
         'COMPATIBLE',
       ],
     ],
-  ])('localizes the Eligent opportunity assessment scene at %s', async (route, labels) => {
-    const wrapper = await mountSuspended(App, { route })
-    const visual = wrapper.get(
-      '[data-project-id="eligent"] .eligent-home-signal',
-    )
+  ])(
+    'localizes the Eligent opportunity assessment scene at %s',
+    async (route, labels) => {
+      const wrapper = await mountSuspended(App, { route })
+      const visual = wrapper.get(
+        '[data-project-id="eligent"] .eligent-home-signal',
+      )
 
-    for (const label of labels) expect(visual.text()).toContain(label)
-  })
+      for (const label of labels) expect(visual.text()).toContain(label)
+    },
+  )
 })

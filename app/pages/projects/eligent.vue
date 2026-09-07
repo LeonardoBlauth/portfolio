@@ -72,7 +72,10 @@ const outcomes = ['eligible', 'ineligible', 'abstain'] as const
     >
       <h3>{{ t('pages.eligent.architecture.title') }}</h3>
       <p class="case-copy">{{ t('pages.eligent.architecture.p1') }}</p>
-      <ProjectFlow class="eligent-architecture-flow" :items="architectureFlow" />
+      <ProjectFlow
+        class="eligent-architecture-flow"
+        :items="architectureFlow"
+      />
     </ProjectSection>
 
     <ProjectSection
