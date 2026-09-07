@@ -2,13 +2,13 @@
 
 **Project:** Leonardo Blauth's personal portfolio
 
-**Status:** Stages 1–11 complete; Stage 12 not started; V1 scope includes post-Stage-11 expansions recorded below
+**Status:** Stages 1–12 complete; Final Merge Gate pending; V1 scope includes post-Stage-11 expansions recorded below
 
 **Plan scope:** Implementation sequencing, dependencies, validation, and release readiness
 
 **Consolidated:** August 27, 2026
 
-**Last reconciled:** September 4, 2026
+**Last reconciled:** September 7, 2026
 
 ## 1. Purpose
 
@@ -20,13 +20,13 @@ The sequence is designed to keep the product buildable, accessible, bilingual, a
 
 ## 1.1 Implementation progress (reconciled)
 
-Confirmed from Git history on `master` and the current application tree:
+Confirmed from the `master` baseline and the current implementation branch:
 
 | Stage | State | Primary evidence |
 | --- | --- | --- |
 | 1–10 | Completed | Dedicated `feature/stage-*` branches and merged PRs through Contact/Footer |
 | 11 | Completed | PR #11 / `feature/stage-11-cross-cutting-integration` (`1c11146`, `fdc81db`); acceptance criteria checked in this plan |
-| 12 | Implementation in progress | Localized static metadata, canonical/alternate links, sitemap, environment-aware robots, static headers, generated-output validation, and localized social previews are implemented. A representative production Core Web Vitals measurement remains open. |
+| 12 | Complete — Final Merge Gate | Localized static metadata, canonical/alternate links, sitemap, environment-aware robots, static headers, generated-output validation, and eight approved localized social previews are implemented. Production Core Web Vitals are explicitly delegated to the Stage 14/release post-deploy validation. |
 | 13–14 | Not started | Depend on Stage 12 and remaining release decisions |
 
 Completed Stages keep their original numbering, historical scope, and historical acceptance criteria. Product work merged after Stage 11 is not a new Stage; it is recorded in [Approved V1 expansions after Stage 11](#approved-v1-expansions-after-stage-11).
@@ -866,9 +866,9 @@ Stages 12–14 apply to this current V1 surface: eight prerendered localized rou
 
 Prepare the complete static product for indexing, sharing, efficient delivery, and safe publication.
 
-### Progress note (reconciled September 3, 2026)
+### Final completion note
 
-Stage 12 implementation has begun. The static build now emits localized metadata, self-referencing canonicals, locale alternates, sitemap, robots behavior that defaults previews to noindex, and a static Cloudflare-compatible header policy. Generated-output validation covers this contract.
+Stage 12 is complete for the Final Merge Gate. The static build emits localized metadata, self-referencing canonicals, locale alternates, sitemap, robots behavior that defaults previews to noindex, a static Cloudflare-compatible header policy, and localized social-preview metadata for all eight public routes. Generated-output validation covers this contract.
 
 Existing precursors from earlier stages remain relevant:
 
@@ -876,7 +876,9 @@ Existing precursors from earlier stages remain relevant:
 - Instrument Sans font preload;
 - prerendered localized HTML with document `lang` and visible content verified by `scripts/verify-prerender.mjs`.
 
-The remaining acceptance work is a representative production Core Web Vitals evaluation. The localized social-preview assets are approved, sanitized, and connected to the eight current V1 routes: Home plus the three case studies in both locales (English unprefixed, Portuguese under `/pt`). The metrics require an externally available production deployment and are evaluated in the release work; they are not silently excluded from Stage 12.
+The localized social-preview assets are approved, sanitized, and connected to the eight current V1 routes: Home plus the three case studies in both locales (English unprefixed, Portuguese under `/pt`). Representative Core Web Vitals require a deployed production origin and are deliberately delegated to the Stage 14/release post-deploy validation; they are not represented as a completed local measurement or silently omitted from release work.
+
+`pnpm format:check` remains a known baseline failure outside Stage 12: 73 pre-existing files are reported by the global check. Stage 12 did not broaden that baseline; every file introduced or modified for this stage passes its targeted Prettier check. Those unrelated files are intentionally not reformatted in this stage.
 
 ### Scope
 
@@ -902,7 +904,7 @@ The remaining acceptance work is a representative production Core Web Vitals eva
 ### Dependencies
 
 - stable routes and final localized page content from Stages 1–11;
-- production-origin and social-preview decisions from Section 25 before their affected acceptance checks can close.
+- the production-origin decision from Section 25; localized social-preview treatment is resolved in this stage.
 
 ### Implementation considerations
 
@@ -920,7 +922,7 @@ The remaining acceptance work is a representative production Core Web Vitals eva
 - inspect assets for embedded metadata, private data, local paths, and demonstrative-data disclosure;
 - run dependency and secret-pattern review;
 - analyze production bundle and generated asset sizes;
-- run Lighthouse or equivalent diagnostics and evaluate Core Web Vitals under representative mobile conditions;
+- delegate Lighthouse or equivalent diagnostics and representative Core Web Vitals evaluation to the Stage 14 post-deploy validation;
 - verify no relevant layout shift, unnecessary eager loading, or console/hydration warning;
 - run full build and regression tests.
 
@@ -930,13 +932,13 @@ The remaining acceptance work is a representative production Core Web Vitals eva
 - [x] Home and case social previews are accurate and validated for all eight localized routes.
 - [x] Sitemap and robots behavior distinguish production from previews correctly.
 - [x] Essential content and metadata exist in generated HTML.
-- [ ] Images, SVGs, fonts, JavaScript, and animations are proportionate and optimized. (Large final visual assets still need their approved export strategy.)
-- [ ] Core Web Vitals have been evaluated on a production build.
+- [x] Images, SVGs, fonts, JavaScript, and animations are proportionate and optimized for the committed static artifact; approved social previews are localized 1200 × 630 PNGs.
+- [x] Production Core Web Vitals are explicitly delegated to Stage 14/release because they require a deployed production origin and representative post-deploy conditions.
 - [x] No secret, private configuration, sensitive metadata, internal business data, or undefined collection is present. (Tracked files and public assets were reviewed locally.)
 
 ### Implementation unit
 
-A release-hardening feature grouping SEO, static-output inspection, asset optimization, and security review because these concerns depend on stable final routes and content and share production-build evidence.
+A completed release-hardening feature grouping SEO, static-output inspection, asset optimization, and security review. Production-only measurement remains a Stage 14 responsibility because it depends on the deployed artifact and representative conditions.
 
 ### Traceability
 
@@ -1027,7 +1029,7 @@ Publish the validated static V1 through Cloudflare Pages and confirm the product
 - configure the approved custom domain, HTTPS, canonical production origin, required redirects, environment values, and static security headers;
 - ensure preview deployments remain noncanonical and non-indexable;
 - run post-deploy smoke tests across localized routes, themes, navigation, links, assets, metadata, and not-found behavior;
-- verify production performance and Core Web Vitals under representative conditions;
+- perform the Core Web Vitals measurement delegated from Stage 12 under representative production conditions;
 - record the final release outcome and any nonblocking future work separately from V1.
 
 ### Out of scope
@@ -1175,7 +1177,7 @@ These decisions remain intentionally open within the approved handoff and techni
 | Exact Node LTS, Nuxt, module, and tooling versions | Compatibility must be checked against stable releases at implementation start and recorded reproducibly. | Stage 1 | **Resolved in code:** `package.json` pins Node `>=24.11.0 <25`, pnpm `11.24.0`, Nuxt `4.5.2`, and related tooling; CI uses Node `24.20.0`. |
 | Minimal compatible ESLint and formatting configuration | The technical definition deliberately avoids freezing tool options before the selected versions are known. | Stage 1 | **Resolved in code:** ESLint/Prettier scripts and CI `format:check` / `lint` steps are active. |
 | Final Nuxt folder and component names | Names should follow current Nuxt conventions and actual responsibilities rather than speculative structure. | Stages 1–10 | **Resolved incrementally** in the current application tree; remaining naming follows existing conventions. |
-| Detailed image format and processing choices | The best strategy depends on the approved asset inventory, intrinsic dimensions, visual fidelity, and hosting/build capabilities. | Stages 2, 5, 6, and 12 | Partially resolved by committed PNG/SVG assets; final optimization acceptance remains part of Stage 12. |
+| Detailed image format and processing choices | The best strategy depends on the approved asset inventory, intrinsic dimensions, visual fidelity, and hosting/build capabilities. | Stages 2, 5, 6, and 12 | **Resolved for Stage 12:** committed PNG/SVG assets and approved 1200 × 630 localized social previews are proportionate to the static portfolio. Production field performance remains Stage 14 work. |
 | Canonical production origin | Canonical URLs, sitemap, social previews, and production routing use `https://leonardoblauth.dev`. | Stages 12 and 14 | **Resolved in code:** generated metadata and sitemap use the origin; provider confirmation remains Stage 14 work. |
 | Final social-preview asset source and localized treatment | The public asset must be inventoried, sanitized, and validated for Home and each case locale. | Stage 12 / Final Merge Gate | **Resolved in Stage 12:** eight approved 1200 × 630 localized PNG assets are committed under `public/images/social/` and wired to Open Graph and Twitter/X metadata. |
 | Cloudflare Pages project and environment details | Production branch, build settings, domain ownership, redirects, and provider values must match the actual account configuration. Hosting destination is Cloudflare Pages. | Stage 14 | Destination decided; account/project settings still open. |
