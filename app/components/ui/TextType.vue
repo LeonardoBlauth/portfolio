@@ -10,6 +10,7 @@ interface TextTypeProps {
   showCursor?: boolean
   cursorCharacter?: string
   cursorHoldDuration?: number
+  typeOnMount?: boolean
 }
 
 const props = withDefaults(defineProps<TextTypeProps>(), {
@@ -18,9 +19,10 @@ const props = withDefaults(defineProps<TextTypeProps>(), {
   showCursor: true,
   cursorCharacter: '|',
   cursorHoldDuration: 900,
+  typeOnMount: true,
 })
 
-const displayedText = ref('')
+const displayedText = ref(props.typeOnMount ? '' : props.text)
 const cursorVisible = ref(false)
 const accessibleText = computed(() => props.text.replace(/\s+/g, ' ').trim())
 
@@ -63,6 +65,11 @@ const typeNextCharacter = () => {
 }
 
 onMounted(() => {
+  if (!props.typeOnMount) {
+    completed = true
+    return
+  }
+
   const reducedMotion =
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -83,15 +90,18 @@ onBeforeUnmount(clearTimers)
 
 <template>
   <component :is="as" class="text-type" v-bind="$attrs">
-    <span class="visually-hidden">{{ accessibleText }}</span>
-    <span class="text-type__visual" :data-text="text" aria-hidden="true">
-      <span class="text-type__animated">
-        <span class="text-type__typed">{{ displayedText }}</span>
-        <span v-if="cursorVisible" class="text-type__cursor">{{
-          cursorCharacter
-        }}</span>
+    <template v-if="typeOnMount">
+      <span class="visually-hidden">{{ accessibleText }}</span>
+      <span class="text-type__visual" :data-text="text" aria-hidden="true">
+        <span class="text-type__animated">
+          <span class="text-type__typed">{{ displayedText }}</span>
+          <span v-if="cursorVisible" class="text-type__cursor">{{
+            cursorCharacter
+          }}</span>
+        </span>
       </span>
-    </span>
+    </template>
+    <span v-else class="text-type__static">{{ text }}</span>
   </component>
 </template>
 
@@ -107,6 +117,11 @@ onBeforeUnmount(clearTimers)
   display: block;
   content: attr(data-text);
   visibility: hidden;
+}
+
+.text-type__static {
+  display: block;
+  white-space: pre-line;
 }
 
 .text-type__animated {

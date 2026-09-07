@@ -96,6 +96,7 @@ const onVisualClick = (event: MouseEvent) => {
                 alt=""
                 :width="project.visual.width"
                 :height="project.visual.height"
+                loading="lazy"
                 decoding="async"
                 draggable="false"
               />
@@ -112,6 +113,7 @@ const onVisualClick = (event: MouseEvent) => {
                 alt=""
                 :width="project.visual.width"
                 :height="project.visual.height"
+                loading="lazy"
                 decoding="async"
                 draggable="false"
               />

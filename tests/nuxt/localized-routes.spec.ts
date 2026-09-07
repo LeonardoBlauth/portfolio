@@ -40,9 +40,12 @@ describe('localized routes', () => {
     const accessibleHeading = pageHeading.find('.visually-hidden')
 
     expect(
-      accessibleHeading.exists()
+      (accessibleHeading.exists()
         ? accessibleHeading.text()
-        : pageHeading.text(),
+        : pageHeading.text()
+      )
+        .replace(/\s+/g, ' ')
+        .trim(),
     ).toBe(heading)
     expect(wrapper.get('main').attributes('data-locale')).toBe(locale)
   })

@@ -124,6 +124,16 @@ describe('Selected project presentation', () => {
     expect(section.text()).toContain('01 / 03')
   })
 
+  it('defers non-hero project visuals from the initial page load', async () => {
+    const wrapper = await mountSuspended(App, { route: '/' })
+    const visuals = wrapper.findAll('.project-showcase__figure img')
+
+    expect(visuals).toHaveLength(2)
+    for (const visual of visuals) {
+      expect(visual.attributes('loading')).toBe('lazy')
+    }
+  })
+
   it.each([
     [
       '/',

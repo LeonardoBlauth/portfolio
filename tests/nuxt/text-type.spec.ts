@@ -71,4 +71,23 @@ describe('TextType', () => {
     ).toBe('Leonardo Blauth')
     expect(vi.getTimerCount()).toBe(0)
   })
+
+  it('keeps above-the-fold text visible without waiting for hydration typing', async () => {
+    vi.useFakeTimers()
+    setReducedMotion(false)
+
+    const wrapper = await mountSuspended(TextType, {
+      props: {
+        as: 'h1',
+        text: 'Leonardo\nBlauth',
+        typingSpeed: 70,
+        typeOnMount: false,
+      },
+    })
+
+    expect(wrapper.get('h1').text().replace(/\s+/g, ' ')).toBe(
+      'Leonardo Blauth',
+    )
+    expect(vi.getTimerCount()).toBe(0)
+  })
 })
