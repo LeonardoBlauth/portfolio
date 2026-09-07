@@ -27,7 +27,8 @@ Confirmed from the `master` baseline and the current implementation branch:
 | 1–10 | Completed | Dedicated `feature/stage-*` branches and merged PRs through Contact/Footer |
 | 11 | Completed | PR #11 / `feature/stage-11-cross-cutting-integration` (`1c11146`, `fdc81db`); acceptance criteria checked in this plan |
 | 12 | Complete — Final Merge Gate | Localized static metadata, canonical/alternate links, sitemap, environment-aware robots, static headers, generated-output validation, and eight approved localized social previews are implemented. Production Core Web Vitals are explicitly delegated to the Stage 14/release post-deploy validation. |
-| 13–14 | Not started | Depend on Stage 12 and remaining release decisions |
+| 13 | Ready for Final Merge Gate | Automated accessibility, keyboard, responsive, localized-route, static-output, and regression validation has passed. The final human assistive-technology pass and clean-diff review remain gate activities. |
+| 14 | Not started | Depends on Stage 13 acceptance and production-release decisions |
 
 Completed Stages keep their original numbering, historical scope, and historical acceptance criteria. Product work merged after Stage 11 is not a new Stage; it is recorded in [Approved V1 expansions after Stage 11](#approved-v1-expansions-after-stage-11).
 
@@ -951,6 +952,14 @@ A completed release-hardening feature grouping SEO, static-output inspection, as
 
 Audit the complete V1 against product acceptance criteria, close residual accessibility and quality gaps, and produce release-candidate evidence.
 
+### Final completion note
+
+Stage 13 is ready for the Final Merge Gate. The audit found and corrected one published-content accessibility gap: the `movune` brand was rendered as `MOVUNE` in the localized Home card and case eyebrow. It now remains lowercase in both locales, and regression coverage protects that editorial contract. The all-routes Axe matrix also now includes the Portuguese Home route instead of scanning the English Home route twice.
+
+Observed local release-candidate evidence includes lint, typecheck, 69 unit/component tests, 70 serial Playwright scenarios, Axe coverage for every localized route in both themes, production static generation, prerender verification of all eight localized routes, and a clean Linux-equivalent Prettier check. The Windows checkout's `core.autocrlf=true` still makes the unscoped global local format command report the documented line-ending baseline; it is not a Stage 13 source-format regression.
+
+The Final Merge Gate retains the human review that automation cannot replace: representative screen-reader use, visual inspection at the approved viewport matrix, and a final clean-diff/asset review. Production deployment, public-origin smoke tests, provider configuration, and representative Core Web Vitals remain Stage 14 work.
+
 ### Scope
 
 - perform a complete semantic, keyboard, focus, accessible-name, contrast, motion, touch, language, and zoom audit;
@@ -997,14 +1006,14 @@ Audit the complete V1 against product acceptance criteria, close residual access
 
 ### Acceptance criteria
 
-- [ ] All defined automated validation passes without relevant warnings.
-- [ ] All localized routes pass manual accessibility and responsive review.
-- [ ] Visual and content fidelity match the current approved V1 surface in both locales and themes.
-- [ ] Smooth scroll, deep links, mobile navigation, locale, theme, project navigation, and external links pass end to end.
-- [ ] Professional facts use 2021 and expected education completion uses 2027.
-- [ ] Published projects remain accurately framed (`movune` lowercase and in prototyping; `rigset` planned; Eligent in technical validation without a validated connector or automatic replies).
-- [ ] No contact form, analytics, final-screenshot dependency, or other remaining excluded feature is present.
-- [ ] The release-candidate diff is clean, sanitized, and limited to approved work.
+- [x] All defined automated validation passes without relevant warnings.
+- [ ] All localized routes pass manual accessibility and responsive review. (Final Gate: representative screen-reader and visual viewport review.)
+- [x] Visual and content fidelity match the current approved V1 surface in both locales and themes.
+- [x] Smooth scroll, deep links, mobile navigation, locale, theme, project navigation, and external links pass end to end.
+- [x] Professional facts use 2021 and expected education completion uses 2027.
+- [x] Published projects remain accurately framed (`movune` lowercase and in prototyping; `rigset` planned; Eligent in technical validation without a validated connector or automatic replies).
+- [x] No contact form, analytics, final-screenshot dependency, or other remaining excluded feature is present.
+- [ ] The release-candidate diff is clean, sanitized, and limited to approved work. (Final Gate: review the committed diff and public CI result.)
 
 ### Implementation unit
 
