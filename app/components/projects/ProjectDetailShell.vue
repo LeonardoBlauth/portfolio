@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import BackToTopButton from '~/components/ui/BackToTopButton.vue'
 import CaseBackLink from '~/components/projects/CaseBackLink.vue'
+import ProjectExternalLinks from '~/components/projects/ProjectExternalLinks.vue'
+import { selectedProjects } from '~/data/projects'
 
 const props = defineProps<{
   backLabel: string
@@ -11,6 +13,12 @@ defineOptions({ inheritAttrs: false })
 
 const attrs = useAttrs()
 const { setActiveProjectSlug } = useProjectCarouselState()
+
+const externalLinks = computed(
+  () =>
+    selectedProjects.find((project) => project.slug === props.projectSlug)
+      ?.externalLinks,
+)
 
 setActiveProjectSlug(props.projectSlug)
 
@@ -25,6 +33,7 @@ watch(
     <header id="top" class="case-hero layout-container">
       <CaseBackLink :label="backLabel" :project-slug="projectSlug" />
       <slot name="hero" />
+      <ProjectExternalLinks :links="externalLinks" />
     </header>
     <div class="case-content layout-container">
       <slot />

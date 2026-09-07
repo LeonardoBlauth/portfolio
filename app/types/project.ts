@@ -31,12 +31,20 @@ export type ProjectVisual =
 
 export type ProjectRouteName = 'movune' | 'rigset' | 'eligent'
 
+export type ProjectExternalLink = {
+  type: 'github'
+  href: string
+  labelKey: string
+  accessibilityLabelKey: string
+}
+
 export type ProjectSummary = {
   slug: string
   route: ProjectRouteName
   status: ProjectStatus
   visual: ProjectVisual
   categoryKeys: string[]
+  externalLinks?: readonly ProjectExternalLink[]
   hasMaturityNote?: boolean
   messageKey: string
 }
