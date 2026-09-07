@@ -351,6 +351,7 @@ Each relevant project may have its own route and a modular composition, allowing
 - categorized skills and stack;
 - presentation of movune;
 - structure for movune case study;
+- public movune repository link in its case study;
 - links to GitHub and LinkedIn;
 - contact via email and LinkedIn;
 - professional photo;
@@ -361,7 +362,7 @@ Each relevant project may have its own route and a modular composition, allowing
 ### 11.2 Conditional
 
 - resume in PDF;
-- movune demo and code links when actually available;
+- movune demo link when actually available;
 - analytics, after defining purpose and privacy approach.
 
 ### 11.3 Excluded from the First Release

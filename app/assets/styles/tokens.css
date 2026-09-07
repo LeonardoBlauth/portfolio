@@ -86,6 +86,10 @@
   --status-prototyping-border: rgb(96 165 250 / 22%);
   --status-prototyping-bg: rgb(96 165 250 / 6%);
 
+  --status-technical-validation-dot: #f472b6;
+  --status-technical-validation-border: rgb(244 114 182 / 22%);
+  --status-technical-validation-bg: rgb(244 114 182 / 6%);
+
   --status-development-dot: #2dd4bf;
   --status-development-border: rgb(45 212 191 / 20%);
   --status-development-bg: rgb(45 212 191 / 5%);
@@ -129,6 +133,10 @@
   --status-prototyping-dot: #2563eb;
   --status-prototyping-border: rgb(37 99 235 / 18%);
   --status-prototyping-bg: rgb(37 99 235 / 5%);
+
+  --status-technical-validation-dot: #be185d;
+  --status-technical-validation-border: rgb(190 24 93 / 18%);
+  --status-technical-validation-bg: rgb(190 24 93 / 5%);
 
   --status-development-dot: #0d9488;
   --status-development-border: rgb(13 148 136 / 16%);

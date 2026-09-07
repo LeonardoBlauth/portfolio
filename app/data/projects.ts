@@ -7,6 +7,14 @@ export const selectedProjects: readonly ProjectSummary[] = [
     status: 'prototyping',
     messageKey: 'selectedProjects.movune',
     categoryKeys: ['saasB2b'],
+    externalLinks: [
+      {
+        type: 'github',
+        href: 'https://github.com/LeonardoBlauth/movune',
+        labelKey: 'projectLinks.repository',
+        accessibilityLabelKey: 'projectLinks.repositoryLabel',
+      },
+    ],
     visual: {
       type: 'screenshot',
       src: '/images/projects/movune/dashboard-light.png',

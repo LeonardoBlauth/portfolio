@@ -47,6 +47,11 @@
       "experience": "Desenvolvimento web desde 2021"
     }
   },
+  "projectLinks": {
+    "label": "Links do projeto",
+    "repository": "Ver repositório",
+    "repositoryLabel": "Ver repositório no GitHub (abre em uma nova aba)"
+  },
   "selectedProjects": {
     "label": "Projetos selecionados",
     "headline": "Projetos e soluções que desenvolvo.",

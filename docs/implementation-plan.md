@@ -2,7 +2,7 @@
 
 **Project:** Leonardo Blauth's personal portfolio
 
-**Status:** Stages 1–12 complete; Final Merge Gate pending; V1 scope includes post-Stage-11 expansions recorded below
+**Status:** Stages 1–13 complete; Stage 14 has not started; V1 scope includes post-Stage-11 expansions recorded below
 
 **Plan scope:** Implementation sequencing, dependencies, validation, and release readiness
 
@@ -27,7 +27,7 @@ Confirmed from the `master` baseline and the current implementation branch:
 | 1–10 | Completed | Dedicated `feature/stage-*` branches and merged PRs through Contact/Footer |
 | 11 | Completed | PR #11 / `feature/stage-11-cross-cutting-integration` (`1c11146`, `fdc81db`); acceptance criteria checked in this plan |
 | 12 | Complete — Final Merge Gate | Localized static metadata, canonical/alternate links, sitemap, environment-aware robots, static headers, generated-output validation, and eight approved localized social previews are implemented. Production Core Web Vitals are explicitly delegated to the Stage 14/release post-deploy validation. |
-| 13 | Ready for Final Merge Gate | Automated accessibility, keyboard, responsive, localized-route, static-output, and regression validation has passed. The final human assistive-technology pass and clean-diff review remain gate activities. |
+| 13 | Complete — Final Merge Gate | Automated accessibility, keyboard, responsive, localized-route, static-output, and regression validation passed; the human assistive-technology, zoom, reduced-motion, and viewport reviews are approved. |
 | 14 | Not started | Depends on Stage 13 acceptance and production-release decisions |
 
 Completed Stages keep their original numbering, historical scope, and historical acceptance criteria. Product work merged after Stage 11 is not a new Stage; it is recorded in [Approved V1 expansions after Stage 11](#approved-v1-expansions-after-stage-11).
@@ -954,11 +954,11 @@ Audit the complete V1 against product acceptance criteria, close residual access
 
 ### Final completion note
 
-Stage 13 is ready for the Final Merge Gate. The audit found and corrected one published-content accessibility gap: the `movune` brand was rendered as `MOVUNE` in the localized Home card and case eyebrow. It now remains lowercase in both locales, and regression coverage protects that editorial contract. The all-routes Axe matrix also now includes the Portuguese Home route instead of scanning the English Home route twice.
+Stage 13 is complete for the Final Merge Gate. The audit found and corrected one published-content accessibility gap: the `movune` brand was rendered as `MOVUNE` in the localized Home card and case eyebrow. It now remains lowercase in both locales, and regression coverage protects that editorial contract. The all-routes Axe matrix also now includes the Portuguese Home route instead of scanning the English Home route twice. Post-merge review also corrected the static reduced-motion logo layout and the narrow Rigset `Plan → Apply → Verify` flow alignment; both behaviors have targeted E2E regression coverage.
 
 Observed local release-candidate evidence includes lint, typecheck, 69 unit/component tests, 70 serial Playwright scenarios, Axe coverage for every localized route in both themes, production static generation, prerender verification of all eight localized routes, and a clean Linux-equivalent Prettier check. The Windows checkout's `core.autocrlf=true` still makes the unscoped global local format command report the documented line-ending baseline; it is not a Stage 13 source-format regression.
 
-The Final Merge Gate retains the human review that automation cannot replace: representative screen-reader use, visual inspection at the approved viewport matrix, and a final clean-diff/asset review. Production deployment, public-origin smoke tests, provider configuration, and representative Core Web Vitals remain Stage 14 work.
+The Final Merge Gate is complete: representative screen-reader use, accessible navigation and structure, 200% zoom, reduced motion, and the approved viewport matrix have passed. The public CI `validate` job for the merged Stage 13 commit also completed successfully. Production deployment, public-origin smoke tests, provider configuration, and representative Core Web Vitals remain Stage 14 work.
 
 ### Scope
 
@@ -1007,13 +1007,13 @@ The Final Merge Gate retains the human review that automation cannot replace: re
 ### Acceptance criteria
 
 - [x] All defined automated validation passes without relevant warnings.
-- [ ] All localized routes pass manual accessibility and responsive review. (Final Gate: representative screen-reader and visual viewport review.)
+- [x] All localized routes pass manual accessibility and responsive review. (Representative screen-reader, accessible navigation and structure, 200% zoom, reduced motion, and visual viewport review approved.)
 - [x] Visual and content fidelity match the current approved V1 surface in both locales and themes.
 - [x] Smooth scroll, deep links, mobile navigation, locale, theme, project navigation, and external links pass end to end.
 - [x] Professional facts use 2021 and expected education completion uses 2027.
 - [x] Published projects remain accurately framed (`movune` lowercase and in prototyping; `rigset` planned; Eligent in technical validation without a validated connector or automatic replies).
 - [x] No contact form, analytics, final-screenshot dependency, or other remaining excluded feature is present.
-- [ ] The release-candidate diff is clean, sanitized, and limited to approved work. (Final Gate: review the committed diff and public CI result.)
+- [x] The release-candidate diff is clean, sanitized, and limited to approved work. (Final Gate: committed diff reviewed; public CI `validate` completed successfully.)
 
 ### Implementation unit
 

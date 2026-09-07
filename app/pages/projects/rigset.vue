@@ -711,6 +711,13 @@ const invariantRows = computed(() =>
   content: '–';
 }
 
+@media (width < 80rem) {
+  .plan-model__stages {
+    justify-items: center;
+    text-align: center;
+  }
+}
+
 @media (width >= 80rem) {
   .plan-model__inputs {
     grid-template-columns: repeat(5, minmax(0, 1fr));
