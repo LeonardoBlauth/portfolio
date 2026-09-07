@@ -19,6 +19,35 @@ const stubDialog = () => {
 }
 
 describe('ZoomableImage', () => {
+  it('defers detail images unless the caller marks one as high priority', async () => {
+    const lazyWrapper = await mountSuspended(ZoomableImage, {
+      props: {
+        src: '/images/projects/movune/schedule-light.png',
+        alt: 'Agenda',
+      },
+    })
+    const priorityWrapper = await mountSuspended(ZoomableImage, {
+      props: {
+        src: '/images/projects/rigset/concept-overview.png',
+        alt: 'Concept overview',
+        loading: 'eager',
+        fetchPriority: 'high',
+      },
+    })
+
+    expect(
+      lazyWrapper.get('.zoomable-image__trigger img').attributes('loading'),
+    ).toBe('lazy')
+    expect(
+      priorityWrapper.get('.zoomable-image__trigger img').attributes('loading'),
+    ).toBe('eager')
+    expect(
+      priorityWrapper
+        .get('.zoomable-image__trigger img')
+        .attributes('fetchpriority'),
+    ).toBe('high')
+  })
+
   it('opens the lightbox from the trigger and closes with Escape', async () => {
     stubDialog()
 

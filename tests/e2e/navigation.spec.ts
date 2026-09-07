@@ -390,7 +390,7 @@ test.describe('localized and persisted controls', () => {
         home: /\/pt\/?$/,
       },
       {
-        from: '/pt/projetos/automacao-horas-extras',
+        from: '/pt/projetos/eligent',
         link: 'Contato',
         section: 'contact',
         home: /\/pt\/?$/,
@@ -1251,8 +1251,8 @@ test.describe('cross-cutting integration', () => {
     '/projects/movune',
     '/pt/projetos/rigset',
     '/projects/rigset',
-    '/pt/projetos/automacao-horas-extras',
-    '/projects/overtime-automation',
+    '/pt/projetos/eligent',
+    '/projects/eligent',
   ]
 
   test('keeps every localized route axe-clean in both themes', async ({

@@ -22,11 +22,11 @@ export const localizedRoutes = {
       pt: '/pt/projetos/rigset',
     },
   },
-  overtimeAutomation: {
-    name: 'overtimeAutomation',
+  eligent: {
+    name: 'eligent',
     paths: {
-      en: '/projects/overtime-automation',
-      pt: '/pt/projetos/automacao-horas-extras',
+      en: '/projects/eligent',
+      pt: '/pt/projetos/eligent',
     },
   },
 } as const satisfies Record<string, LocalizedRouteDefinition>

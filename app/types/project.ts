@@ -1,5 +1,10 @@
 export type ProjectStatus =
-  'concept' | 'planned' | 'prototyping' | 'development' | 'available'
+  | 'concept'
+  | 'planned'
+  | 'prototyping'
+  | 'technical-validation'
+  | 'development'
+  | 'available'
 
 export type ProjectVisual =
   | {
@@ -24,7 +29,7 @@ export type ProjectVisual =
       captionKey?: string
     }
 
-export type ProjectRouteName = 'movune' | 'rigset' | 'overtimeAutomation'
+export type ProjectRouteName = 'movune' | 'rigset' | 'eligent'
 
 export type ProjectSummary = {
   slug: string

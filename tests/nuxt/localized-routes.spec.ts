@@ -28,14 +28,14 @@ describe('localized routes', () => {
       'Configure and manage your workstation, your way.',
     ],
     [
-      '/pt/projetos/automacao-horas-extras',
+      '/pt/projetos/eligent',
       'pt',
-      'Responder rápido, sem aceitar o que não cabe na escala.',
+      'Decida rápido quando uma oportunidade fizer sentido.',
     ],
     [
-      '/projects/overtime-automation',
+      '/projects/eligent',
       'en',
-      'Reply fast, without accepting what does not fit the schedule.',
+      'Decide quickly when an opportunity fits.',
     ],
   ])('renders %s in %s', async (route, locale, heading) => {
     const wrapper = await mountSuspended(App, { route })

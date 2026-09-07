@@ -77,7 +77,7 @@ The portfolio presents Leonardo Blauth primarily for professional opportunities 
 - `/` — portfolio Home;
 - `/projetos/movune` — `movune` case study;
 - `/projetos/rigset` — Rigset case study;
-- `/projetos/automacao-horas-extras` — overtime-automation case study;
+- `/projetos/eligent` — Eligent case study;
 
 plus English equivalents under `/en` and `/en/projects/...` as defined in the technical definition.
 
@@ -198,7 +198,7 @@ The layout must respond to available space rather than use resolution-specific h
 | Headline | Projetos e soluções que desenvolvo. | Projects and solutions I develop. |
 | Introduction | Apresento cada projeto com seu contexto, processo, decisões e estado real de desenvolvimento. | I present each project with its context, process, decisions, and current stage of development. |
 
-The current approved Home presents three published projects — `movune`, `rigset`, and overtime automation — through a multi-project carousel with localized case CTAs. Presentation preserves:
+The current approved Home presents three published projects — `movune`, `rigset`, and Eligent — through a multi-project carousel with localized case CTAs. Presentation preserves:
 
 - project identity and type/categories;
 - honest status and classification;
@@ -272,7 +272,7 @@ Rigset is an open-source CLI for describing, configuring, and managing workstati
 
 Stable facts:
 
-- categories: Developer Tool · Open Source;
+- categories: Environment Configuration · Open Source;
 - Home and case visuals are conceptual and must remain labeled as not the final interface;
 - the case must not claim a released CLI, users, or production operations.
 
@@ -287,27 +287,32 @@ Case structure in the current implementation:
 
 Editorial copy, detailed capability lists, and section prose live in `i18n/locales` under `pages.rigset` and must not be duplicated here.
 
-### 5.7 Overtime automation case study
+### 5.7 Eligent case study
 
-Route: `/projetos/automacao-horas-extras` (English: `/en/projects/overtime-automation`).
+Route: `/projetos/eligent` (English: `/en/projects/eligent`).
 
-Overtime automation is a concept for identifying overtime opportunities in messages, checking schedule, availability, and limits, and replying automatically only when the opportunity is eligible. V1 publishes it as a **concept**: the problem, main rules, and initial decision flow are defined; technical requirements and implementation have not started.
+Eligent is a **decision support system in technical validation**. It originated with real overtime opportunities received by its first user, who needed to interpret them quickly, consult availability and rules, and decide whether they could be accepted. It does not automatically reply or confirm acceptance.
 
 Stable facts:
 
-- categories: Automation · WhatsApp;
-- Home visual is an editorial diagram of the decision flow, not a product screenshot;
-- the case must not claim a deployed bot, live WhatsApp integration, or production use.
+- categories: Decision Support System;
+- Home visual is an editorial diagram of Source, Interpretation, Eligibility, and Delivery, not a product screenshot;
+- WhatsApp is only the first Opportunity Source under consideration; the Android connector for personal WhatsApp remains unvalidated;
+- the case must not claim a deployed bot, automatic replies, an unofficial WhatsApp client/API, or production use.
+- Eligibility and Delivery are independent: `ELIGIBLE` and internal `ABSTAIN` outcomes notify by default; `INELIGIBLE` notification is optional and disabled by default.
+- `ABSTAIN` means insufficient information or confidence to assert compatibility or incompatibility. User-facing notifications explain determined and unresolved information without exposing that internal term.
+- Opportunity Detection favors recall within reasonable limits; eligibility assertions require high confidence. AI may assist interpretation but cannot invent missing information or decide eligibility.
 
 Case structure in the current implementation:
 
-1. The problem;
-2. How the decision works;
-3. Rules already identified;
-4. Limits of the current concept;
-5. Current status.
+1. The original problem;
+2. What feasibility research changed;
+3. Reducing scope, preserving value;
+4. A source-agnostic system;
+5. Deterministic eligibility;
+6. Technical validation in progress.
 
-Editorial copy and flow labels live in `i18n/locales` under `pages.overtime` and must not be duplicated here.
+Editorial copy and flow labels live in `i18n/locales` under `pages.eligent` and must not be duplicated here.
 
 ### 5.8 Temporary and conceptual representations
 
@@ -555,7 +560,7 @@ The final implementation defines and validates:
 - consistent heading structure;
 - indexing, sitemap, and robots behavior;
 - structured data only when justified by accurate data;
-- case-specific metadata for each published case (`movune`, `rigset`, overtime automation).
+- case-specific metadata for each published case (`movune`, `rigset`, Eligent).
 
 Baseline prototype copy includes:
 
@@ -599,7 +604,7 @@ Visual fidelity does not justify a heavy implementation.
 | LinkedIn | <https://www.linkedin.com/in/leonardo-blauth> |
 | `movune` case | `/projetos/movune` |
 | Rigset case | `/projetos/rigset` |
-| Overtime automation case | `/projetos/automacao-horas-extras` |
+| Eligent case | `/projetos/eligent` |
 
 No external product URLs for these cases are approved for publication beyond the portfolio routes above.
 
@@ -638,7 +643,7 @@ When real, approved `movune` screenshots exist, they may replace temporary repre
 
 ### 16.3 Multiple projects
 
-The earlier planning note that a carousel could be reconsidered after additional real projects exist has been fulfilled. The approved Home now ships a multi-project carousel with `movune`, `rigset`, and overtime automation. Desktop, keyboard, touch/swipe, mobile, controls, and accessibility behavior must continue to be maintained against that real content.
+The earlier planning note that a carousel could be reconsidered after additional real projects exist has been fulfilled. The approved Home now ships a multi-project carousel with `movune`, `rigset`, and Eligent. Desktop, keyboard, touch/swipe, mobile, controls, and accessibility behavior must continue to be maintained against that real content.
 
 ### 16.4 Explicit exclusions
 
@@ -653,7 +658,7 @@ The earlier planning note that a carousel could be reconsidered after additional
 ### 17.1 Product and content
 
 - [ ] The implementation reproduces the approved visual result, including later approved refinements on `master`.
-- [ ] Home and the localized case studies for `movune`, `rigset`, and overtime automation are present.
+- [ ] Home and the localized case studies for `movune`, `rigset`, and Eligent are present.
 - [ ] Section order and structure are preserved.
 - [ ] Approved factual copy is preserved in both languages.
 - [ ] `movune` is consistently lowercase.

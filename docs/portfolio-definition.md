@@ -177,8 +177,8 @@ The portfolio can launch with one main project or grow to several. Quantity is n
 
 Additional published cases now on `master` (reconciled September 3, 2026):
 
-- **Rigset** — developer-tool / open-source workstation concept, documented as planned;
-- **Overtime automation** — automation concept around schedule-aware WhatsApp reply decisions, documented as concept.
+- **Rigset** — environment-configuration / open-source workstation concept, documented as planned;
+- **Eligent** — decision support system for time-sensitive opportunities, documented as in technical validation; its first Android connector for personal WhatsApp remains unvalidated.
 
 Each case must honestly represent its existing phase. While there is no implementation, it should not suggest that production architecture, code, integrations or results already exist beyond what that case documents.
 

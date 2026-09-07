@@ -5,12 +5,16 @@ const props = withDefaults(
     alt: string
     width?: number
     height?: number
+    loading?: 'eager' | 'lazy'
+    fetchPriority?: 'high' | 'low' | 'auto'
     caption?: string
     figureClass?: string
   }>(),
   {
     width: undefined,
     height: undefined,
+    loading: 'lazy',
+    fetchPriority: 'auto',
     caption: undefined,
     figureClass: 'case-figure',
   },
@@ -118,7 +122,15 @@ onBeforeUnmount(() => {
       :aria-label="expandLabel"
       @click="open"
     >
-      <img :src="src" alt="" :width="width" :height="height" decoding="async" />
+      <img
+        :src="src"
+        alt=""
+        :width="width"
+        :height="height"
+        :loading="loading"
+        :fetchpriority="fetchPriority"
+        decoding="async"
+      />
     </button>
     <figcaption v-if="caption">{{ caption }}</figcaption>
     <dialog

@@ -21,7 +21,7 @@ export const selectedProjects: readonly ProjectSummary[] = [
     status: 'planned',
     messageKey: 'selectedProjects.rigset',
     hasMaturityNote: true,
-    categoryKeys: ['developerTool', 'openSource'],
+    categoryKeys: ['environmentConfiguration', 'openSource'],
     visual: {
       type: 'concept-image',
       src: '/images/projects/rigset/home-concept.png',
@@ -32,12 +32,11 @@ export const selectedProjects: readonly ProjectSummary[] = [
     },
   },
   {
-    slug: 'overtime-automation',
-    route: 'overtimeAutomation',
-    status: 'concept',
-    messageKey: 'selectedProjects.overtimeAutomation',
-    hasMaturityNote: true,
-    categoryKeys: ['automation', 'whatsapp'],
+    slug: 'eligent',
+    route: 'eligent',
+    status: 'technical-validation',
+    messageKey: 'selectedProjects.eligent',
+    categoryKeys: ['decisionSupportSystem'],
     visual: {
       type: 'diagram',
       altKey: 'visualAlt',

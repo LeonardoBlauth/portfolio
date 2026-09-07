@@ -21,9 +21,9 @@ describe('Selected project presentation', () => {
       'RIGSET',
       'Explorar planejamento →',
       '/pt/projetos/rigset',
-      'AUTOMAÇÃO DE HORAS EXTRAS',
-      'Explorar conceito →',
-      '/pt/projetos/automacao-horas-extras',
+      'Eligent',
+      'Explorar validação técnica →',
+      '/pt/projetos/eligent',
     ],
     [
       '/',
@@ -37,9 +37,9 @@ describe('Selected project presentation', () => {
       'RIGSET',
       'Explore the plan →',
       '/projects/rigset',
-      'OVERTIME AUTOMATION',
-      'Explore the concept →',
-      '/projects/overtime-automation',
+      'Eligent',
+      'Explore technical validation →',
+      '/projects/eligent',
     ],
   ])(
     'renders the approved project carousel at %s',
@@ -55,9 +55,9 @@ describe('Selected project presentation', () => {
       rigsetName,
       rigsetCta,
       rigsetRoute,
-      overtimeName,
-      overtimeCta,
-      overtimeRoute,
+      eligentName,
+      eligentCta,
+      eligentRoute,
     ) => {
       const wrapper = await mountSuspended(App, { route })
       const section = wrapper.get('section#projects')
@@ -84,13 +84,13 @@ describe('Selected project presentation', () => {
           .find(`a.project-showcase__visual-link[href="${rigsetRoute}"]`)
           .exists(),
       ).toBe(true)
-      expect(section.text()).toContain(overtimeName)
+      expect(section.text()).toContain(eligentName)
       expect(
-        section.get(`a.project-showcase__cta[href="${overtimeRoute}"]`).text(),
-      ).toBe(overtimeCta)
+        section.get(`a.project-showcase__cta[href="${eligentRoute}"]`).text(),
+      ).toBe(eligentCta)
       expect(
         section
-          .find(`a.project-showcase__visual-link[href="${overtimeRoute}"]`)
+          .find(`a.project-showcase__visual-link[href="${eligentRoute}"]`)
           .exists(),
       ).toBe(true)
       expect(section.findAll('[data-project-id]')).toHaveLength(3)
@@ -107,7 +107,7 @@ describe('Selected project presentation', () => {
       ).toBe('concept-image')
       expect(
         section
-          .get('[data-project-id="overtime-automation"] .project-visual-slot')
+          .get('[data-project-id="eligent"] .project-visual-slot')
           .attributes('data-visual-type'),
       ).toBe('diagram')
     },
@@ -122,5 +122,54 @@ describe('Selected project presentation', () => {
     expect(previous.attributes('disabled')).toBeDefined()
     expect(next.attributes('disabled')).toBeUndefined()
     expect(section.text()).toContain('01 / 03')
+  })
+
+  it.each([
+    [
+      '/',
+      'Technical validation',
+      'Decision support for time-sensitive opportunities, based on availability and user rules.',
+    ],
+    [
+      '/pt',
+      'Validação técnica',
+      'Suporte à decisão para oportunidades sensíveis ao tempo, com base na disponibilidade e nas regras do usuário.',
+    ],
+  ])(
+    'keeps the Eligent card compact at %s',
+    async (route, status, summary) => {
+      const wrapper = await mountSuspended(App, { route })
+      const card = wrapper.get('[data-project-id="eligent"]')
+
+      expect(card.get('h3').text()).toBe('Eligent')
+      expect(card.text()).toContain(status)
+      expect(card.text()).toContain(summary)
+      expect(card.text()).not.toContain('Android')
+      expect(card.text()).not.toContain('selectedProjects.status.')
+    },
+  )
+
+  it.each([
+    [
+      '/pt',
+      ['HE · PAINEL', 'HOJE · 19H–23H', 'DISPONIBILIDADE', 'REGRAS', 'COMPATÍVEL'],
+    ],
+    [
+      '/',
+      [
+        'OVERTIME OPPORTUNITY',
+        'TODAY · 7PM–11PM',
+        'AVAILABILITY',
+        'RULES',
+        'COMPATIBLE',
+      ],
+    ],
+  ])('localizes the Eligent opportunity assessment scene at %s', async (route, labels) => {
+    const wrapper = await mountSuspended(App, { route })
+    const visual = wrapper.get(
+      '[data-project-id="eligent"] .eligent-home-signal',
+    )
+
+    for (const label of labels) expect(visual.text()).toContain(label)
   })
 })

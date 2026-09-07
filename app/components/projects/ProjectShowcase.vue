@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ProjectSummary } from '~/types/project'
+import type { ProjectStatus, ProjectSummary } from '~/types/project'
 import { localizedRoutes } from '~/data/localized-routes'
 import type { SupportedLocale } from '~/utils/locale'
 import { toSupportedLocale } from '~/utils/locale'
-import OvertimeHomeDiagram from '~/components/projects/OvertimeHomeDiagram.vue'
+import EligentHomeDiagram from '~/components/projects/EligentHomeDiagram.vue'
 import FloatingCard from '~/components/ui/floating-card/FloatingCard.vue'
 
 const props = defineProps<{
@@ -25,8 +25,16 @@ const categories = computed(() =>
     t(`selectedProjects.categories.${key}`),
   ),
 )
+const statusMessageKeys: Record<ProjectStatus, string> = {
+  concept: 'concept',
+  planned: 'planned',
+  prototyping: 'prototyping',
+  'technical-validation': 'technicalValidation',
+  development: 'development',
+  available: 'available',
+}
 const statusLabel = computed(() =>
-  t(`selectedProjects.status.${props.project.status}`),
+  t(`selectedProjects.status.${statusMessageKeys[props.project.status]}`),
 )
 const visualCaption = computed(() =>
   props.project.visual.type === 'concept-image' ||
@@ -113,7 +121,7 @@ const onVisualClick = (event: MouseEvent) => {
 
           <figure v-else class="project-showcase__diagram">
             <FloatingCard>
-              <OvertimeHomeDiagram />
+              <EligentHomeDiagram />
             </FloatingCard>
           </figure>
         </NuxtLink>
@@ -355,7 +363,7 @@ const onVisualClick = (event: MouseEvent) => {
   .project-visual-slot[data-visual-type='diagram']
     :deep(.floating-card__surface),
   .project-visual-slot[data-visual-type='diagram']
-    :deep(.overtime-home-diagram),
+    :deep(.eligent-home-signal),
   .project-visual-slot[data-visual-type='diagram'] :deep(.project-flow) {
     width: 100%;
     height: 100%;
@@ -363,7 +371,7 @@ const onVisualClick = (event: MouseEvent) => {
   }
 
   .project-visual-slot[data-visual-type='diagram']
-    :deep(.overtime-home-diagram) {
+    :deep(.eligent-home-signal) {
     align-content: space-evenly;
     padding-block: 0;
   }

@@ -7,12 +7,12 @@ describe('selected project data', () => {
     expect(selectedProjects.map((project) => project.slug)).toEqual([
       'movune',
       'rigset',
-      'overtime-automation',
+      'eligent',
     ])
     expect(selectedProjects.map((project) => project.status)).toEqual([
       'prototyping',
       'planned',
-      'concept',
+      'technical-validation',
     ])
   })
 })

@@ -364,7 +364,7 @@ This will be the main visual and interactive area of ​​the Home. The composi
 
 ### 9.2 Current state: multiple published projects
 
-The approved Home publishes `movune`, `rigset`, and overtime automation through a multi-project carousel:
+The approved Home publishes `movune`, `rigset`, and Eligent through a multi-project carousel:
 
 - the active project has large preview prominence;
 - surrounding projects can remain partially visible according to the approved carousel treatment;
