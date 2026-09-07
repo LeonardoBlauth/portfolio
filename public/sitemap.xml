@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://leonardoblauth.dev/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://leonardoblauth.dev/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://leonardoblauth.dev/pt" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://leonardoblauth.dev/" />
+  </url>
+  <url>
+    <loc>https://leonardoblauth.dev/pt</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://leonardoblauth.dev/" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://leonardoblauth.dev/pt" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://leonardoblauth.dev/" />
+  </url>
+  <url>
+    <loc>https://leonardoblauth.dev/projects/movune</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://leonardoblauth.dev/projects/movune" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://leonardoblauth.dev/pt/projetos/movune" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://leonardoblauth.dev/projects/movune" />
+  </url>
+  <url>
+    <loc>https://leonardoblauth.dev/pt/projetos/movune</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://leonardoblauth.dev/projects/movune" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://leonardoblauth.dev/pt/projetos/movune" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://leonardoblauth.dev/projects/movune" />
+  </url>
+  <url>
+    <loc>https://leonardoblauth.dev/projects/rigset</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://leonardoblauth.dev/projects/rigset" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://leonardoblauth.dev/pt/projetos/rigset" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://leonardoblauth.dev/projects/rigset" />
+  </url>
+  <url>
+    <loc>https://leonardoblauth.dev/pt/projetos/rigset</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://leonardoblauth.dev/projects/rigset" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://leonardoblauth.dev/pt/projetos/rigset" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://leonardoblauth.dev/projects/rigset" />
+  </url>
+  <url>
+    <loc>https://leonardoblauth.dev/projects/eligent</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://leonardoblauth.dev/projects/eligent" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://leonardoblauth.dev/pt/projetos/eligent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://leonardoblauth.dev/projects/eligent" />
+  </url>
+  <url>
+    <loc>https://leonardoblauth.dev/pt/projetos/eligent</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://leonardoblauth.dev/projects/eligent" />
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://leonardoblauth.dev/pt/projetos/eligent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://leonardoblauth.dev/projects/eligent" />
+  </url>
+</urlset>

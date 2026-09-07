@@ -63,15 +63,15 @@
       "concept": "Conceito",
       "planned": "Planejado",
       "prototyping": "Em prototipação",
+      "technicalValidation": "Validação técnica",
       "development": "Em desenvolvimento",
       "available": "Disponível"
     },
     "categories": {
       "saasB2b": "SaaS B2B",
-      "developerTool": "Developer Tool",
+      "environmentConfiguration": "Configuração de Ambientes",
       "openSource": "Open Source",
-      "automation": "Automação",
-      "whatsapp": "WhatsApp"
+      "decisionSupportSystem": "Sistema de suporte à decisão"
     },
     "movune": {
       "name": "MOVUNE",
@@ -87,27 +87,17 @@
       "caption": "Visual conceitual — não representa a interface final.",
       "visualAlt": "Visual conceitual do Rigset. Não representa a interface final."
     },
-    "overtimeAutomation": {
-      "name": "AUTOMAÇÃO DE HORAS EXTRAS",
-      "summary": "Automação para identificar oportunidades de hora extra em mensagens, verificar escala, disponibilidade e limites configurados pelo usuário e responder automaticamente quando a oportunidade for elegível.",
-      "maturityNote": "Problema, regras principais e fluxo inicial de decisão definidos. Requisitos técnicos e implementação ainda não iniciados.",
-      "cta": "Explorar conceito →",
-      "visualAlt": "Diagrama do fluxo: oportunidade, interpretar, avaliar, responder, registrar e notificar.",
-      "flow": {
-        "opportunity": "Oportunidade",
-        "interpret": "Interpretar",
-        "evaluate": "Avaliar",
-        "respond": "Responder",
-        "record": "Registrar",
-        "notify": "Notificar",
-        "date": "data",
-        "period": "período",
-        "role": "função",
-        "group": "grupo",
-        "schedule": "escala",
-        "availability": "disponibilidade",
-        "extras": "extras",
-        "limits": "limites"
+    "eligent": {
+      "name": "Eligent",
+      "summary": "Suporte à decisão para oportunidades sensíveis ao tempo, com base na disponibilidade e nas regras do usuário.",
+      "cta": "Explorar validação técnica →",
+      "visualAlt": "Visual conceitual de uma oportunidade de hora extra avaliada conforme a disponibilidade e as regras.",
+      "visual": {
+        "opportunity": "HE · PAINEL",
+        "time": "HOJE · 19H–23H",
+        "availability": "DISPONIBILIDADE",
+        "rules": "REGRAS",
+        "result": "COMPATÍVEL"
       }
     }
   },
@@ -284,7 +274,7 @@
     "rigset": {
       "back": "Voltar para projetos",
       "eyebrow": "RIGSET CLI",
-      "categories": "Developer Tool · Open Source",
+      "categories": "Configuração de Ambientes · Open Source",
       "headline": "Configure e gerencie sua workstation do seu jeito.",
       "lead": "Uma CLI open source para definir, configurar e gerenciar o estado de uma workstation de forma declarativa, segura e previsível.",
       "note": "Produto, arquitetura, experiência da CLI e roadmap da v1 definidos. Implementação ainda não iniciada.",
@@ -460,6 +450,56 @@
         "environments": "Validar suporte em ambientes descartáveis",
         "hardening": "Hardening",
         "release": "Release pública da v1"
+      }
+    },
+    "eligent": {
+      "back": "Voltar para projetos",
+      "eyebrow": "Eligent",
+      "categories": "Sistema de suporte à decisão",
+      "headline": "Decida rápido quando uma oportunidade fizer sentido.",
+      "lead": "Eligent detecta oportunidades sensíveis ao tempo, interpreta seu conteúdo quando necessário, determina a elegibilidade de forma determinística conforme a disponibilidade e regras do usuário e entrega uma notificação rápida enquanto a oportunidade ainda é relevante.",
+      "note": "A validação técnica está em andamento. O primeiro conector Android para WhatsApp pessoal ainda está sendo avaliado e não é apresentado como validado ou concluído.",
+      "origin": {
+        "section": "O problema original",
+        "title": "Uma oportunidade real exigia uma decisão rápida e informada.",
+        "p1": "O projeto surgiu com um usuário real recebendo oportunidades de hora extra em grupos existentes do WhatsApp. Para aceitar uma delas, ele precisava interpretar rapidamente a oportunidade, consultar sua escala e regras e decidir se ela era compatível com sua disponibilidade.",
+        "p2": "O valor depende de entregar uma decisão correta enquanto a oportunidade ainda é relevante. Por isso, latência é um requisito de produto, não uma claim pública de desempenho."
+      },
+      "feasibility": {
+        "section": "O que a pesquisa de viabilidade mudou",
+        "title": "Automação completa não era a base certa.",
+        "p1": "A ideia original era uma automação completa do WhatsApp. A pesquisa de viabilidade encontrou uma limitação para acompanhar grupos e conversas existentes de uma conta pessoal pelas APIs oficiais do WhatsApp; ela é específica desse cenário, não uma limitação absoluta da API do WhatsApp.",
+        "p2": "Uma abordagem não oficial foi considerada e rejeitada. Uma nova conversa com o usuário real mostrou então que a resposta automática não era necessária."
+      },
+      "reframe": {
+        "section": "Reduzindo o escopo, preservando o valor",
+        "title": "Suporte à decisão é o produto.",
+        "p1": "O produto foi reposicionado em torno de suporte rápido e confiável à decisão, e não de respostas automáticas. Isso preserva o valor real para o usuário e remove envio e confirmação automáticos da V1.",
+        "principle": "Certeza para decidir; transparência quando houver dúvida."
+      },
+      "architecture": {
+        "section": "Um sistema independente de fonte",
+        "title": "Responsabilidades separadas evitam depender de um único canal.",
+        "p1": "WhatsApp é apenas a primeira Opportunity Source considerada. Source, Interpretation, Eligibility e Delivery são responsabilidades separadas. Opportunity Detection favorece recall dentro de limites razoáveis porque um falso negativo pode fazer o usuário perder uma oportunidade; uma afirmação de elegibilidade exige alta confiança. A IA pode auxiliar a Interpretation, mas não inventa informações ausentes nem toma decisões de elegibilidade.",
+        "source": "Source",
+        "interpretation": "Interpretation",
+        "eligibility": "Eligibility",
+        "delivery": "Delivery"
+      },
+      "eligibility": {
+        "section": "Elegibilidade determinística",
+        "title": "Disponibilidade é o conceito central.",
+        "p1": "O Eligibility Engine avalia os dados conhecidos da oportunidade conforme a disponibilidade e as regras definidas pelo usuário, de modo determinístico e explicável.",
+        "eligible": "ELIGIBLE — os dados conhecidos são compatíveis com a disponibilidade e as regras.",
+        "ineligible": "INELIGIBLE — os dados conhecidos conflitam com a disponibilidade ou as regras.",
+        "abstain": "ABSTAIN é um resultado interno: há informação ou confiança insuficiente para afirmar qualquer um dos dois resultados anteriores.",
+        "delivery": "Certeza para decidir não é o mesmo que certeza para notificar. Notificações de ELIGIBLE ficam ativadas por padrão. As notificações de ABSTAIN ficam ativadas por padrão como possíveis oportunidades que exigem verificação. A notificação voltada ao usuário não usa o termo técnico ABSTAIN; ela explica o que foi determinado e o que permanece desconhecido ou ambíguo. Notificações de INELIGIBLE são opcionais e ficam desativadas por padrão."
+      },
+      "validation": {
+        "section": "Validação técnica em andamento",
+        "title": "O primeiro conector está em avaliação, não é presumido.",
+        "p1": "A validação técnica atual explora um conector Android de notificações para WhatsApp pessoal. Android não define o produto, e a viabilidade desse conector ainda não foi confirmada ou concluída.",
+        "p2": "A V1 exclui envio automático, confirmação automática e clientes ou APIs não oficiais do WhatsApp."
       }
     },
     "overtime": {

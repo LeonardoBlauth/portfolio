@@ -19,12 +19,11 @@ describe('project carousel state', () => {
         return {
           movune: indexFromSlug('movune'),
           rigset: indexFromSlug('rigset'),
-          automation: indexFromSlug('overtime-automation'),
+          eligent: indexFromSlug('eligent'),
           unknown: indexFromSlug('missing'),
         }
       },
-      template:
-        '<p>{{ movune }} {{ rigset }} {{ automation }} {{ unknown }}</p>',
+      template: '<p>{{ movune }} {{ rigset }} {{ eligent }} {{ unknown }}</p>',
     })
 
     expect(wrapper.text()).toBe('0 1 2 0')
@@ -35,7 +34,7 @@ describe('project carousel state', () => {
       setup() {
         const { activeProjectSlug, setActiveProjectSlug, indexFromSlug } =
           useProjectCarouselState()
-        setActiveProjectSlug('overtime-automation')
+        setActiveProjectSlug('eligent')
         return {
           slug: activeProjectSlug,
           index: indexFromSlug(activeProjectSlug.value),
@@ -44,7 +43,7 @@ describe('project carousel state', () => {
       template: '<p>{{ slug }}:{{ index }}</p>',
     })
 
-    expect(wrapper.text()).toBe('overtime-automation:2')
+    expect(wrapper.text()).toBe('eligent:2')
   })
 
   it('keeps the visited project selected after returning home', async () => {

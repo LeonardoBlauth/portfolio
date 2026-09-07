@@ -63,15 +63,15 @@
       "concept": "Concept",
       "planned": "Planned",
       "prototyping": "In prototyping",
+      "technicalValidation": "Technical validation",
       "development": "In development",
       "available": "Available"
     },
     "categories": {
       "saasB2b": "B2B SaaS",
-      "developerTool": "Developer Tool",
+      "environmentConfiguration": "Environment Configuration",
       "openSource": "Open Source",
-      "automation": "Automation",
-      "whatsapp": "WhatsApp"
+      "decisionSupportSystem": "Decision Support System"
     },
     "movune": {
       "name": "MOVUNE",
@@ -87,27 +87,17 @@
       "caption": "Conceptual visual — not the final interface.",
       "visualAlt": "Conceptual visual of Rigset. It does not represent the final interface."
     },
-    "overtimeAutomation": {
-      "name": "OVERTIME AUTOMATION",
-      "summary": "Automation that identifies overtime opportunities in messages, checks the user’s schedule, availability, and configured limits, and replies automatically when the opportunity is eligible.",
-      "maturityNote": "The problem, main rules, and initial decision flow are defined. Technical requirements and implementation have not started yet.",
-      "cta": "Explore the concept →",
-      "visualAlt": "Editorial diagram of the flow: opportunity, interpret, evaluate, respond, record, and notify.",
-      "flow": {
-        "opportunity": "Opportunity",
-        "interpret": "Interpret",
-        "evaluate": "Evaluate",
-        "respond": "Respond",
-        "record": "Record",
-        "notify": "Notify",
-        "date": "date",
-        "period": "period",
-        "role": "role",
-        "group": "group",
-        "schedule": "schedule",
-        "availability": "availability",
-        "extras": "overtime",
-        "limits": "limits"
+    "eligent": {
+      "name": "Eligent",
+      "summary": "Decision support for time-sensitive opportunities, based on availability and user rules.",
+      "cta": "Explore technical validation →",
+      "visualAlt": "Conceptual visual of an overtime opportunity evaluated against availability and rules.",
+      "visual": {
+        "opportunity": "OVERTIME OPPORTUNITY",
+        "time": "TODAY · 7PM–11PM",
+        "availability": "AVAILABILITY",
+        "rules": "RULES",
+        "result": "COMPATIBLE"
       }
     }
   },
@@ -284,7 +274,7 @@
     "rigset": {
       "back": "Back to projects",
       "eyebrow": "RIGSET CLI",
-      "categories": "Developer Tool · Open Source",
+      "categories": "Environment Configuration · Open Source",
       "headline": "Configure and manage your workstation, your way.",
       "lead": "An open-source CLI to define, configure, and manage the state of a workstation in a declarative, secure, and predictable way.",
       "note": "Product, architecture, CLI experience, and v1 roadmap are defined. Implementation has not started yet.",
@@ -460,6 +450,56 @@
         "environments": "Validate support in disposable environments",
         "hardening": "Hardening",
         "release": "Public v1 release"
+      }
+    },
+    "eligent": {
+      "back": "Back to projects",
+      "eyebrow": "Eligent",
+      "categories": "Decision Support System",
+      "headline": "Decide quickly when an opportunity fits.",
+      "lead": "Eligent detects time-sensitive opportunities, interprets their content when needed, determines eligibility deterministically against availability and user rules, and delivers a prompt notification when the opportunity is still relevant.",
+      "note": "Technical validation is in progress. The first Android connector for personal WhatsApp is still being evaluated and is not presented as validated or complete.",
+      "origin": {
+        "section": "The original problem",
+        "title": "A real opportunity needed a fast, informed decision.",
+        "p1": "The project originated with a real user receiving overtime opportunities in existing WhatsApp groups. To accept one, the user needed to quickly interpret the opportunity, consult their schedule and rules, and decide whether it was compatible with their availability.",
+        "p2": "The value depends on delivering a correct decision while the opportunity is still relevant. Latency is therefore a product requirement, not a public performance claim."
+      },
+      "feasibility": {
+        "section": "What feasibility research changed",
+        "title": "Full automation was not the right foundation.",
+        "p1": "The original idea was full WhatsApp automation. Feasibility research found a limitation in using official WhatsApp APIs to follow existing groups and conversations from a personal account; this is specific to that scenario, not an absolute limitation of the WhatsApp API.",
+        "p2": "An unofficial approach was considered and rejected. A new conversation with the real user then showed that automatic replies were unnecessary."
+      },
+      "reframe": {
+        "section": "Reducing scope, preserving value",
+        "title": "Decision support is the product.",
+        "p1": "The product was reframed around fast, reliable decision support rather than automatic replies. This preserves the user's real value while removing automatic sending and confirmation from V1.",
+        "principle": "Certainty to decide; transparency when in doubt."
+      },
+      "architecture": {
+        "section": "A source-agnostic system",
+        "title": "Separate responsibilities keep the product independent of one channel.",
+        "p1": "WhatsApp is only the first Opportunity Source under consideration. Source, Interpretation, Eligibility, and Delivery are separate responsibilities. Opportunity Detection favors recall within reasonable limits because a false negative can cost the user an opportunity; an eligibility assertion requires high confidence. AI may assist Interpretation, but it does not invent missing information or make eligibility decisions.",
+        "source": "Source",
+        "interpretation": "Interpretation",
+        "eligibility": "Eligibility",
+        "delivery": "Delivery"
+      },
+      "eligibility": {
+        "section": "Deterministic eligibility",
+        "title": "Availability is the central concept.",
+        "p1": "The Eligibility Engine evaluates known opportunity details against availability and user-defined rules in a deterministic, explainable way.",
+        "eligible": "ELIGIBLE — the known details are compatible with availability and rules.",
+        "ineligible": "INELIGIBLE — the known details conflict with availability or rules.",
+        "abstain": "ABSTAIN is an internal result: there is insufficient information or confidence to assert either of the other outcomes.",
+        "delivery": "Certainty to decide is not the same as certainty to notify. ELIGIBLE notifications are enabled by default. ABSTAIN notifications are enabled by default as possible opportunities that require verification. The user-facing notification does not use the technical term ABSTAIN; it explains what was determined and what remains unknown or ambiguous. INELIGIBLE notifications are optional and disabled by default."
+      },
+      "validation": {
+        "section": "Technical validation in progress",
+        "title": "The first connector is being evaluated, not assumed.",
+        "p1": "The current technical validation explores an Android Notification Connector for personal WhatsApp. Android is not the product definition, and this connector has not been confirmed as feasible or complete.",
+        "p2": "V1 excludes automatic sending, automatic confirmation, and unofficial WhatsApp clients or APIs."
       }
     },
     "overtime": {

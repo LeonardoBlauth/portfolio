@@ -73,10 +73,10 @@ Client-side hydration remains available for language switching, theme selection,
 
 PT-BR is the default locale and uses URLs without a locale prefix. English uses the `/en` prefix.
 
-| Locale | Home | `movune` | Rigset | Overtime automation |
+| Locale | Home | `movune` | Rigset | Eligent |
 | --- | --- | --- | --- | --- |
-| PT-BR | `/` | `/projetos/movune` | `/projetos/rigset` | `/projetos/automacao-horas-extras` |
-| English | `/en` | `/en/projects/movune` | `/en/projects/rigset` | `/en/projects/overtime-automation` |
+| PT-BR | `/` | `/projetos/movune` | `/projetos/rigset` | `/projetos/eligent` |
+| English | `/en` | `/en/projects/movune` | `/en/projects/rigset` | `/en/projects/eligent` |
 
 The Nuxt i18n strategy is `prefix_except_default`. Route names and locale paths should be explicit enough to keep language switching deterministic between equivalent pages.
 
@@ -142,7 +142,7 @@ The content model preserves these approved facts:
 - `movune` is a lowercase personal-project identity;
 - `movune` is evolving and currently in prototyping;
 - prototype representations and their data are demonstrative;
-- Home publishes multiple real projects through an approved carousel (`movune`, `rigset`, overtime automation) with honest maturity labels.
+- Home publishes multiple real projects through an approved carousel (`movune`, `rigset`, Eligent) with honest maturity labels.
 
 The public documentation makes no claims about users, customers, revenue, commercial validation, production integrations, or a completed production architecture for published projects beyond what each case documents.
 
@@ -319,7 +319,9 @@ Nuxt route metadata is generated per locale and page. The implementation include
 - appropriate indexability for production and non-indexability for preview environments;
 - structured data only where the data is accurate and the schema adds clear value.
 
-Case metadata must preserve each published project's documented maturity (`movune` in prototyping; `rigset` and overtime automation at planned/concept framing) and must not imply launched commercial products. Preview environments should not compete with the production site in search results.
+Case metadata must preserve each published project's documented maturity (`movune` in prototyping; `rigset` planned; Eligent in technical validation) and must not imply launched commercial products, automatic replies, or a validated WhatsApp connector. Preview environments should not compete with the production site in search results.
+
+Eligent keeps Eligibility separate from Delivery. `ELIGIBLE` and internal `ABSTAIN` outcomes notify by default; `INELIGIBLE` notification is optional and disabled by default. `ABSTAIN` is never shown as user-facing jargon: its notification states what was determined and what remains uncertain.
 
 Metadata is tested from generated HTML, not only from client-side state.
 

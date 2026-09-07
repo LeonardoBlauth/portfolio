@@ -123,6 +123,8 @@ const invariantRows = computed(() =>
         :alt="t('pages.rigset.overviewAlt')"
         :width="1536"
         :height="1024"
+        loading="eager"
+        fetch-priority="high"
         :caption="t('pages.rigset.caption')"
       />
     </template>

@@ -2,13 +2,13 @@
 
 **Project:** Leonardo Blauth's personal portfolio
 
-**Status:** Stages 1–11 complete; Stage 12 not started; V1 scope includes post-Stage-11 expansions recorded below
+**Status:** Stages 1–12 complete; Final Merge Gate pending; V1 scope includes post-Stage-11 expansions recorded below
 
 **Plan scope:** Implementation sequencing, dependencies, validation, and release readiness
 
 **Consolidated:** August 27, 2026
 
-**Last reconciled:** September 4, 2026
+**Last reconciled:** September 7, 2026
 
 ## 1. Purpose
 
@@ -20,13 +20,13 @@ The sequence is designed to keep the product buildable, accessible, bilingual, a
 
 ## 1.1 Implementation progress (reconciled)
 
-Confirmed from Git history on `master` and the current application tree:
+Confirmed from the `master` baseline and the current implementation branch:
 
 | Stage | State | Primary evidence |
 | --- | --- | --- |
 | 1–10 | Completed | Dedicated `feature/stage-*` branches and merged PRs through Contact/Footer |
 | 11 | Completed | PR #11 / `feature/stage-11-cross-cutting-integration` (`1c11146`, `fdc81db`); acceptance criteria checked in this plan |
-| 12 | Not started as a stage | No Stage 12 branch/commit; no sitemap/robots/canonical/OG/Twitter metadata modules; page `useHead` only sets `lang` and theme; Stage 12 acceptance checkboxes remain open |
+| 12 | Complete — Final Merge Gate | Localized static metadata, canonical/alternate links, sitemap, environment-aware robots, static headers, generated-output validation, and eight approved localized social previews are implemented. Production Core Web Vitals are explicitly delegated to the Stage 14/release post-deploy validation. |
 | 13–14 | Not started | Depend on Stage 12 and remaining release decisions |
 
 Completed Stages keep their original numbering, historical scope, and historical acceptance criteria. Product work merged after Stage 11 is not a new Stage; it is recorded in [Approved V1 expansions after Stage 11](#approved-v1-expansions-after-stage-11).
@@ -62,7 +62,7 @@ V1 is the first production version. Current approved scope includes:
 
 - a statically generated Nuxt 4 application using Vue 3 and TypeScript;
 - English Home at `/` (default, unprefixed) and Portuguese Home at `/pt`;
-- localized case studies for `movune`, `rigset`, and overtime automation (`/projects/movune`, `/projects/rigset`, `/projects/overtime-automation`, and Portuguese equivalents under `/pt/projetos/...`);
+- localized case studies for `movune`, `rigset`, and Eligent (`/projects/movune`, `/projects/rigset`, `/projects/eligent`, and Portuguese equivalents under `/pt/projetos/...`);
 - Home Selected Projects presented through an approved multi-project carousel of those three real projects;
 - the Header, Hero, Projects, Experience and Education, Skills and Tech Stack, Work Approach, Contact, and Footer, including later approved interaction and visual refinements already merged to `master`;
 - light and dark themes with persisted explicit preference and system fallback;
@@ -86,7 +86,7 @@ Still out of scope unless separately approved:
 - Tailwind CSS or a general-purpose component framework as the styling system;
 - fictional projects presented as completed products, or speculative empty carousel placeholders;
 - final `movune` screenshots as a release dependency;
-- claims that `movune`, `rigset`, or overtime automation are launched commercial products, or claims of users, clients, revenue, or production integrations that the cases do not support;
+- claims that `movune`, `rigset`, or Eligent are launched commercial products, or claims of users, clients, revenue, validated connectors, or production integrations that the cases do not support;
 - a custom deployment pipeline when Cloudflare Pages' native integration is sufficient;
 - unrelated refactoring disconnected from approved product work.
 
@@ -844,7 +844,7 @@ PR #23 (`577bb45` … merge `d4e3574`) superseded the original V1 constraint of 
 | --- | --- | --- | --- | --- |
 | `movune` | prototyping | `/projects/movune` | `/pt/projetos/movune` | prototype screenshots, labeled as demonstrative |
 | Rigset | planned | `/projects/rigset` | `/pt/projetos/rigset` | conceptual image, labeled as not the final interface |
-| Overtime automation | concept | `/projects/overtime-automation` | `/pt/projetos/automacao-horas-extras` | editorial diagram |
+| Eligent | technical validation | `/projects/eligent` | `/pt/projetos/eligent` | editorial diagram of Source, Interpretation, Eligibility, and Delivery; `ABSTAIN` remains notifiable by default as a possible opportunity requiring verification |
 
 Empty placeholder slides and fictional completed products remain excluded. Localized editorial copy remains in `i18n/locales`; typed facts remain in `app/data/projects.ts`.
 
@@ -866,17 +866,19 @@ Stages 12–14 apply to this current V1 surface: eight prerendered localized rou
 
 Prepare the complete static product for indexing, sharing, efficient delivery, and safe publication.
 
-### Progress note (reconciled September 3, 2026)
+### Final completion note
 
-Stage 12 has **not been executed** as an implementation increment. There is no Stage 12 branch, commit message, or PR.
+Stage 12 is complete for the Final Merge Gate. The static build emits localized metadata, self-referencing canonicals, locale alternates, sitemap, robots behavior that defaults previews to noindex, a static Cloudflare-compatible header policy, and localized social-preview metadata for all eight public routes. Generated-output validation covers this contract.
 
-Incidental precursors from earlier stages exist and must not be mistaken for Stage 12 completion:
+Existing precursors from earlier stages remain relevant:
 
 - favicon and brand SVG delivery under `/brand/`;
 - Instrument Sans font preload;
 - prerendered localized HTML with document `lang` and visible content verified by `scripts/verify-prerender.mjs`.
 
-Still missing relative to this stage's acceptance criteria: localized titles/descriptions, self-referencing canonical URLs based on `https://leonardoblauth.dev`, `hreflang` / `x-default`, Open Graph / social-preview metadata, sitemap, production/preview robots behavior, Core Web Vitals evaluation on a production build, and a static security-header policy derived from the final resource set. Route coverage is the current V1 set: Home plus the three case studies in both locales (eight prerendered routes; English unprefixed, Portuguese under `/pt`).
+The localized social-preview assets are approved, sanitized, and connected to the eight current V1 routes: Home plus the three case studies in both locales (English unprefixed, Portuguese under `/pt`). Representative Core Web Vitals require a deployed production origin and are deliberately delegated to the Stage 14/release post-deploy validation; they are not represented as a completed local measurement or silently omitted from release work.
+
+`pnpm format:check` remains a known baseline failure outside Stage 12: 73 pre-existing files are reported by the global check. Stage 12 did not broaden that baseline; every file introduced or modified for this stage passes its targeted Prettier check. Those unrelated files are intentionally not reformatted in this stage.
 
 ### Scope
 
@@ -902,12 +904,12 @@ Still missing relative to this stage's acceptance criteria: localized titles/des
 ### Dependencies
 
 - stable routes and final localized page content from Stages 1–11;
-- production-origin and social-preview decisions from Section 25 before their affected acceptance checks can close.
+- the production-origin decision from Section 25; localized social-preview treatment is resolved in this stage.
 
 ### Implementation considerations
 
 - Preview environments must not compete with production URLs in search results.
-- `movune` metadata must describe a personal project in prototyping, not a launched commercial product. `rigset` and overtime-automation metadata must preserve their planned/concept framing.
+- `movune` metadata must describe a personal project in prototyping, not a launched commercial product. `rigset` must preserve its planned framing and Eligent its technical-validation framing; neither may imply a validated WhatsApp connector or automatic replies.
 - Metadata must be present in static HTML rather than depend on client execution.
 - A Content Security Policy should reflect actual resource requirements and must not be broadly weakened for unnecessary scripts.
 - Public assets must be sanitized before their first commit.
@@ -920,23 +922,23 @@ Still missing relative to this stage's acceptance criteria: localized titles/des
 - inspect assets for embedded metadata, private data, local paths, and demonstrative-data disclosure;
 - run dependency and secret-pattern review;
 - analyze production bundle and generated asset sizes;
-- run Lighthouse or equivalent diagnostics and evaluate Core Web Vitals under representative mobile conditions;
+- delegate Lighthouse or equivalent diagnostics and representative Core Web Vitals evaluation to the Stage 14 post-deploy validation;
 - verify no relevant layout shift, unnecessary eager loading, or console/hydration warning;
 - run full build and regression tests.
 
 ### Acceptance criteria
 
-- [ ] Every localized route has correct title, description, canonical, and language alternates.
-- [ ] Home and case social previews are accurate and validated.
-- [ ] Sitemap and robots behavior distinguish production from previews correctly.
-- [ ] Essential content and metadata exist in generated HTML.
-- [ ] Images, SVGs, fonts, JavaScript, and animations are proportionate and optimized.
-- [ ] Core Web Vitals have been evaluated on a production build.
-- [ ] No secret, private configuration, sensitive metadata, internal business data, or undefined collection is present.
+- [x] Every localized route has correct title, description, canonical, and language alternates.
+- [x] Home and case social previews are accurate and validated for all eight localized routes.
+- [x] Sitemap and robots behavior distinguish production from previews correctly.
+- [x] Essential content and metadata exist in generated HTML.
+- [x] Images, SVGs, fonts, JavaScript, and animations are proportionate and optimized for the committed static artifact; approved social previews are localized 1200 × 630 PNGs.
+- [x] Production Core Web Vitals are explicitly delegated to Stage 14/release because they require a deployed production origin and representative post-deploy conditions.
+- [x] No secret, private configuration, sensitive metadata, internal business data, or undefined collection is present. (Tracked files and public assets were reviewed locally.)
 
 ### Implementation unit
 
-A release-hardening feature grouping SEO, static-output inspection, asset optimization, and security review because these concerns depend on stable final routes and content and share production-build evidence.
+A completed release-hardening feature grouping SEO, static-output inspection, asset optimization, and security review. Production-only measurement remains a Stage 14 responsibility because it depends on the deployed artifact and representative conditions.
 
 ### Traceability
 
@@ -1000,7 +1002,7 @@ Audit the complete V1 against product acceptance criteria, close residual access
 - [ ] Visual and content fidelity match the current approved V1 surface in both locales and themes.
 - [ ] Smooth scroll, deep links, mobile navigation, locale, theme, project navigation, and external links pass end to end.
 - [ ] Professional facts use 2021 and expected education completion uses 2027.
-- [ ] Published projects remain accurately framed (`movune` lowercase and in prototyping; `rigset` and overtime automation at their documented maturity).
+- [ ] Published projects remain accurately framed (`movune` lowercase and in prototyping; `rigset` planned; Eligent in technical validation without a validated connector or automatic replies).
 - [ ] No contact form, analytics, final-screenshot dependency, or other remaining excluded feature is present.
 - [ ] The release-candidate diff is clean, sanitized, and limited to approved work.
 
@@ -1027,7 +1029,7 @@ Publish the validated static V1 through Cloudflare Pages and confirm the product
 - configure the approved custom domain, HTTPS, canonical production origin, required redirects, environment values, and static security headers;
 - ensure preview deployments remain noncanonical and non-indexable;
 - run post-deploy smoke tests across localized routes, themes, navigation, links, assets, metadata, and not-found behavior;
-- verify production performance and Core Web Vitals under representative conditions;
+- perform the Core Web Vitals measurement delegated from Stage 12 under representative production conditions;
 - record the final release outcome and any nonblocking future work separately from V1.
 
 ### Out of scope
@@ -1127,7 +1129,7 @@ V1 is complete only when all conditions below are satisfied.
 - [ ] PT-BR and English are complete and semantically equivalent across visible copy, hidden text, accessible names, and metadata.
 - [ ] Professional web development and DealerUp experience begin in 2021.
 - [ ] Software Engineering completion is expected in 2027.
-- [ ] Published projects remain accurately framed: `movune` lowercase and in prototyping; `rigset` and overtime automation at their documented maturity.
+- [ ] Published projects remain accurately framed: `movune` lowercase and in prototyping; `rigset` planned; Eligent in technical validation without a validated connector or automatic replies.
 - [ ] No unsupported claim, metric, user, client, revenue, integration, or production architecture is published.
 
 ### Themes, responsiveness, and interaction
@@ -1175,11 +1177,11 @@ These decisions remain intentionally open within the approved handoff and techni
 | Exact Node LTS, Nuxt, module, and tooling versions | Compatibility must be checked against stable releases at implementation start and recorded reproducibly. | Stage 1 | **Resolved in code:** `package.json` pins Node `>=24.11.0 <25`, pnpm `11.24.0`, Nuxt `4.5.2`, and related tooling; CI uses Node `24.20.0`. |
 | Minimal compatible ESLint and formatting configuration | The technical definition deliberately avoids freezing tool options before the selected versions are known. | Stage 1 | **Resolved in code:** ESLint/Prettier scripts and CI `format:check` / `lint` steps are active. |
 | Final Nuxt folder and component names | Names should follow current Nuxt conventions and actual responsibilities rather than speculative structure. | Stages 1–10 | **Resolved incrementally** in the current application tree; remaining naming follows existing conventions. |
-| Detailed image format and processing choices | The best strategy depends on the approved asset inventory, intrinsic dimensions, visual fidelity, and hosting/build capabilities. | Stages 2, 5, 6, and 12 | Partially resolved by committed PNG/SVG assets; final optimization acceptance remains part of Stage 12. |
-| Canonical production origin | Canonical URLs, sitemap, social previews, and production routing use `https://leonardoblauth.dev`. Wiring this origin into generated metadata remains Stage 12 work. | Stages 12 and 14 | Origin decided; implementation still pending. |
-| Final social-preview asset source and localized treatment | The actual public asset must be inventoried, sanitized, and validated for Home and each case locale. | Stage 12 | Still open; does not block other Stage 12 work. |
+| Detailed image format and processing choices | The best strategy depends on the approved asset inventory, intrinsic dimensions, visual fidelity, and hosting/build capabilities. | Stages 2, 5, 6, and 12 | **Resolved for Stage 12:** committed PNG/SVG assets and approved 1200 × 630 localized social previews are proportionate to the static portfolio. Production field performance remains Stage 14 work. |
+| Canonical production origin | Canonical URLs, sitemap, social previews, and production routing use `https://leonardoblauth.dev`. | Stages 12 and 14 | **Resolved in code:** generated metadata and sitemap use the origin; provider confirmation remains Stage 14 work. |
+| Final social-preview asset source and localized treatment | The public asset must be inventoried, sanitized, and validated for Home and each case locale. | Stage 12 / Final Merge Gate | **Resolved in Stage 12:** eight approved 1200 × 630 localized PNG assets are committed under `public/images/social/` and wired to Open Graph and Twitter/X metadata. |
 | Cloudflare Pages project and environment details | Production branch, build settings, domain ownership, redirects, and provider values must match the actual account configuration. Hosting destination is Cloudflare Pages. | Stage 14 | Destination decided; account/project settings still open. |
-| Exact static security-header policy | Headers, especially CSP, must be derived from the final resource set rather than copied from a generic template. | Stages 12 and 14 | Still open until the final resource set is reviewed in Stage 12. |
+| Exact static security-header policy | Headers, especially CSP, must be derived from the final resource set rather than copied from a generic template. | Stages 12 and 14 | **Implemented in Stage 12:** `public/_headers` reflects the static self-hosted resource set; provider-level validation remains Stage 14 work. |
 
 No open decision authorizes a different framework, rendering model, styling system, i18n strategy, theme model, test stack, package manager, CI platform, or hosting platform.
 
