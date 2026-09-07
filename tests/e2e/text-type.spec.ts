@@ -1,10 +1,9 @@
 import { expect, test, type Page } from '@playwright/test'
 
-const visualName = (page: Page) =>
-  page.locator('#hero-title [aria-hidden="true"]')
+const visualName = (page: Page) => page.locator('#hero-title')
 
 test.describe('Hero Text Type', () => {
-  test('types the name once and does not restart after scrolling away', async ({
+  test('renders the complete name without a hydration-time typing delay', async ({
     page,
   }) => {
     const relevantMessages: string[] = []
