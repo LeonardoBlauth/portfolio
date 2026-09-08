@@ -20,7 +20,7 @@ describe('TextType', () => {
     vi.unstubAllGlobals()
   })
 
-  it('keeps the complete name visible until hydration starts the typing replay', async () => {
+  it('keeps a visible static title while the typing enhancement replays after hydration', async () => {
     vi.useFakeTimers()
     setReducedMotion(false)
 
@@ -44,25 +44,26 @@ describe('TextType', () => {
     })
 
     expect(wrapper.get('h1').attributes('aria-label')).toBe('Leonardo Blauth')
-    expect(wrapper.find('.visually-hidden').exists()).toBe(false)
+    expect(wrapper.get('.text-type__static').text()).toBe('Leonardo\nBlauth')
     expect(
-      wrapper.get('[aria-hidden="true"]').text().replace(/\s+/g, ' '),
+      wrapper.get('.text-type__animated').text().replace(/\s+/g, ' '),
     ).toBe('Leonardo Blauth')
     expect(wrapper.find('.text-type__cursor').exists()).toBe(false)
 
     frameCallback?.(0)
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.get('[aria-hidden="true"]').text()).toBe('L|')
+    expect(wrapper.get('.text-type__static').text()).toBe('Leonardo\nBlauth')
+    expect(wrapper.get('.text-type__animated').text()).toBe('L|')
 
     await vi.advanceTimersByTimeAsync(14 * 70)
     expect(
-      wrapper.get('[aria-hidden="true"]').text().replace(/\s+/g, ' '),
+      wrapper.get('.text-type__animated').text().replace(/\s+/g, ' '),
     ).toContain('Leonardo Blauth')
 
     await vi.advanceTimersByTimeAsync(1_000)
     expect(
-      wrapper.get('[aria-hidden="true"]').text().replace(/\s+/g, ' '),
+      wrapper.get('.text-type__animated').text().replace(/\s+/g, ' '),
     ).toBe('Leonardo Blauth')
 
     await vi.advanceTimersByTimeAsync(10_000)
@@ -85,8 +86,9 @@ describe('TextType', () => {
     })
 
     expect(wrapper.get('h1').attributes('aria-label')).toBe('Leonardo Blauth')
+    expect(wrapper.get('.text-type__static').text()).toBe('Leonardo\nBlauth')
     expect(
-      wrapper.get('[aria-hidden="true"]').text().replace(/\s+/g, ' '),
+      wrapper.get('.text-type__animated').text().replace(/\s+/g, ' '),
     ).toBe('Leonardo Blauth')
     expect(vi.getTimerCount()).toBe(0)
   })

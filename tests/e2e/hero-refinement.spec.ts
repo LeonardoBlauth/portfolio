@@ -144,6 +144,28 @@ test.describe('Hero refinement', () => {
     ])
   })
 
+  test('reveals the professional role without a clip-path animation', async ({
+    page,
+  }) => {
+    await page.goto('/pt')
+
+    const motion = await page.evaluate(() => {
+      const role = document.querySelector<HTMLElement>('.hero__role')
+      if (!role) throw new Error('Hero role is missing')
+
+      const style = getComputedStyle(role)
+      return {
+        animationName: style.animationName,
+        clipPath: style.clipPath,
+        transform: style.transform,
+      }
+    })
+
+    expect(motion.animationName).toContain('hero-role-reveal')
+    expect(motion.clipPath).toBe('none')
+    expect(motion.transform).not.toBe('none')
+  })
+
   test('starts professional details only after availability has finished appearing', async ({
     page,
   }) => {
