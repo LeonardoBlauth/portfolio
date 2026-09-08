@@ -28,7 +28,7 @@ describe('Selected project presentation', () => {
     [
       '/',
       'Selected projects',
-      'Projects and solutions I develop.',
+      'Projects and solutions I’m building.',
       'movune',
       'B2B SaaS',
       'In prototyping',

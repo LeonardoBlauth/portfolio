@@ -165,7 +165,7 @@ Portuguese is included below only because it is approved localized product conte
 
 | Element | PT-BR | English |
 | --- | --- | --- |
-| Availability | Disponível para oportunidades | Open to opportunities |
+| Availability | Oculto; texto preservado para futura reativação | Hidden; copy retained for future reactivation |
 | Name | Leonardo Blauth | Leonardo Blauth |
 | Role | Full Stack Developer | Full Stack Developer |
 | Description | Desenvolvo soluções web de ponta a ponta, conectando necessidades de produto a decisões técnicas claras. | I build end-to-end web solutions, connecting product needs with clear technical decisions. |
@@ -195,7 +195,7 @@ The layout must respond to available space rather than use resolution-specific h
 | Element | PT-BR | English |
 | --- | --- | --- |
 | Label | Projetos selecionados | Selected projects |
-| Headline | Projetos e soluções que desenvolvo. | Projects and solutions I develop. |
+| Headline | Projetos e soluções que desenvolvo. | Projects and solutions I’m building. |
 | Introduction | Apresento cada projeto com seu contexto, processo, decisões e estado real de desenvolvimento. | I present each project with its context, process, decisions, and current stage of development. |
 
 The current approved Home presents three published projects — `movune`, `rigset`, and Eligent — through a multi-project carousel with localized case CTAs. Presentation preserves:
