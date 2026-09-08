@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Color, Mesh, Program, Renderer, Triangle } from 'ogl'
+import type { Color, Mesh, Renderer } from 'ogl'
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 interface AuroraProps {
@@ -41,6 +41,8 @@ let intersectionObserver: IntersectionObserver | undefined
 let motionQuery: MediaQueryList | undefined
 let documentVisible = true
 let contextLost = false
+let colorConstructor: typeof Color | undefined
+let loadingRenderer = false
 
 const vertexShader = `#version 300 es
 in vec2 position;
@@ -128,11 +130,15 @@ void main() {
   fragColor = vec4(auroraColor * auroraAlpha, auroraAlpha);
 }`
 
-const colorStopsToRgb = (stops: string[]): [number, number, number][] =>
-  stops.slice(0, 3).map((hex) => {
-    const color = new Color(hex)
+const colorStopsToRgb = (stops: string[]): [number, number, number][] => {
+  const ColorRuntime = colorConstructor
+  if (!ColorRuntime) return []
+
+  return stops.slice(0, 3).map((hex) => {
+    const color = new ColorRuntime(hex)
     return [color.r, color.g, color.b]
   })
+}
 
 const stopAnimation = () => {
   if (animationFrame !== undefined) cancelAnimationFrame(animationFrame)
@@ -221,18 +227,33 @@ const handleContextLost = (event: Event) => {
   destroyRenderer(false)
 }
 
-const initialize = () => {
+const initialize = async () => {
   if (
     !container.value ||
     renderer ||
     reducedMotion.value ||
     contextLost ||
-    !isVisible.value
+    !isVisible.value ||
+    loadingRenderer
   ) {
     return
   }
 
+  loadingRenderer = true
+
   try {
+    const { Color, Mesh, Program, Renderer, Triangle } = await import('ogl')
+    if (
+      !container.value ||
+      renderer ||
+      reducedMotion.value ||
+      contextLost ||
+      !isVisible.value
+    ) {
+      return
+    }
+
+    colorConstructor = Color
     renderer = new Renderer({
       alpha: true,
       antialias: false,
@@ -275,6 +296,8 @@ const initialize = () => {
     startAnimation()
   } catch {
     destroyRenderer()
+  } finally {
+    loadingRenderer = false
   }
 }
 
@@ -286,7 +309,7 @@ const syncMotionPreference = () => {
     return
   }
 
-  initialize()
+  void initialize()
   startAnimation()
 }
 
@@ -336,7 +359,7 @@ onMounted(() => {
         return
       }
 
-      initialize()
+      void initialize()
       startAnimation()
     },
     { threshold: 0.01 },

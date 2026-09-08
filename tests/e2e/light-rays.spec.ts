@@ -146,7 +146,7 @@ test.describe('Hero Light Rays', () => {
     await expect(page.locator('#top .hero__light-rays canvas')).toHaveCount(0)
   })
 
-  test('caps mobile DPR and remains contained in both themes', async ({
+  test('uses the static fallback on mobile and remains contained in both themes', async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 })
@@ -158,14 +158,9 @@ test.describe('Hero Light Rays', () => {
       await page.goto('/')
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
 
-      const canvas = page.locator('#top .hero__light-rays canvas')
-      await expect(canvas).toBeVisible()
-      const dpr = await canvas.evaluate((element) => {
-        const target = element as HTMLCanvasElement
-        return target.width / target.clientWidth
-      })
-
-      expect(dpr).toBeLessThanOrEqual(1.25)
+      const lightRays = page.locator('#top .hero__light-rays')
+      await expect(lightRays).toBeVisible()
+      await expect(lightRays.locator('canvas')).toHaveCount(0)
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth > window.innerWidth,

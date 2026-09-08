@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { Ref } from 'vue'
 
 export type ScrollRevealVariant = 'block' | 'words'
@@ -69,9 +67,12 @@ const resolvedBlurStrength = computed(() =>
 const resolvedTranslate = computed(() => (compactViewport.value ? 18 : 28))
 
 let pluginRegistered = false
-let context: gsap.Context | undefined
+let context: { revert: () => void } | undefined
 let compactMediaQuery: MediaQueryList | null = null
 let motionMediaQuery: MediaQueryList | null = null
+let gsapRuntime: (typeof import('gsap'))['gsap'] | undefined
+let scrollTriggerRuntime:
+  (typeof import('gsap/ScrollTrigger'))['ScrollTrigger'] | undefined
 
 const prefersReducedMotion = () => motionMediaQuery?.matches ?? false
 
@@ -80,9 +81,17 @@ const supportsCssViewTimeline = () =>
   typeof CSS.supports === 'function' &&
   CSS.supports('animation-timeline: view()')
 
-const registerScrollTrigger = () => {
+const registerScrollTrigger = async () => {
   if (pluginRegistered || !import.meta.client) return
-  gsap.registerPlugin(ScrollTrigger)
+
+  const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+    import('gsap'),
+    import('gsap/ScrollTrigger'),
+  ])
+
+  gsapRuntime = gsap
+  scrollTriggerRuntime = ScrollTrigger
+  gsapRuntime.registerPlugin(scrollTriggerRuntime)
   pluginRegistered = true
 }
 
@@ -113,7 +122,8 @@ const setup = async () => {
     return
   }
 
-  registerScrollTrigger()
+  await registerScrollTrigger()
+  if (!gsapRuntime) return
 
   const scroller = resolveScroller(props.scrollContainerRef)
   const targets =
@@ -123,13 +133,15 @@ const setup = async () => {
 
   if (targets.length === 0) return
 
-  const from: gsap.TweenVars = {
+  const from = {
     opacity: props.baseOpacity,
     y: resolvedTranslate.value,
     transformOrigin: '50% 100%',
     willChange: 'opacity, filter, transform',
+    filter: undefined as string | undefined,
+    rotate: undefined as number | undefined,
   }
-  const to: gsap.TweenVars = {
+  const to = {
     ease: 'none',
     opacity: 1,
     y: 0,
@@ -143,11 +155,13 @@ const setup = async () => {
       invalidateOnRefresh: true,
     },
     onComplete: () => {
-      gsap.set(targets, { willChange: 'auto' })
+      gsapRuntime?.set(targets, { willChange: 'auto' })
     },
+    filter: undefined as string | undefined,
+    rotate: undefined as number | undefined,
   }
 
-  if (props.enableBlur) {
+  if (props.enableBlur && !compactViewport.value) {
     from.filter = `blur(${resolvedBlurStrength.value}px)`
     to.filter = 'blur(0px)'
   }
@@ -157,8 +171,8 @@ const setup = async () => {
     to.rotate = 0
   }
 
-  context = gsap.context(() => {
-    gsap.fromTo(targets, from, to)
+  context = gsapRuntime.context(() => {
+    gsapRuntime?.fromTo(targets, from, to)
   }, element)
 }
 
@@ -212,8 +226,10 @@ onBeforeUnmount(() => {
     class="scroll-reveal"
     :class="{
       'scroll-reveal--words': variant === 'words',
-      'scroll-reveal--css': variant === 'block' && enableBlur,
-      'scroll-reveal--css-fade': variant === 'block' && !enableBlur,
+      'scroll-reveal--css':
+        variant === 'block' && enableBlur && !compactViewport,
+      'scroll-reveal--css-fade':
+        variant === 'block' && (!enableBlur || compactViewport),
     }"
     :data-scroll-reveal="variant"
   >
