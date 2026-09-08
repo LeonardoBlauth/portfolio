@@ -126,19 +126,16 @@ test.describe('Hero refinement', () => {
     await page.waitForTimeout(20)
 
     const visibility = await page.evaluate(() =>
-      ['.hero__role', '.hero__availability', '.hero__details'].map(
-        (selector) => {
-          const element = document.querySelector<HTMLElement>(selector)
-          if (!element) throw new Error(`${selector} is missing`)
+      ['.hero__role', '.hero__details'].map((selector) => {
+        const element = document.querySelector<HTMLElement>(selector)
+        if (!element) throw new Error(`${selector} is missing`)
 
-          const style = getComputedStyle(element)
-          return { opacity: style.opacity, transform: style.transform }
-        },
-      ),
+        const style = getComputedStyle(element)
+        return { opacity: style.opacity, transform: style.transform }
+      }),
     )
 
     expect(visibility).toEqual([
-      { opacity: '1', transform: 'none' },
       { opacity: '1', transform: 'none' },
       { opacity: '1', transform: 'none' },
     ])
@@ -166,32 +163,30 @@ test.describe('Hero refinement', () => {
     expect(motion.transform).not.toBe('none')
   })
 
-  test('starts professional details only after availability has finished appearing', async ({
+  test('starts professional details only after the role reveal', async ({
     page,
   }) => {
     await page.goto('/pt')
 
     const schedule = await page.evaluate(() => {
-      const availability = document.querySelector('.hero__availability')
+      const role = document.querySelector('.hero__role')
       const details = document.querySelector('.hero__details')
 
-      if (!availability || !details)
+      if (!role || !details)
         throw new Error('Hero motion groups are missing')
 
-      const availabilityStyle = getComputedStyle(availability)
+      const roleStyle = getComputedStyle(role)
       const detailsStyle = getComputedStyle(details)
 
       return {
-        availabilityDelay: Number.parseFloat(availabilityStyle.animationDelay),
-        availabilityDuration: Number.parseFloat(
-          availabilityStyle.animationDuration,
-        ),
+        roleDelay: Number.parseFloat(roleStyle.animationDelay),
+        roleDuration: Number.parseFloat(roleStyle.animationDuration),
         detailsDelay: Number.parseFloat(detailsStyle.animationDelay),
       }
     })
 
     expect(schedule.detailsDelay).toBeGreaterThanOrEqual(
-      schedule.availabilityDelay + schedule.availabilityDuration,
+      schedule.roleDelay + schedule.roleDuration,
     )
   })
 })
