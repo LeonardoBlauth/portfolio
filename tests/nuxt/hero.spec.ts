@@ -7,7 +7,6 @@ describe('Home Hero', () => {
   it.each([
     [
       '/pt',
-      'Disponível para oportunidades',
       'Desenvolvo soluções web de ponta a ponta, conectando necessidades de produto a decisões técnicas claras.',
       'Entrar em contato',
       'Vamos conversar',
@@ -17,7 +16,6 @@ describe('Home Hero', () => {
     ],
     [
       '/',
-      'Open to opportunities',
       'I build end-to-end web solutions, connecting product needs with clear technical decisions.',
       'Get in touch',
       "Let's talk",
@@ -29,7 +27,6 @@ describe('Home Hero', () => {
     'renders approved localized content at %s',
     async (
       route,
-      availability,
       description,
       contact,
       contactSecondary,
@@ -45,7 +42,7 @@ describe('Home Hero', () => {
         'Leonardo\nBlauth',
       )
       expect(hero.text()).toContain('Full Stack Developer')
-      expect(hero.text()).toContain(availability)
+      expect(hero.find('.hero__availability').exists()).toBe(false)
       expect(hero.text()).toContain(description)
       expect(hero.text()).toContain(location)
       expect(hero.text()).toContain(experience)

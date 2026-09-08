@@ -6,6 +6,9 @@ import { heroTechnologyLogos } from '~/data/tech-stack'
 const { t } = useI18n()
 const { resolvedTheme } = useTheme()
 
+// Preserve the approved availability content for a future reactivation.
+const showAvailability = false
+
 const raysColor = computed(() =>
   resolvedTheme.value === 'light' ? '#FFD166' : '#fff',
 )
@@ -47,7 +50,7 @@ const raysSaturation = computed(() =>
 
         <p class="hero__role">Full Stack Developer</p>
 
-        <p class="hero__availability">
+        <p v-if="showAvailability" class="hero__availability">
           <span class="hero__availability-dot" aria-hidden="true" />
           {{ t('hero.availability') }}
         </p>
