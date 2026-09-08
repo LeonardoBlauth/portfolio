@@ -9,9 +9,9 @@ const outputDirectory = resolve(root, 'public/images/social')
 const dataUri = async (path, mimeType) =>
   `data:${mimeType};base64,${(await readFile(resolve(root, path))).toString('base64')}`
 
-const [font, monogram, movuneDashboard] = await Promise.all([
+const [font, darkMonogram, movuneDashboard] = await Promise.all([
   dataUri('public/fonts/instrument-sans-variable.woff2', 'font/woff2'),
-  dataUri('public/brand/lb-monogram-cobalt.svg', 'image/svg+xml'),
+  dataUri('public/brand/lb-monogram-color.svg', 'image/svg+xml'),
   dataUri('public/images/projects/movune/dashboard-light.png', 'image/png'),
 ])
 
@@ -19,7 +19,6 @@ const previews = [
   {
     file: 'home-en.png',
     name: 'Leonardo Blauth',
-    eyebrow: 'Full Stack Developer',
     headline:
       'I build end-to-end web solutions, connecting product needs with clear technical decisions.',
     visual: 'home',
@@ -27,7 +26,6 @@ const previews = [
   {
     file: 'home-pt.png',
     name: 'Leonardo Blauth',
-    eyebrow: 'Full Stack Developer',
     headline:
       'Desenvolvo soluções web de ponta a ponta, conectando necessidades de produto a decisões técnicas claras.',
     visual: 'home',
@@ -90,7 +88,7 @@ if (
 }
 
 const visuals = {
-  home: `<div class="home-visual"><img src="${monogram}" alt="" /></div>`,
+  home: `<div class="home-visual"><img src="${darkMonogram}" alt="" /><span>Full Stack Developer</span></div>`,
   movune: `<div class="movune-frame"><img src="${movuneDashboard}" alt="" /></div>`,
   'rigset-en': `
     <div class="rigset-visual"><section class="state-card state-current"><b>CURRENT STATE</b><i></i><i></i><i></i></section><span class="state-bridge"></span><section class="state-card state-desired"><b>DESIRED STATE</b><i></i><i></i><i></i></section></div>`,
@@ -116,8 +114,9 @@ body { background: #080a0d; color: #f5f7fa; font-family: Instrument, Arial, sans
 h1 { position: absolute; top: 184px; left: 74px; z-index: 2; width: 500px; margin: 0; font-size: 47px; line-height: 1.07; font-weight: 650; letter-spacing: -.045em; }
 .name { position: absolute; bottom: 58px; left: 74px; color: #9aa6b7; font-size: 15px; font-weight: 600; letter-spacing: .04em; }
 .visual { position: absolute; top: 106px; right: 70px; width: 500px; height: 405px; }
-.home-visual { position: absolute; inset: 0; overflow: hidden; }
-.home-visual img { position: absolute; z-index: 2; top: 24px; right: 39px; width: 350px; height: 350px; filter: drop-shadow(0 18px 32px rgba(37,99,235,.14)); }
+.home-visual { position: absolute; inset: 0; display: grid; justify-items: center; align-content: start; overflow: hidden; padding-top: 34px; }
+.home-visual img { display: block; width: 264px; height: 264px; filter: drop-shadow(0 18px 32px rgba(37,99,235,.14)); }
+.home-visual span { margin-top: 18px; color: #94a3b8; font-size: 20px; line-height: 1.2; font-weight: 500; letter-spacing: -.02em; }
 .movune-frame { position: absolute; top: 20px; right: 0; width: 498px; height: 336px; padding: 10px; border: 1px solid rgba(148,163,184,.3); border-radius: 12px; background: #e8edf3; box-shadow: 0 24px 50px rgba(0,0,0,.28); transform: perspective(900px) rotateY(-4deg) rotateX(2deg); }
 .movune-frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top left; border-radius: 5px; }
 .rigset-visual { position: absolute; inset: 0; }
@@ -136,7 +135,7 @@ h1 { position: absolute; top: 184px; left: 74px; z-index: 2; width: 500px; margi
 .context b + b { margin-top: 15px; color: #aeb9c8; }
 .decision-line { position: absolute; top: 178px; left: 238px; display: flex; align-items: center; gap: 11px; }
 .decision-line i { display: block; width: 11px; height: 11px; border-radius: 50%; background: #2563eb; box-shadow: 0 0 0 8px rgba(37,99,235,.13); }.decision-line span { display: block; width: 116px; height: 1px; background: #2563eb; }.decision-line strong { color: #f5f7fa; font-size: 14px; font-weight: 700; letter-spacing: .045em; }
-</style></head><body><main class="canvas"><div class="signature"><img src="${monogram}" alt="" /></div><div class="eyebrow">${eyebrow}</div><h1>${headline}</h1><div class="name">${name}</div><div class="visual">${visuals[visual]}</div></main></body></html>`
+</style></head><body><main class="canvas"><div class="signature"><img src="${darkMonogram}" alt="" /></div>${eyebrow ? `<div class="eyebrow">${eyebrow}</div>` : ''}<h1>${headline}</h1><div class="name">${name}</div><div class="visual">${visuals[visual]}</div></main></body></html>`
 
 await mkdir(outputDirectory, { recursive: true })
 const browser = await chromium.launch({ headless: true })
