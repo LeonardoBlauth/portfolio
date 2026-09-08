@@ -1,9 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
 
 const visualName = (page: Page) => page.locator('#hero-title')
+const typedName = (page: Page) => page.locator('#hero-title .text-type__typed')
 
 test.describe('Hero Text Type', () => {
-  test('renders the complete name without a hydration-time typing delay', async ({
+  test('keeps the complete SSR name visible before replaying the typing animation', async ({
     page,
   }) => {
     const relevantMessages: string[] = []
@@ -17,25 +18,26 @@ test.describe('Hero Text Type', () => {
     })
     page.on('pageerror', (error) => relevantMessages.push(error.message))
 
+    const response = await page.request.get('/')
+    const initialHtml = await response.text()
+
+    expect(initialHtml).toContain('Leonardo\nBlauth')
+
     await page.goto('/')
 
     await expect(
       page.getByRole('heading', { level: 1, name: 'Leonardo Blauth' }),
     ).toBeVisible()
-    await expect(visualName(page)).toContainText('Leonardo\nBlauth')
-    await expect(page.locator('#hero-title .text-type__cursor')).toHaveCount(
-      0,
-      {
-        timeout: 5_000,
-      },
-    )
-    await expect(visualName(page)).toHaveText('Leonardo\nBlauth')
 
-    await page.locator('#projects').scrollIntoViewIfNeeded()
-    await page.locator('#top').scrollIntoViewIfNeeded()
-    await page.waitForTimeout(300)
+    await expect(page.locator('#hero-title .text-type__cursor')).toHaveCount(1)
+    await expect(typedName(page)).toContainText('L')
+    await expect(typedName(page)).not.toHaveText('Leonardo\nBlauth')
 
-    await expect(visualName(page)).toHaveText('Leonardo\nBlauth')
+    await expect(typedName(page)).toHaveText('Leonardo\nBlauth', {
+      timeout: 5_000,
+    })
+
+    await expect(typedName(page)).toHaveText('Leonardo\nBlauth')
     await expect(page.locator('#hero-title .text-type__cursor')).toHaveCount(0)
     expect(relevantMessages).toEqual([])
   })
@@ -65,7 +67,7 @@ test.describe('Hero Text Type', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto('/')
 
-    await expect(visualName(page)).toHaveText('Leonardo\nBlauth')
+    await expect(typedName(page)).toHaveText('Leonardo\nBlauth')
     await expect(page.locator('#hero-title .text-type__cursor')).toHaveCount(0)
   })
 })

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Mesh, Program, Renderer, Triangle } from 'ogl'
+import type { Mesh, Renderer } from 'ogl'
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 export type RaysOrigin =
@@ -70,10 +70,13 @@ let frameId: number | undefined
 let pointerFrameId: number | undefined
 let intersectionObserver: IntersectionObserver | undefined
 let resizeObserver: ResizeObserver | undefined
+let compactMediaQuery: MediaQueryList | undefined
 let visible = false
 let documentVisible = true
 let reducedMotion = false
+let compactViewport = false
 let pointerEnabled = false
+let loadingRenderer = false
 let pointer = { x: 0.5, y: 0.5 }
 let smoothPointer = { x: 0.5, y: 0.5 }
 
@@ -241,8 +244,10 @@ const getPlacement = (
 const updateSize = () => {
   if (!container.value || !renderer || !uniforms) return
 
-  const mobile = window.matchMedia('(width < 48rem)').matches
-  renderer.dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 2)
+  renderer.dpr = Math.min(
+    window.devicePixelRatio || 1,
+    compactViewport ? 1.25 : 2,
+  )
   renderer.setSize(container.value.clientWidth, container.value.clientHeight)
 
   const width = container.value.clientWidth * renderer.dpr
@@ -317,13 +322,43 @@ const handleVisibilityChange = () => {
   else stopAnimation()
 }
 
-const initialize = async () => {
-  if (!container.value || renderer || reducedMotion) return
+const syncCompactViewport = () => {
+  compactViewport = compactMediaQuery?.matches ?? false
 
-  await nextTick()
-  if (!container.value) return
+  if (compactViewport) {
+    destroyRenderer()
+    return
+  }
+
+  if (visible) void initialize()
+}
+
+const initialize = async () => {
+  if (
+    !container.value ||
+    renderer ||
+    reducedMotion ||
+    compactViewport ||
+    loadingRenderer
+  ) {
+    return
+  }
+
+  loadingRenderer = true
 
   try {
+    await nextTick()
+    const { Mesh, Program, Renderer, Triangle } = await import('ogl')
+    if (
+      !container.value ||
+      renderer ||
+      reducedMotion ||
+      compactViewport ||
+      !visible
+    ) {
+      return
+    }
+
     renderer = new Renderer({
       alpha: true,
       antialias: false,
@@ -366,6 +401,8 @@ const initialize = async () => {
     startAnimation()
   } catch {
     destroyRenderer()
+  } finally {
+    loadingRenderer = false
   }
 }
 
@@ -417,6 +454,9 @@ onMounted(() => {
   if (!container.value) return
 
   reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  compactMediaQuery = window.matchMedia('(width < 48rem)')
+  compactViewport = compactMediaQuery.matches
+  compactMediaQuery.addEventListener('change', syncCompactViewport)
   pointerEnabled =
     props.followMouse &&
     !reducedMotion &&
@@ -431,6 +471,7 @@ onMounted(() => {
 
       visible = entry.isIntersecting
       if (visible) {
+        if (compactViewport) return
         if (renderer) startAnimation()
         else void initialize()
       } else {
@@ -452,6 +493,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   intersectionObserver?.disconnect()
   resizeObserver?.disconnect()
+  compactMediaQuery?.removeEventListener('change', syncCompactViewport)
   document.removeEventListener('visibilitychange', handleVisibilityChange)
   window.removeEventListener('pointermove', handlePointerMove)
 

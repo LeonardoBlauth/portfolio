@@ -43,7 +43,6 @@ const raysSaturation = computed(() =>
           :typing-speed="70"
           :show-cursor="true"
           cursor-character="|"
-          :type-on-mount="false"
         />
 
         <p class="hero__role">Full Stack Developer</p>

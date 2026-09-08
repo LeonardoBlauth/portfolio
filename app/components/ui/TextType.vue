@@ -22,18 +22,20 @@ const props = withDefaults(defineProps<TextTypeProps>(), {
   typeOnMount: true,
 })
 
-const displayedText = ref(props.typeOnMount ? '' : props.text)
+const displayedText = ref(props.text)
 const cursorVisible = ref(false)
 const accessibleText = computed(() => props.text.replace(/\s+/g, ' ').trim())
 
 let characterIndex = 0
 let typingTimer: ReturnType<typeof setTimeout> | undefined
 let cursorTimer: ReturnType<typeof setTimeout> | undefined
+let hydrationFrame: number | undefined
 let completed = false
 
 const clearTimers = () => {
   if (typingTimer) clearTimeout(typingTimer)
   if (cursorTimer) clearTimeout(cursorTimer)
+  if (hydrationFrame) cancelAnimationFrame(hydrationFrame)
 }
 
 const finish = () => {
@@ -64,6 +66,13 @@ const typeNextCharacter = () => {
   }, props.typingSpeed)
 }
 
+const startTyping = () => {
+  characterIndex = 1
+  displayedText.value = props.text.slice(0, characterIndex)
+  cursorVisible.value = props.showCursor
+  typeNextCharacter()
+}
+
 onMounted(() => {
   if (!props.typeOnMount) {
     completed = true
@@ -81,17 +90,20 @@ onMounted(() => {
     return
   }
 
-  cursorVisible.value = props.showCursor
-  typeNextCharacter()
+  hydrationFrame = requestAnimationFrame(startTyping)
 })
 
 onBeforeUnmount(clearTimers)
 </script>
 
 <template>
-  <component :is="as" class="text-type" v-bind="$attrs">
+  <component
+    :is="as"
+    class="text-type"
+    :aria-label="typeOnMount ? accessibleText : undefined"
+    v-bind="$attrs"
+  >
     <template v-if="typeOnMount">
-      <span class="visually-hidden">{{ accessibleText }}</span>
       <span class="text-type__visual" :data-text="text" aria-hidden="true">
         <span class="text-type__animated">
           <span class="text-type__typed">{{ displayedText }}</span>
