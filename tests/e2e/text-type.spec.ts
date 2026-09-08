@@ -1,12 +1,14 @@
 import { expect, test, type Page } from '@playwright/test'
 
 const visualName = (page: Page) => page.locator('#hero-title')
+const visualNameLayer = (page: Page) =>
+  page.locator('#hero-title .text-type__visual')
 const typedName = (page: Page) => page.locator('#hero-title .text-type__typed')
 const staticName = (page: Page) =>
   page.locator('#hero-title .text-type__static')
 
 test.describe('Hero Text Type', () => {
-  test('keeps the static title visible while replaying the typing enhancement', async ({
+  test('hands the static title to the typing enhancement without visible overlap', async ({
     page,
   }) => {
     const relevantMessages: string[] = []
@@ -32,10 +34,21 @@ test.describe('Hero Text Type', () => {
     ).toBeVisible()
 
     await expect(staticName(page)).toHaveText('Leonardo\nBlauth')
-    await expect(page.locator('#hero-title .text-type__cursor')).toHaveCount(1)
-    await expect(typedName(page)).toContainText('L')
-    await expect(typedName(page)).not.toHaveText('Leonardo\nBlauth')
+    await expect(visualNameLayer(page)).toHaveClass(
+      /text-type__visual--enhanced/,
+    )
+    const titleLayerColors = await visualName(page).evaluate((heading) => {
+      const staticLayer = heading.querySelector('.text-type__static')
+      const animatedLayer = heading.querySelector('.text-type__animated')
 
+      return {
+        static: staticLayer ? getComputedStyle(staticLayer).color : null,
+        animated: animatedLayer ? getComputedStyle(animatedLayer).color : null,
+      }
+    })
+
+    expect(titleLayerColors.static).toBe('rgba(0, 0, 0, 0)')
+    expect(titleLayerColors.animated).not.toBe('rgba(0, 0, 0, 0)')
     await expect(typedName(page)).toHaveText('Leonardo\nBlauth', {
       timeout: 5_000,
     })

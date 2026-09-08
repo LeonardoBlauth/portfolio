@@ -20,7 +20,7 @@ describe('TextType', () => {
     vi.unstubAllGlobals()
   })
 
-  it('keeps a visible static title while the typing enhancement replays after hydration', async () => {
+  it('hands the static title to the typing enhancement after hydration', async () => {
     vi.useFakeTimers()
     setReducedMotion(false)
 
@@ -49,10 +49,16 @@ describe('TextType', () => {
       wrapper.get('.text-type__animated').text().replace(/\s+/g, ' '),
     ).toBe('Leonardo Blauth')
     expect(wrapper.find('.text-type__cursor').exists()).toBe(false)
+    expect(wrapper.get('.text-type__visual').classes()).not.toContain(
+      'text-type__visual--enhanced',
+    )
 
     frameCallback?.(0)
     await wrapper.vm.$nextTick()
 
+    expect(wrapper.get('.text-type__visual').classes()).toContain(
+      'text-type__visual--enhanced',
+    )
     expect(wrapper.get('.text-type__static').text()).toBe('Leonardo\nBlauth')
     expect(wrapper.get('.text-type__animated').text()).toBe('L|')
 
@@ -91,6 +97,9 @@ describe('TextType', () => {
       wrapper.get('.text-type__animated').text().replace(/\s+/g, ' '),
     ).toBe('Leonardo Blauth')
     expect(vi.getTimerCount()).toBe(0)
+    expect(wrapper.get('.text-type__visual').classes()).not.toContain(
+      'text-type__visual--enhanced',
+    )
   })
 
   it('keeps above-the-fold text visible without waiting for hydration typing', async () => {

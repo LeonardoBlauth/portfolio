@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<TextTypeProps>(), {
 
 const displayedText = ref(props.text)
 const cursorVisible = ref(false)
+const isEnhanced = ref(false)
 const accessibleText = computed(() => props.text.replace(/\s+/g, ' ').trim())
 
 let characterIndex = 0
@@ -67,6 +68,7 @@ const typeNextCharacter = () => {
 }
 
 const startTyping = () => {
+  isEnhanced.value = true
   characterIndex = 1
   displayedText.value = props.text.slice(0, characterIndex)
   cursorVisible.value = props.showCursor
@@ -104,7 +106,10 @@ onBeforeUnmount(clearTimers)
     v-bind="$attrs"
   >
     <template v-if="typeOnMount">
-      <span class="text-type__visual">
+      <span
+        class="text-type__visual"
+        :class="{ 'text-type__visual--enhanced': isEnhanced }"
+      >
         <span class="text-type__static">{{ text }}</span>
         <span class="text-type__animated" aria-hidden="true">
           <span class="text-type__typed">{{ displayedText }}</span>
@@ -136,6 +141,14 @@ onBeforeUnmount(clearTimers)
   inset: 0;
   color: transparent;
   white-space: pre-line;
+}
+
+.text-type__visual--enhanced .text-type__static {
+  color: transparent;
+}
+
+.text-type__visual--enhanced .text-type__animated {
+  color: var(--color-text-primary);
 }
 
 .text-type__cursor {
