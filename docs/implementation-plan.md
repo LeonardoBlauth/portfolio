@@ -2,7 +2,7 @@
 
 **Project:** Leonardo Blauth's personal portfolio
 
-**Status:** Stages 1–13 complete; Stage 14 has not started; V1 scope includes post-Stage-11 expansions recorded below
+**Status:** Stages 1–14 complete; V1 is released; scope includes post-Stage-11 expansions recorded below
 
 **Plan scope:** Implementation sequencing, dependencies, validation, and release readiness
 
@@ -28,7 +28,7 @@ Confirmed from the `master` baseline and the current implementation branch:
 | 11 | Completed | PR #11 / `feature/stage-11-cross-cutting-integration` (`1c11146`, `fdc81db`); acceptance criteria checked in this plan |
 | 12 | Complete — Final Merge Gate | Localized static metadata, canonical/alternate links, sitemap, environment-aware robots, static headers, generated-output validation, and eight approved localized social previews are implemented. Production Core Web Vitals are explicitly delegated to the Stage 14/release post-deploy validation. |
 | 13 | Complete — Final Merge Gate | Automated accessibility, keyboard, responsive, localized-route, static-output, and regression validation passed; the human assistive-technology, zoom, reduced-motion, and viewport reviews are approved. |
-| 14 | Not started | Depends on Stage 13 acceptance and production-release decisions |
+| 14 | Complete — Production Release Gate | Cloudflare Pages production release validated at `https://leonardoblauth.dev`; final evidence is recorded in Stage 14 below. |
 
 Completed Stages keep their original numbering, historical scope, and historical acceptance criteria. Product work merged after Stage 11 is not a new Stage; it is recorded in [Approved V1 expansions after Stage 11](#approved-v1-expansions-after-stage-11).
 
@@ -1072,17 +1072,25 @@ Publish the validated static V1 through Cloudflare Pages and confirm the product
 
 ### Acceptance criteria
 
-- [ ] Cloudflare Pages serves the expected static build from the approved production revision.
-- [ ] Custom domain and HTTPS work correctly.
-- [ ] All localized Home and case routes and direct deep links work in production.
-- [ ] Production metadata, sitemap, robots, social previews, assets, and headers are correct.
-- [ ] Preview deployments are not treated as canonical production pages.
-- [ ] Post-deploy functional, accessibility, responsive, security, and performance smoke checks pass.
-- [ ] No unapproved service, tracking, secret, or feature is introduced during release.
+- [x] Cloudflare Pages serves the expected static build from the approved production revision.
+- [x] Custom domain and HTTPS work correctly.
+- [x] All localized Home and case routes and direct deep links work in production.
+- [x] Production metadata, sitemap, robots, social previews, assets, and headers are correct.
+- [x] Preview deployments are not treated as canonical production pages.
+- [x] Post-deploy functional, accessibility, responsive, security, and performance smoke checks pass.
+- [x] No unapproved service, tracking, secret, or feature is introduced during release.
 
 ### Implementation unit
 
 A release-configuration and production-verification unit performed only after the validated application is ready. It changes delivery configuration, not product scope.
+
+### Final production evidence
+
+Cloudflare Pages served production revision `0171ce9d120dedd2338aa28a23b1178cfe903efd` successfully on the canonical custom domain `https://leonardoblauth.dev`. The public Home and all three localized case routes were previously smoke-tested directly, including HTTPS, canonical and alternate metadata, social previews, CSP, robots, sitemap, redirects, assets, and basic navigation; the production deployment configuration, public origin, and revision were reconfirmed for the final performance update.
+
+The final Hero validation confirmed the complete SSR title from initial HTML, a decorative `aria-hidden` Type Text layer after hydration in desktop and mobile, and the static reduced-motion variant. The `hero-role-reveal` animation uses only `opacity` and `transform`; it no longer uses `clip-path`.
+
+CrUX did not yet have sufficient field data. Two production Lighthouse mobile runs on the canonical origin were consistent: Performance 94, FCP 1.7 s, LCP 2.7 s, TBT 10 ms, and CLS 0.086. The LCP element was the static SSR title `.text-type__static`. Its breakdown reported 0 ms TTFB and 390 ms render delay; no load delay or load time applied because the candidate is text. Instrument Sans and the required CSS were present in the initial path, and LCP rendering did not depend on JavaScript, OGL, GSAP, or an external resource. Lighthouse remains laboratory evidence, not a replacement for CrUX p75 field data. No further code-controlled bottleneck was identified that justified another visual or performance change.
 
 ### Traceability
 

@@ -10,17 +10,17 @@ The primary audience is recruiters and technical leadership, with deeper project
 
 ## Current status
 
-**Implementation in progress**
+**V1 released**
 
-Definition → Visual Direction → Prototyping → Implementation handoff → Technical definition → Implementation plan → **Stages 1–12 complete; Final Merge Gate pending**
+Definition → Visual Direction → Prototyping → Implementation handoff → Technical definition → Implementation plan → **Stages 1–14 complete; V1 released**
 
 Confirmed on the current Stage 12 implementation branch (reconciled September 7, 2026):
 
 - V1 is the first production version. Current scope includes three published projects and the Home carousel.
 - Stages 1–11 of the [implementation plan](docs/implementation-plan.md) are complete. Later approved expansions are recorded there in a non-numbered section after Stage 11.
 - Stage 12 adds localized static metadata, canonical and alternate links, sitemap, environment-aware robots output, static security headers, build-output validation, and localized social-preview assets. Representative production Core Web Vitals measurement is deliberately delegated to the Stage 14/release post-deploy validation.
-- Stages 13–14 (final QA and production release) remain pending.
-- Canonical production origin: `https://leonardoblauth.dev`, to be served from Cloudflare Pages.
+- Stages 13–14 (final QA and production release) are complete.
+- Canonical production origin: `https://leonardoblauth.dev`, served from Cloudflare Pages.
 
 Local development uses `pnpm` with the Node/pnpm ranges declared in `package.json`.
 
