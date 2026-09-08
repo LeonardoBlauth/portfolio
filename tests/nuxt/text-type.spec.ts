@@ -20,9 +20,19 @@ describe('TextType', () => {
     vi.unstubAllGlobals()
   })
 
-  it('types the name once, keeps it written, and removes the cursor', async () => {
+  it('keeps the complete name visible until hydration starts the typing replay', async () => {
     vi.useFakeTimers()
     setReducedMotion(false)
+
+    let frameCallback: FrameRequestCallback | undefined
+    vi.stubGlobal(
+      'requestAnimationFrame',
+      vi.fn((callback: FrameRequestCallback) => {
+        frameCallback = callback
+        return 1
+      }),
+    )
+    vi.stubGlobal('cancelAnimationFrame', vi.fn())
 
     const wrapper = await mountSuspended(TextType, {
       props: {
@@ -33,10 +43,19 @@ describe('TextType', () => {
       },
     })
 
-    expect(wrapper.get('h1 .visually-hidden').text()).toBe('Leonardo Blauth')
-    expect(wrapper.get('[aria-hidden="true"]').text()).toBe('|')
+    expect(wrapper.get('h1').attributes('aria-label')).toBe('Leonardo Blauth')
+    expect(wrapper.find('.visually-hidden').exists()).toBe(false)
+    expect(
+      wrapper.get('[aria-hidden="true"]').text().replace(/\s+/g, ' '),
+    ).toBe('Leonardo Blauth')
+    expect(wrapper.find('.text-type__cursor').exists()).toBe(false)
 
-    await vi.advanceTimersByTimeAsync(15 * 70)
+    frameCallback?.(0)
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.get('[aria-hidden="true"]').text()).toBe('L|')
+
+    await vi.advanceTimersByTimeAsync(14 * 70)
     expect(
       wrapper.get('[aria-hidden="true"]').text().replace(/\s+/g, ' '),
     ).toContain('Leonardo Blauth')
@@ -65,7 +84,7 @@ describe('TextType', () => {
       },
     })
 
-    expect(wrapper.get('h1 .visually-hidden').text()).toBe('Leonardo Blauth')
+    expect(wrapper.get('h1').attributes('aria-label')).toBe('Leonardo Blauth')
     expect(
       wrapper.get('[aria-hidden="true"]').text().replace(/\s+/g, ' '),
     ).toBe('Leonardo Blauth')
