@@ -172,8 +172,7 @@ test.describe('Hero refinement', () => {
       const role = document.querySelector('.hero__role')
       const details = document.querySelector('.hero__details')
 
-      if (!role || !details)
-        throw new Error('Hero motion groups are missing')
+      if (!role || !details) throw new Error('Hero motion groups are missing')
 
       const roleStyle = getComputedStyle(role)
       const detailsStyle = getComputedStyle(details)
