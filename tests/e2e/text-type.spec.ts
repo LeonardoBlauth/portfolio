@@ -2,9 +2,11 @@ import { expect, test, type Page } from '@playwright/test'
 
 const visualName = (page: Page) => page.locator('#hero-title')
 const typedName = (page: Page) => page.locator('#hero-title .text-type__typed')
+const staticName = (page: Page) =>
+  page.locator('#hero-title .text-type__static')
 
 test.describe('Hero Text Type', () => {
-  test('keeps the complete SSR name visible before replaying the typing animation', async ({
+  test('keeps the static title visible while replaying the typing enhancement', async ({
     page,
   }) => {
     const relevantMessages: string[] = []
@@ -29,6 +31,7 @@ test.describe('Hero Text Type', () => {
       page.getByRole('heading', { level: 1, name: 'Leonardo Blauth' }),
     ).toBeVisible()
 
+    await expect(staticName(page)).toHaveText('Leonardo\nBlauth')
     await expect(page.locator('#hero-title .text-type__cursor')).toHaveCount(1)
     await expect(typedName(page)).toContainText('L')
     await expect(typedName(page)).not.toHaveText('Leonardo\nBlauth')
@@ -39,6 +42,7 @@ test.describe('Hero Text Type', () => {
 
     await expect(typedName(page)).toHaveText('Leonardo\nBlauth')
     await expect(page.locator('#hero-title .text-type__cursor')).toHaveCount(0)
+    await expect(staticName(page)).toHaveText('Leonardo\nBlauth')
     expect(relevantMessages).toEqual([])
   })
 

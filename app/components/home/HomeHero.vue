@@ -489,13 +489,11 @@ const raysSaturation = computed(() =>
 @keyframes hero-role-reveal {
   from {
     opacity: 0;
-    clip-path: inset(0 0 100% 0);
-    translate: 0 0.375rem;
+    transform: translateY(0.375rem);
   }
   to {
     opacity: 1;
-    clip-path: inset(0);
-    translate: 0;
+    transform: translateY(0);
   }
 }
 
@@ -616,7 +614,6 @@ const raysSaturation = computed(() =>
   .hero__availability,
   .hero__details {
     opacity: 1;
-    clip-path: none;
     translate: 0;
     animation: none;
   }

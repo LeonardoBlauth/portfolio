@@ -40,7 +40,10 @@ describe('Home Hero', () => {
       const wrapper = await mountSuspended(App, { route })
       const hero = wrapper.get('section#top')
 
-      expect(hero.get('h1').text().replace(/\s+/g, ' ')).toBe('Leonardo Blauth')
+      expect(hero.get('h1').attributes('aria-label')).toBe('Leonardo Blauth')
+      expect(hero.get('h1').get('.text-type__static').text()).toBe(
+        'Leonardo\nBlauth',
+      )
       expect(hero.text()).toContain('Full Stack Developer')
       expect(hero.text()).toContain(availability)
       expect(hero.text()).toContain(description)

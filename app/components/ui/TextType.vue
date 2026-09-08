@@ -104,8 +104,9 @@ onBeforeUnmount(clearTimers)
     v-bind="$attrs"
   >
     <template v-if="typeOnMount">
-      <span class="text-type__visual" :data-text="text" aria-hidden="true">
-        <span class="text-type__animated">
+      <span class="text-type__visual">
+        <span class="text-type__static">{{ text }}</span>
+        <span class="text-type__animated" aria-hidden="true">
           <span class="text-type__typed">{{ displayedText }}</span>
           <span v-if="cursorVisible" class="text-type__cursor">{{
             cursorCharacter
@@ -121,14 +122,8 @@ onBeforeUnmount(clearTimers)
 .text-type__visual {
   position: relative;
   display: block;
-  inline-size: max-content;
+  inline-size: fit-content;
   white-space: pre-line;
-}
-
-.text-type__visual::before {
-  display: block;
-  content: attr(data-text);
-  visibility: hidden;
 }
 
 .text-type__static {
@@ -139,10 +134,13 @@ onBeforeUnmount(clearTimers)
 .text-type__animated {
   position: absolute;
   inset: 0;
+  color: transparent;
+  white-space: pre-line;
 }
 
 .text-type__cursor {
   margin-inline-start: 0.08em;
+  color: var(--color-text-primary);
   animation: text-type-cursor 0.65s ease-in-out infinite alternate;
 }
 
@@ -153,10 +151,6 @@ onBeforeUnmount(clearTimers)
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .text-type__visual::before {
-    visibility: visible;
-  }
-
   .text-type__animated {
     display: none;
   }

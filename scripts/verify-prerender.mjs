@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
+import { getSemanticHeadingText } from './get-semantic-heading.mjs'
+
 const outputDirectory =
   process.env.NITRO_PRESET === 'cloudflare-pages-static'
     ? 'dist'
@@ -217,10 +219,7 @@ for (const route of generatedRoutes) {
   }
 
   const headingMatch = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/)
-  const headingText = headingMatch?.[1]
-    .replace(/<[^>]+>/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
+  const headingText = getSemanticHeadingText(headingMatch?.[1] ?? '')
 
   if (headingText !== route.heading) {
     throw new Error(`${route.file} does not contain its expected heading`)

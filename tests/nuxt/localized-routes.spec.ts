@@ -38,11 +38,14 @@ describe('localized routes', () => {
 
     const pageHeading = wrapper.get('h1')
     const accessibleHeading = pageHeading.find('.visually-hidden')
+    const staticHeading = pageHeading.find('.text-type__static')
 
     expect(
       (accessibleHeading.exists()
         ? accessibleHeading.text()
-        : pageHeading.text()
+        : staticHeading.exists()
+          ? staticHeading.text()
+          : pageHeading.text()
       )
         .replace(/\s+/g, ' ')
         .trim(),
